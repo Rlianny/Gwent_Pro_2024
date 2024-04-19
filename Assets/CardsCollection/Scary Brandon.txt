@@ -1,0 +1,9 @@
+P
+Scary Brandon
+Vórtice del Caos
+R
+2
+"Mini pesadilla" Multiplica por n su ataque, siendo n la cantidad de cartas iguales a ella en el campo.
+10
+Un mini-personaje aterrador de las pesadillas de Morty.
+

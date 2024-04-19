@@ -1,0 +1,9 @@
+P
+Mr. Meeseeks
+Neutral
+M R S
+4
+"Existence is pain" Calcula el promedio de poder entre todas las cartas del campo (propio o del rival). Luego iguala el poder de todas las cartas del campo (propias o del rival) a ese promedio.
+13
+Estos seres azules son criaturas creadas para cumplir una tarea específica. Su existencia es dolorosa, pero son útiles en la batalla.
+"I’m Mr. Meeseeks! Look at me!"

@@ -1,0 +1,9 @@
+P
+Pencilvester
+Neutral
+R S
+3
+"Lápiz mágico" Elimina la carta con menos poder del rival.
+8
+Un lápiz parlante con habilidades mágicas y un sentido del humor peculiar.
+

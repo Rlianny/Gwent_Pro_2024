@@ -1,0 +1,9 @@
+D
+Plumbus
+Neutral
+
+
+Despeja el clima eliminando una o varias cartas de tipo clima.
+12
+El Plumbus es una herramienta versátil que puede limpiar cualquier situación.
+"No preguntes cómo se hace un Plumbus, solo úsalo!"

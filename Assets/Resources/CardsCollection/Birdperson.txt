@@ -1,0 +1,9 @@
+P
+Birdperson
+Rickpública
+M S
+5
+“Vínculo aviar” Multiplica por n su ataque, siendo n la cantidad de cartas iguales a ella en el campo.
+10
+Un guerrero aviar con un pasado trágico. Su amistad con Rick es inquebrantable.
+

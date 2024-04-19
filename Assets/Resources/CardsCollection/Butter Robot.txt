@@ -1,0 +1,9 @@
+P
+Butter Robot
+Smiths Interdimensionales
+R S
+4
+“Dilema existencial” Limpia la fila del campo (no vacı́a, propia o del rival) con menos unidades.
+11
+Un robot creado para pasar mantequilla, pero que se cuestiona el sentido de la vida.
+

@@ -1,0 +1,9 @@
+C
+Granizo de portales
+Neutral
+R
+
+Reduce a 1 el poder de las cartas en las filas de distancia.
+17
+Granizos de diferentes dimensiones azotan el campo de batalla.
+"!Cuidado con el granizo de portales, puede distorsionar la realidad!"

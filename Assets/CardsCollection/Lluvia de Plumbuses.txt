@@ -1,0 +1,9 @@
+C
+Lluvia de Plumbuses
+Neutral
+M
+
+Reduce a 1 el poder de las cartas en las filas de cuerpo a cuerpo.
+17
+La lluvia de plumbuses cae sobre el campo de batalla.
+"No preguntes cómo se hacen los Plumbuses, solo esquívalos!"
