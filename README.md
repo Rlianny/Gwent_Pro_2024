@@ -24,7 +24,10 @@ Requisitos para jugar
 * La resolución de su pantalla debe ser 1920 x 1080. Esto es necesario para que no se distorsionen determinados elementos visuales.
 * Debe estar trabjando en alguna distribución de Linux.
 * Usted debe correr el ejecutable ´GwentR&M.x86_64´ que se encuentra dentro de la carpeta GwentR&M en la carpeta principal.
-* Se recomienda leer el fichero GwentR&MGuide.pdf que se encuentra en la carpeta principal, este contiene una descripción de las reglas del juego y tips para mejorar su experiencia durante la partida.
+
+Se recomienda leer el fichero GwentR&MGuide.pdf que se encuentra en la carpeta principal, este contiene una descripción de las reglas del juego y tips para mejorar su experiencia durante la partida.
+
+Para la revisión del código en el proyecto, se recomienda leer el fichero GwentDevelopmentGuide.pdf que se encuentra en la carpeta principal, el cual es un informe sobre el contenido del proyecto.
 
 
 # Autor
