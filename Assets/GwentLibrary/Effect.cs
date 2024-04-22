@@ -452,20 +452,21 @@ public class ClearARowEffect : Effect
         List<UnityCard> listToClear = null;
         int minCount = int.MaxValue;
 
-        foreach (List<UnityCard> cardList in ActivePlayer.Battlefield.Battlefield)
+
+        foreach (List<UnityCard> cardList in RivalPlayer.Battlefield.Battlefield)
         {
-            if (Tools.NumberOfSilversInRow(cardList) > 0 && Tools.NumberOfSilversInRow(cardList) < minCount)
+            if (cardList.Count > 0 && cardList.Count < minCount && Tools.NumberOfSilversInRow(cardList) > 0)
             {
-                minCount = Tools.NumberOfSilversInRow(cardList);
+                minCount = cardList.Count;
                 listToClear = cardList;
             }
         }
 
-        foreach (List<UnityCard> cardList in RivalPlayer.Battlefield.Battlefield)
+        foreach (List<UnityCard> cardList in ActivePlayer.Battlefield.Battlefield)
         {
-            if (Tools.NumberOfSilversInRow(cardList) > 0 && Tools.NumberOfSilversInRow(cardList) < minCount)
+            if (cardList.Count > 0 && cardList.Count < minCount && Tools.NumberOfSilversInRow(cardList) > 0)
             {
-                minCount = Tools.NumberOfSilversInRow(cardList);
+                minCount = cardList.Count;
                 listToClear = cardList;
             }
         }
