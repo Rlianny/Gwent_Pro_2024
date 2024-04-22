@@ -273,12 +273,23 @@ public class UIVisual : MonoBehaviour, IObserver
                             CardsInDecoyRow.Add(silverUnityCard);
                     }
 
-                    foreach (SilverUnityCard silverUnityCard in CardsInDecoyRow)
+                    if (CardsInDecoyRow.Count > 0)
                     {
-                        var newCard = Instantiate(CardToPickPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-                        newCard.transform.SetParent(DecoyEventCardsShower.transform);
-                        UICard ui = newCard.GetComponent<UICard>();
-                        ui.PrintCard(silverUnityCard);
+                        foreach (SilverUnityCard silverUnityCard in CardsInDecoyRow)
+                        {
+                            Debug.Log(CardsInDecoyRow.Count);
+                            var newCard = Instantiate(CardToPickPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+                            newCard.transform.SetParent(DecoyEventCardsShower.transform);
+                            UICard ui = newCard.GetComponent<UICard>();
+                            ui.PrintCard(silverUnityCard);
+                        }
+
+                    }
+
+                    else
+                    {
+                        GameManager.gameManager.AbortDecoyEvent();
+                        return;
                     }
 
                     SmogForDecoyEvent.gameObject.SetActive(true);
@@ -320,16 +331,26 @@ public class UIVisual : MonoBehaviour, IObserver
                             CardsInDecoyRow.Add(silverUnityCard);
                     }
 
-                    foreach (SilverUnityCard silverUnityCard in CardsInDecoyRow)
+                    if (CardsInDecoyRow.Count != 0)
                     {
-                        var newCard = Instantiate(CardToPickPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-                        newCard.transform.SetParent(DecoyEventCardsShower.transform);
-                        UICard ui = newCard.GetComponent<UICard>();
-                        ui.PrintCard(silverUnityCard);
+                        foreach (SilverUnityCard silverUnityCard in CardsInDecoyRow)
+                        {
+                            Debug.Log(CardsInDecoyRow.Count);
+                            var newCard = Instantiate(CardToPickPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+                            newCard.transform.SetParent(DecoyEventCardsShower.transform);
+                            UICard ui = newCard.GetComponent<UICard>();
+                            ui.PrintCard(silverUnityCard);
+                        }
+
+                    }
+
+                    else
+                    {
+                        GameManager.gameManager.AbortDecoyEvent();
+                        return;
                     }
 
                     SmogForDecoyEvent.gameObject.SetActive(true);
-
                 }
             }
 

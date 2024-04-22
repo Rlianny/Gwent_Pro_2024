@@ -16,9 +16,10 @@ public class OnClickForSwapCard : MonoBehaviour
                 Card oldCard = gameObject.GetComponent<UICard>().MotherCard;
                 Card newCard = Hand.RandomChoice(GameData.Player1.PlayerHand.GameDeck);
                 gameObject.GetComponent<UICard>().PrintCard(newCard);
+                GameData.Player1.PlayerHand.GameDeck.Remove(newCard);
                 GameData.Player1.PlayerHand.PlayerHand.Add(newCard);
                 GameData.Player1.PlayerHand.PlayerHand.Remove(oldCard);
-                GameData.Player1.PlayerHand.GameDeck.Remove(newCard);
+                GameData.Player1.PlayerHand.GameDeck.Add(oldCard);
             }
         }
 
@@ -32,6 +33,7 @@ public class OnClickForSwapCard : MonoBehaviour
                 Card newCard = Hand.RandomChoice(GameData.Player2.PlayerHand.GameDeck);
                 gameObject.GetComponent<UICard>().PrintCard(newCard);
                 GameData.Player2.PlayerHand.PlayerHand.Add(newCard);
+                GameData.Player2.PlayerHand.GameDeck.Add(oldCard);
                 GameData.Player2.PlayerHand.PlayerHand.Remove(oldCard);
                 GameData.Player2.PlayerHand.GameDeck.Remove(newCard);
             }
