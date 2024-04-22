@@ -225,7 +225,11 @@ public class UIVisual : MonoBehaviour, IObserver
             newCard.transform.SetParent(Player1HandScript.Hand.GetComponent<HorizontalLayoutGroup>().transform);
             UICard ui = newCard.GetComponent<UICard>();
             ui.PrintCard(card);
-            ClearRowUI(DecoyEventCardsShower);
+            for (int i = 0; i < DecoyEventCardsShower.transform.childCount; i++)
+            {
+                GameObject cardToClear = DecoyEventCardsShower.transform.GetChild(i).gameObject;
+                Destroy(cardToClear);
+            }
             SmogForDecoyEvent.gameObject.SetActive(false);
             StartCoroutine(ShowMessage($"Turno de {GameManager.Player2.PlayerName}"));
         }
@@ -236,7 +240,11 @@ public class UIVisual : MonoBehaviour, IObserver
             newCard.transform.SetParent(Player2HandScript.Hand.GetComponent<HorizontalLayoutGroup>().transform);
             UICard ui = newCard.GetComponent<UICard>();
             ui.PrintCard(card);
-            ClearRowUI(DecoyEventCardsShower);
+            for (int i = 0; i < DecoyEventCardsShower.transform.childCount; i++)
+            {
+                GameObject cardToClear = DecoyEventCardsShower.transform.GetChild(i).gameObject;
+                Destroy(cardToClear);
+            }
             SmogForDecoyEvent.gameObject.SetActive(false);
             StartCoroutine(ShowMessage($"Turno de {GameManager.Player1.PlayerName}"));
         }
