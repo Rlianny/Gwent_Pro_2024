@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using System;
 using System.Diagnostics;
 using System.ComponentModel.Design;
+using UnityEditor;
 
 public abstract class Effect
 {
@@ -453,18 +454,18 @@ public class ClearARowEffect : Effect
 
         foreach (List<UnityCard> cardList in ActivePlayer.Battlefield.Battlefield)
         {
-            if ((cardList.Count > 0 && cardList.Count < minCount) && !(cardList.Count == 1 && cardList[0] is HeroCard))
+            if (Tools.NumberOfSilversInRow(cardList) > 0 && Tools.NumberOfSilversInRow(cardList) < minCount)
             {
-                minCount = cardList.Count;
+                minCount = Tools.NumberOfSilversInRow(cardList);
                 listToClear = cardList;
             }
         }
 
         foreach (List<UnityCard> cardList in RivalPlayer.Battlefield.Battlefield)
         {
-            if ((cardList.Count > 0 && cardList.Count < minCount) && !(cardList.Count == 1 && cardList[0] is HeroCard))
+            if (Tools.NumberOfSilversInRow(cardList) > 0 && Tools.NumberOfSilversInRow(cardList) < minCount)
             {
-                minCount = cardList.Count;
+                minCount = Tools.NumberOfSilversInRow(cardList);
                 listToClear = cardList;
             }
         }

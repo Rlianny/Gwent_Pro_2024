@@ -19,4 +19,17 @@ public static class Tools
 
         return count;
     }
+
+    public static int NumberOfSilversInRow(List<UnityCard> rowCards)
+    {
+        int count = 0;
+
+        foreach(UnityCard unityCard in rowCards)
+        {
+            if(unityCard is SilverUnityCard)
+            count++;
+        }
+
+        return count;
+    }
 }
