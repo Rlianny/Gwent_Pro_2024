@@ -138,12 +138,7 @@ public class PlayerBattlefield
         {
             if (unityCard is SilverUnityCard silverUnityCard)
             {
-                if (silverUnityCard.ActualPower == 1)
-                {
-                    silverUnityCard.ActualPower++;
-                }
-
-                if (silverUnityCard.ActualPower == silverUnityCard.Power)
+                if (silverUnityCard.ActualPower == 1 || silverUnityCard.ActualPower == silverUnityCard.Power)
                 {
                     silverUnityCard.ActualPower++;
                 }
