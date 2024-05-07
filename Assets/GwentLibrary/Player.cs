@@ -105,6 +105,10 @@ public class Player
             {
                 Battlefield.Battlefield[Battlefield.RowCorrespondency[Row]].Add(unityCard);
                 PlayerHand.PlayerHand.Remove(unityCard);
+
+                activePlayer.Battlefield.UpdateBattlefieldInfo();
+                rivalPlayer.Battlefield.UpdateBattlefieldInfo();
+
                 unityCard.ActivateEffect(activePlayer, rivalPlayer, unityCard);
 
                 activePlayer.Battlefield.UpdateBattlefieldInfo();
@@ -115,6 +119,10 @@ public class Player
             {
                 Battlefield.IncreaseColumn[Battlefield.RowCorrespondency[Row]] = increaseCard;
                 PlayerHand.PlayerHand.Remove(increaseCard);
+
+                activePlayer.Battlefield.UpdateBattlefieldInfo();
+                rivalPlayer.Battlefield.UpdateBattlefieldInfo();
+
                 increaseCard.ActivateEffect(activePlayer, rivalPlayer, increaseCard);
 
                 activePlayer.Battlefield.UpdateBattlefieldInfo();
@@ -125,6 +133,10 @@ public class Player
             {
                 PlayerBattlefield.WeatherRow[Battlefield.RowCorrespondency[Row]] = weatherCard;
                 PlayerHand.PlayerHand.Remove(weatherCard);
+
+                activePlayer.Battlefield.UpdateBattlefieldInfo();
+                rivalPlayer.Battlefield.UpdateBattlefieldInfo();
+
                 weatherCard.ActivateEffect(activePlayer, rivalPlayer, weatherCard);
 
                 activePlayer.Battlefield.UpdateBattlefieldInfo();
@@ -134,6 +146,10 @@ public class Player
             if (card is ClearanceCard clearanceCard)
             {
                 PlayerHand.PlayerHand.Remove(clearanceCard);
+
+                activePlayer.Battlefield.UpdateBattlefieldInfo();
+                rivalPlayer.Battlefield.UpdateBattlefieldInfo();
+
                 clearanceCard.ActivateEffect(activePlayer, rivalPlayer, clearanceCard);
 
                 activePlayer.Battlefield.UpdateBattlefieldInfo();

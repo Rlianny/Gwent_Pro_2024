@@ -299,9 +299,6 @@ public class DeleteTheLeastEffect : DeleteEffect
 {
     public override void TakeEffect(Player ActivePlayer, Player RivalPlayer, Card card)
     {
-        ActivePlayer.Battlefield.UpdateBattlefieldInfo();
-        RivalPlayer.Battlefield.UpdateBattlefieldInfo();
-
         int minPower = int.MaxValue;
         int minPowerIndex = -1;
         int pos = -1;
@@ -517,9 +514,6 @@ public class AverageEffect : Effect
 {
     public override void TakeEffect(Player ActivePlayer, Player RivalPlayer, Card card)
     {
-        ActivePlayer.Battlefield.UpdateBattlefieldInfo();
-        ActivePlayer.Battlefield.UpdateBattlefieldInfo();
-
         int average;
         int cardsInField = Tools.NumberOfUnitysOnBattlefield(ActivePlayer.Battlefield.Battlefield) + Tools.NumberOfUnitysOnBattlefield(RivalPlayer.Battlefield.Battlefield);
         average = (ActivePlayer.Battlefield.TotalScore + RivalPlayer.Battlefield.TotalScore) / cardsInField;
