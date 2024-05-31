@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Subject : MonoBehaviour
+public abstract class Subject
 {
     protected List<IObserver> observers = new List<IObserver>();
 

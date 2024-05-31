@@ -7,17 +7,11 @@ public class InitialAnimation : MonoBehaviour
     public GameObject Panel;
     private float timer = 0f;
 
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
     void Update()
     {
         timer += Time.deltaTime;
 
-        if(timer >= 13f)
+        if(timer >= 12f)
         {
             Panel.SetActive(false);
         }

@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Security.Cryptography;
 using System;
+using TMPro;
 
 public abstract class Card
 {
-    string type;
-    public string Type // tipo de carta
+    public string type;
+    public CardTypes Type // tipo de carta
     {
         get { return TypeClassifier(type); }
-        private set { type = value; }
+        private set { type = TypeClassifier(type).ToString().Replace('_', ' '); }
     }
     public string Name { get; private set; }
     public string Faction { get; private set; }
@@ -42,6 +43,7 @@ public abstract class Card
     public Card(Card card)
     {
         type = card.type;
+        Type = card.Type;
         Name = card.Name;
         Faction = card.Faction;
         EffectDescription = card.EffectDescription;
@@ -75,51 +77,51 @@ public abstract class Card
     /// </summary>
     /// <param name="TipeLetter">String que codifica el tipo de cartas en la base de datos.</param>
     /// <returns>Tipo de carta.</returns>
-    private static string TypeClassifier(string TipeLetter)
+    private static CardTypes TypeClassifier(string TipeLetter)
     {
         switch (TipeLetter)
         {
             case "L":
-                return "Líder";
+                return CardTypes.Líder;
 
             case "O":
-                return "Unidad Héroe";
+                return CardTypes.Unidad_Héroe;
 
             case "P":
-                return "Unidad de Plata";
+                return CardTypes.Unidad_de_Plata;
 
             case "A":
-                return "Carta de Aumento";
+                return CardTypes.Carta_de_Aumento;
 
             case "C":
-                return "Carta de Clima";
+                return CardTypes.Carta_de_Clima;
 
             case "S":
-                return "Señuelo";
+                return CardTypes.Señuelo;
 
             case "D":
-                return "Carta de Despeje";
+                return CardTypes.Carta_de_Despeje;
 
             case "Líder":
-                return "Líder";
+                return CardTypes.Líder;
 
             case "Unidad Héroe":
-                return "Unidad Héroe";
+                return CardTypes.Unidad_Héroe;
 
             case "Unidad de Plata":
-                return "Unidad de Plata";
+                return CardTypes.Unidad_de_Plata;
 
             case "Carta de Aumento":
-                return "Carta de Aumento";
+                return CardTypes.Carta_de_Aumento;
 
             case "Carta de Clima":
-                return "Carta de Clima";
+                return CardTypes.Carta_de_Clima;
 
             case "Señuelo":
-                return "Señuelo";
+                return CardTypes.Señuelo;
 
             case "Carta de Despeje":
-                return "Carta de Despeje";
+                return CardTypes.Carta_de_Despeje;
 
             default:
                 throw new ArgumentException("La carta tiene un tipo no definido");

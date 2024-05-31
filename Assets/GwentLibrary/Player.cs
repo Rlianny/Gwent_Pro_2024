@@ -70,7 +70,6 @@ public class Player
     public void StartTurn()
     {
         IsActive = true;
-        Debug.Log($"El turno de {PlayerName} ha comenzado");
     }
 
     /// <summary>
@@ -79,7 +78,6 @@ public class Player
     public void FinishTurn()
     {
         IsActive = false;
-        Debug.Log($"El turno de {PlayerName} ha finalizado");
     }
 
     /// <summary>
@@ -97,78 +95,49 @@ public class Player
     /// <param name="rivalPlayer">El jugador rival al momento de la llamada del método.</param>
     /// <param name="card">Carta que será manipulada.</param>
     /// <param name="Row">Lugar al que se moverá la carta.</param>
-    public void DragAndDropMovement(Player activePlayer, Player rivalPlayer, Card card, string Row)
+    public void DragAndDropMovement(Player activePlayer, Player rivalPlayer, Card card, RowTypes Row)
     {
-        if (Row == "M" || Row == "R" || Row == "S")
+        if (Row == RowTypes.Melee || Row == RowTypes.Ranged || Row == RowTypes.Sigee)
         {
             if (card is UnityCard unityCard)
             {
-                Battlefield.Battlefield[Battlefield.RowCorrespondency[Row]].Add(unityCard);
-                PlayerHand.PlayerHand.Remove(unityCard);
-
-                activePlayer.Battlefield.UpdateBattlefieldInfo();
-                rivalPlayer.Battlefield.UpdateBattlefieldInfo();
-
-                unityCard.ActivateEffect(activePlayer, rivalPlayer, unityCard);
-
-                activePlayer.Battlefield.UpdateBattlefieldInfo();
-                rivalPlayer.Battlefield.UpdateBattlefieldInfo();
+                Battlefield.Battlefield[PlayerBattlefield.RowCorrespondency[Row]].Add(unityCard);
+                RemoveCardAndActivateEffect(activePlayer, rivalPlayer, unityCard);
             }
 
             if (card is IncreaseCard increaseCard)
             {
-                Battlefield.IncreaseColumn[Battlefield.RowCorrespondency[Row]] = increaseCard;
-                PlayerHand.PlayerHand.Remove(increaseCard);
-
-                activePlayer.Battlefield.UpdateBattlefieldInfo();
-                rivalPlayer.Battlefield.UpdateBattlefieldInfo();
-
-                increaseCard.ActivateEffect(activePlayer, rivalPlayer, increaseCard);
-
-                activePlayer.Battlefield.UpdateBattlefieldInfo();
-                rivalPlayer.Battlefield.UpdateBattlefieldInfo();
+                Battlefield.IncreaseColumn[PlayerBattlefield.RowCorrespondency[Row]] = increaseCard;
+                RemoveCardAndActivateEffect(activePlayer, rivalPlayer, increaseCard);
             }
 
             if (card is WeatherCard weatherCard)
             {
-                PlayerBattlefield.WeatherRow[Battlefield.RowCorrespondency[Row]] = weatherCard;
-                PlayerHand.PlayerHand.Remove(weatherCard);
-
-                activePlayer.Battlefield.UpdateBattlefieldInfo();
-                rivalPlayer.Battlefield.UpdateBattlefieldInfo();
-
-                weatherCard.ActivateEffect(activePlayer, rivalPlayer, weatherCard);
-
-                activePlayer.Battlefield.UpdateBattlefieldInfo();
-                rivalPlayer.Battlefield.UpdateBattlefieldInfo();
+                PlayerBattlefield.WeatherRow[PlayerBattlefield.RowCorrespondency[Row]] = weatherCard;
+                RemoveCardAndActivateEffect(activePlayer, rivalPlayer, weatherCard);
             }
 
             if (card is ClearanceCard clearanceCard)
             {
-                PlayerHand.PlayerHand.Remove(clearanceCard);
-
-                activePlayer.Battlefield.UpdateBattlefieldInfo();
-                rivalPlayer.Battlefield.UpdateBattlefieldInfo();
-
-                clearanceCard.ActivateEffect(activePlayer, rivalPlayer, clearanceCard);
-
-                activePlayer.Battlefield.UpdateBattlefieldInfo();
-                rivalPlayer.Battlefield.UpdateBattlefieldInfo();
+                RemoveCardAndActivateEffect(activePlayer, rivalPlayer, clearanceCard);
             }
-
-            Debug.Log($"El puntaje de la fila Melee de {activePlayer.PlayerName} es {activePlayer.Battlefield.MeleeRowScore}");
-            Debug.Log($"El puntaje de la fila Ranged de {activePlayer.PlayerName} es {activePlayer.Battlefield.RangedRowScore}");
-            Debug.Log($"El puntaje de la fila Sigee de {activePlayer.PlayerName} es {activePlayer.Battlefield.SigeeRowScore}");
-            Debug.Log($"El puntaje total de {activePlayer.PlayerName} es {activePlayer.Battlefield.TotalScore}");
-
-            Debug.Log($"El puntaje de la fila Melee de {rivalPlayer.PlayerName} es {rivalPlayer.Battlefield.MeleeRowScore}");
-            Debug.Log($"El puntaje de la fila Ranged de {rivalPlayer.PlayerName} es {rivalPlayer.Battlefield.RangedRowScore}");
-            Debug.Log($"El puntaje de la fila Sigee de {rivalPlayer.PlayerName} es {rivalPlayer.Battlefield.SigeeRowScore}");
-            Debug.Log($"El puntaje total de {rivalPlayer.PlayerName} es {rivalPlayer.Battlefield.TotalScore}");
         }
 
         else
             throw new ArgumentException("Parámetro de entrada Row incorrecto");
+    }
+
+    private void RemoveCardAndActivateEffect(Player activePlayer, Player rivalPlayer, Card card)
+    {
+        PlayerHand.PlayerHand.Remove(card);
+
+        activePlayer.Battlefield.UpdateBattlefieldInfo();
+        rivalPlayer.Battlefield.UpdateBattlefieldInfo();
+
+        card.ActivateEffect(activePlayer, rivalPlayer, card);
+
+        activePlayer.Battlefield.UpdateBattlefieldInfo();
+        rivalPlayer.Battlefield.UpdateBattlefieldInfo();
     }
 
     /// <summary>

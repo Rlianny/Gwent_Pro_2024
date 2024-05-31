@@ -6,12 +6,12 @@ public class OnClickForSwapCard : MonoBehaviour
 {
     public void Swap()
     {
-        if(gameObject.transform.parent.name == "Player1Hand")
+        if (gameObject.transform.parent.name == "Player1Hand")
         {
-            if(SwappingCards.Player1Swaps < 2)
+            if (SwappingCards.Player1Swaps < 2)
             {
                 SwappingCards.Player1Swaps++;
-                
+
 
                 Card oldCard = gameObject.GetComponent<UICard>().MotherCard;
                 Card newCard = Hand.RandomChoice(GameData.Player1.PlayerHand.GameDeck);
@@ -23,9 +23,9 @@ public class OnClickForSwapCard : MonoBehaviour
             }
         }
 
-        if(gameObject.transform.parent.name == "Player2Hand")
+        if (gameObject.transform.parent.name == "Player2Hand")
         {
-            if(SwappingCards.Player2Swaps < 2)
+            if (SwappingCards.Player2Swaps < 2)
             {
                 SwappingCards.Player2Swaps++;
 

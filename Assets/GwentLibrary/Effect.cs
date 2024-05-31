@@ -6,15 +6,30 @@ using System;
 using System.Diagnostics;
 using System.ComponentModel.Design;
 using UnityEditor;
+using System.Data;
 
 public abstract class Effect
 {
-    public static Dictionary<int, Effect> EffectDictionary { get; private set; } = DictionaryCreator();
-
-    public Effect()
+    public static Dictionary<int, Effect> EffectDictionary { get; private set; } = new()
     {
-
-    }
+        {1, new IncreaseMeleeRowEffect()},
+        {2, new IncreaseRangedRowEffect()},
+        {3, new IncreaseSigeeRowEffect()},
+        {4, new WeatherMeleeRowEffect()},
+        {5, new WeatherRangedRowEffect()},
+        {6, new WeatherSigeeRowEffect()},
+        {7, new DrawEffect()},
+        {8, new DeleteTheLeastEffect()},
+        {9, new DeleteTheMostEfect()},
+        {10, new CloseBondEffect()},
+        {11, new ClearARowEffect()},
+        {12, new ClearanceEffect()},
+        {13, new AverageEffect()},
+        {14, new DecoyEffect()},
+        {15, new SupremacyEffect()},
+        {16, new CancelEffect()},
+        {17, new VoidEffect()},
+    };
 
     /// <summary>
     /// Este método manipula el campo de batalla realizando el efecto de la carta.
@@ -23,31 +38,6 @@ public abstract class Effect
     /// <param name="RivalPlayer">El jugador rival al momento de la llamada del método.</param>
     /// <param name="card">La carta desde la cual se activa el efecto.</param>
     public abstract void TakeEffect(Player ActivePlayer, Player RivalPlayer, Card card);
-
-    private static Dictionary<int, Effect> DictionaryCreator()
-    {
-        Dictionary<int, Effect> effectDictionary = new();
-
-        effectDictionary.Add(1, new IncreaseMeleeRowEffect());
-        effectDictionary.Add(2, new IncreaseRangedRowEffect());
-        effectDictionary.Add(3, new IncreaseSigeeRowEffect());
-        effectDictionary.Add(4, new WeatherMeleeRowEffect());
-        effectDictionary.Add(5, new WeatherRangedRowEffect());
-        effectDictionary.Add(6, new WeatherSigeeRowEffect());
-        effectDictionary.Add(7, new DrawEffect());
-        effectDictionary.Add(8, new DeleteTheLeastEffect());
-        effectDictionary.Add(9, new DeleteTheMostEfect());
-        effectDictionary.Add(10, new CloseBondEffect());
-        effectDictionary.Add(11, new ClearARowEffect());
-        effectDictionary.Add(12, new ClearanceEffect());
-        effectDictionary.Add(13, new AverageEffect());
-        effectDictionary.Add(14, new DecoyEffect());
-        effectDictionary.Add(15, new SupremacyEffect());
-        effectDictionary.Add(16, new CancelEffect());
-        effectDictionary.Add(17, new VoidEffect());
-
-        return effectDictionary;
-    }
 }
 
 public abstract class IncreaseEffect : Effect
@@ -68,27 +58,19 @@ public class IncreaseMeleeRowEffect : IncreaseEffect
         {
             foreach (Card toFind in ActivePlayer.PlayerHand.GameDeck)
             {
-                if (toFind is IncreaseCard increaseCard && increaseCard.Row.Contains("M"))
+                if (toFind is IncreaseCard increaseCard && increaseCard.Row == RowTypes.Melee)
                 {
                     toInvoke = increaseCard;
                 }
             }
 
         }
-        else
-            UnityEngine.Debug.Log("No hay espacio para el aumento");
 
         if (toInvoke != null)
         {
-            GameManager.gameManager.InvokeACard(toInvoke, "M");
+            GameManager.gameManager.InvokeACard(toInvoke, RowTypes.Melee);
             return;
         }
-
-        else
-        {
-            UnityEngine.Debug.Log("No se encontaron cartas de Aumento para la fila M en el deck del jugador " + ActivePlayer.PlayerName);
-        }
-
     }
 }
 
@@ -105,7 +87,7 @@ public class IncreaseRangedRowEffect : IncreaseEffect
         {
             foreach (Card toFind in ActivePlayer.PlayerHand.GameDeck)
             {
-                if (toFind is IncreaseCard increaseCard && increaseCard.Row.Contains("R"))
+                if (toFind is IncreaseCard increaseCard && increaseCard.Row == RowTypes.Ranged)
                 {
                     toInvoke = increaseCard;
                 }
@@ -113,18 +95,11 @@ public class IncreaseRangedRowEffect : IncreaseEffect
 
         }
 
-        else
-            UnityEngine.Debug.Log("No hay espacio para el aumento");
-
         if (toInvoke != null)
         {
-            GameManager.gameManager.InvokeACard(toInvoke, "R");
+            GameManager.gameManager.InvokeACard(toInvoke, RowTypes.Ranged);
             return;
         }
-
-        else
-            UnityEngine.Debug.Log("No se encontaron cartas de Aumento para la fila R en el deck del jugador " + ActivePlayer.PlayerName);
-
     }
 }
 
@@ -141,7 +116,7 @@ public class IncreaseSigeeRowEffect : IncreaseEffect
         {
             foreach (Card toFind in ActivePlayer.PlayerHand.GameDeck)
             {
-                if (toFind is IncreaseCard increaseCard && increaseCard.Row.Contains("S"))
+                if (toFind is IncreaseCard increaseCard && increaseCard.Row == RowTypes.Sigee)
                 {
                     toInvoke = increaseCard;
                 }
@@ -149,18 +124,11 @@ public class IncreaseSigeeRowEffect : IncreaseEffect
 
         }
 
-        else
-            UnityEngine.Debug.Log("No hay espacio para el aumento");
-
         if (toInvoke != null)
         {
-            GameManager.gameManager.InvokeACard(toInvoke, "S");
+            GameManager.gameManager.InvokeACard(toInvoke, RowTypes.Sigee);
             return;
         }
-
-        else
-            UnityEngine.Debug.Log("No se encontaron cartas de Aumento para la fila S en el deck del jugador " + ActivePlayer.PlayerName);
-
     }
 }
 
@@ -182,24 +150,18 @@ public class WeatherMeleeRowEffect : WeatherEffect
         {
             foreach (Card toFind in ActivePlayer.PlayerHand.GameDeck)
             {
-                if (toFind is WeatherCard weatherCard && weatherCard.Row.Contains("M"))
+                if (toFind is WeatherCard weatherCard && weatherCard.Row == RowTypes.Melee)
                 {
                     toInvoke = weatherCard;
                 }
             }
         }
 
-        else
-            UnityEngine.Debug.Log("No hay espacio para el clima");
-
         if (toInvoke != null)
         {
-            GameManager.gameManager.InvokeACard(toInvoke, "M");
+            GameManager.gameManager.InvokeACard(toInvoke, RowTypes.Melee);
             return;
         }
-
-        else
-            UnityEngine.Debug.Log("No se encontaron cartas de Clima para la fila M en el deck del jugador " + ActivePlayer.PlayerName);
 
     }
 }
@@ -217,25 +179,18 @@ public class WeatherRangedRowEffect : WeatherEffect
         {
             foreach (Card toFind in ActivePlayer.PlayerHand.GameDeck)
             {
-                if (toFind is WeatherCard weatherCard && weatherCard.Row.Contains("R"))
+                if (toFind is WeatherCard weatherCard && weatherCard.Row == RowTypes.Ranged)
                 {
                     toInvoke = weatherCard;
                 }
             }
         }
 
-        else
-            UnityEngine.Debug.Log("No hay espacio para el clima");
-
         if (toInvoke != null)
         {
-            GameManager.gameManager.InvokeACard(toInvoke, "R");
+            GameManager.gameManager.InvokeACard(toInvoke, RowTypes.Ranged);
             return;
         }
-
-        else
-            UnityEngine.Debug.Log("No se encontaron cartas de Clima para la fila R en el deck del jugador " + ActivePlayer.PlayerName);
-
     }
 }
 
@@ -252,7 +207,7 @@ public class WeatherSigeeRowEffect : WeatherEffect
         {
             foreach (Card toFind in ActivePlayer.PlayerHand.GameDeck)
             {
-                if (toFind is WeatherCard weatherCard && weatherCard.Row.Contains("S"))
+                if (toFind is WeatherCard weatherCard && weatherCard.Row == RowTypes.Sigee)
                 {
                     toInvoke = weatherCard;
                 }
@@ -260,18 +215,11 @@ public class WeatherSigeeRowEffect : WeatherEffect
 
         }
 
-        else
-            UnityEngine.Debug.Log("No hay espacio para el clima");
-
         if (toInvoke != null)
         {
-            GameManager.gameManager.InvokeACard(toInvoke, "S");
+            GameManager.gameManager.InvokeACard(toInvoke, RowTypes.Sigee);
             return;
         }
-
-        else
-            UnityEngine.Debug.Log("No se encontaron cartas de Clima para la fila S en el deck del jugador " + ActivePlayer.PlayerName);
-
     }
 }
 
@@ -429,7 +377,7 @@ public class CloseBondEffect : Effect
                 foreach (var unityCard in cardList)
                 {
                     if (unityCard.Name == card.Name && unityCard is SilverUnityCard silverUnityCard)
-                        silverUnityCard.ActualPower = silverUnityCard.ActualPower * n;
+                        silverUnityCard.ActualPower *= n;
                 }
             }
         }

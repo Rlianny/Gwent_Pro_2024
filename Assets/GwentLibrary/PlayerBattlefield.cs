@@ -7,9 +7,6 @@ using Unity.VisualScripting;
 
 public class PlayerBattlefield
 {
-    public List<UnityCard> MeleeRow { get; private set; } = new();
-    public List<UnityCard> RangedRow { get; private set; } = new();
-    public List<UnityCard> SigeeRow { get; private set; } = new();
     public List<UnityCard>[] Battlefield { get; private set; } = new List<UnityCard>[3];
     public IncreaseCard[] IncreaseColumn { get; private set; } = new IncreaseCard[3];
     public static WeatherCard[] WeatherRow { get; private set; } = new WeatherCard[3];
@@ -17,19 +14,20 @@ public class PlayerBattlefield
     public int RangedRowScore { get; private set; }
     public int SigeeRowScore { get; private set; }
     public int TotalScore { get; private set; }
-    public Dictionary<string, int> RowCorrespondency { get; private set; } = new();
+    public static Dictionary<RowTypes, int> RowCorrespondency { get; private set; } = new()
+    {
+        {RowTypes.Melee, 0},
+        {RowTypes.Ranged, 1},
+        {RowTypes.Sigee, 2},
+    };
 
     public PlayerBattlefield()
     {
-        Battlefield[0] = MeleeRow;
-        Battlefield[1] = RangedRow;
-        Battlefield[2] = SigeeRow;
+        Battlefield[0] = new();
+        Battlefield[1] = new();
+        Battlefield[2] = new();
 
         UpdateBattlefieldInfo();
-
-        RowCorrespondency.Add("M", 0);
-        RowCorrespondency.Add("R", 1);
-        RowCorrespondency.Add("S", 2);
     }
 
     /// <summary>
@@ -154,15 +152,13 @@ public class PlayerBattlefield
     /// </summary>
     public void ClearBattelfield()
     {
-        Battlefield[0] = null;
-        Battlefield[1] = null;
-        Battlefield[2] = null;
-        Battlefield[0] = new();
-        Battlefield[1] = new();
-        Battlefield[2] = new();
+        for (int i = 0; i <= 2; i++)
+        {
+            Battlefield[i] = null;
+            Battlefield[i] = new();
+        }
         ClearWeatherRow();
-        IncreaseColumn = null;
-        IncreaseColumn = new IncreaseCard[3];
+        ClearIncreaseRow();
     }
 
 
@@ -174,5 +170,11 @@ public class PlayerBattlefield
     {
         WeatherRow = null;
         WeatherRow = new WeatherCard[3];
+    }
+
+    public void ClearIncreaseRow()
+    {
+        IncreaseColumn = null;
+        IncreaseColumn = new IncreaseCard[3];
     }
 }

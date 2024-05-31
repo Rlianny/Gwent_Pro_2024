@@ -108,6 +108,9 @@ public class UIHand : MonoBehaviour
         }
     }
 
+    
+    
+
     async public void DrawCardUI(Card card)
     {
         await Task.Delay(400);

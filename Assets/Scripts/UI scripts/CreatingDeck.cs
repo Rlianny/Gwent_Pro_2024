@@ -81,15 +81,23 @@ public class CreatingDeck : MonoBehaviour
 
             foreach (Card card in cardsCollection.Collection)
             {
-                if (card.Type != "Líder")
+                if (card.Type != CardTypes.Líder)
                 {
 
-                    if (type == "Carta de Aumento" || type == "Carta de Clima")
+                    if (type == "Carta de Aumento")
                     {
-                        if (card.Type == type && (card.Faction == "Neutral" || card.Faction == actualDeck.Faction))
+                        if (card.Type == CardTypes.Carta_de_Aumento)
                             cardsToShow.Add(card);
 
-                        StringToChangeCollection.text = type;
+                        StringToChangeDeck.text = type;
+                    }
+
+                    if (type == "Carta de Clima")
+                    {
+                        if (card.Type == CardTypes.Carta_de_Clima)
+                            cardsToShow.Add(card);
+
+                        StringToChangeDeck.text = type;
                     }
 
                     if (type == "All")
@@ -102,7 +110,7 @@ public class CreatingDeck : MonoBehaviour
 
                     if (type == "Melee")
                     {
-                        if (card is UnityCard unityCard && unityCard.Row.Contains("M") && (card.Faction == "Neutral" || card.Faction == actualDeck.Faction))
+                        if (card is UnityCard unityCard && unityCard.Row.Contains(RowTypes.Melee) && (card.Faction == "Neutral" || card.Faction == actualDeck.Faction))
                             cardsToShow.Add(card);
 
                         StringToChangeCollection.text = "Ataque cuerpo a cuerpo";
@@ -110,7 +118,7 @@ public class CreatingDeck : MonoBehaviour
 
                     if (type == "Ranged")
                     {
-                        if (card is UnityCard unityCard && unityCard.Row.Contains("R") && (card.Faction == "Neutral" || card.Faction == actualDeck.Faction))
+                        if (card is UnityCard unityCard && unityCard.Row.Contains(RowTypes.Ranged) && (card.Faction == "Neutral" || card.Faction == actualDeck.Faction))
                             cardsToShow.Add(card);
 
                         StringToChangeCollection.text = "Ataque a distancia";
@@ -118,7 +126,7 @@ public class CreatingDeck : MonoBehaviour
 
                     if (type == "Sigee")
                     {
-                        if (card is UnityCard unityCard && unityCard.Row.Contains("S") && (card.Faction == "Neutral" || card.Faction == actualDeck.Faction))
+                        if (card is UnityCard unityCard && unityCard.Row.Contains(RowTypes.Sigee) && (card.Faction == "Neutral" || card.Faction == actualDeck.Faction))
                             cardsToShow.Add(card);
 
                         StringToChangeCollection.text = "Asedio";
@@ -156,10 +164,17 @@ public class CreatingDeck : MonoBehaviour
             foreach (Card card in actualDeck.CardDeck)
             {
 
-
-                if (type == "Carta de Aumento" || type == "Carta de Clima")
+                if (type == "Carta de Aumento")
                 {
-                    if (card.Type == type)
+                    if (card.Type == CardTypes.Carta_de_Aumento)
+                        cardsToShow.Add(card);
+
+                    StringToChangeDeck.text = type;
+                }
+
+                if (type == "Carta de Clima")
+                {
+                    if (card.Type == CardTypes.Carta_de_Clima)
                         cardsToShow.Add(card);
 
                     StringToChangeDeck.text = type;
@@ -175,7 +190,7 @@ public class CreatingDeck : MonoBehaviour
 
                 if (type == "Melee")
                 {
-                    if (card is UnityCard unityCard && unityCard.Row.Contains("M"))
+                    if (card is UnityCard unityCard && unityCard.Row.Contains(RowTypes.Melee))
                         cardsToShow.Add(card);
 
                     StringToChangeDeck.text = "Ataque cuerpo a cuerpo";
@@ -183,7 +198,7 @@ public class CreatingDeck : MonoBehaviour
 
                 if (type == "Ranged")
                 {
-                    if (card is UnityCard unityCard && unityCard.Row.Contains("R"))
+                    if (card is UnityCard unityCard && unityCard.Row.Contains(RowTypes.Ranged))
                         cardsToShow.Add(card);
 
                     StringToChangeDeck.text = "Ataque a Distancia";
@@ -191,7 +206,7 @@ public class CreatingDeck : MonoBehaviour
 
                 if (type == "Sigee")
                 {
-                    if (card is UnityCard unityCard && unityCard.Row.Contains("S"))
+                    if (card is UnityCard unityCard && unityCard.Row.Contains(RowTypes.Sigee))
                         cardsToShow.Add(card);
 
                     StringToChangeDeck.text = "Asedio";
@@ -274,5 +289,9 @@ public class CreatingDeck : MonoBehaviour
         }
     }
 
+    public void SaveDeck()
+    {
+        GameData.CreatePlayer();
+    }
 
 }

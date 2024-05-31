@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class InventorySlots : MonoBehaviour
 {
     public TextMeshProUGUI CardCounter;
-    // Update is called once per frame
+    
     void Update()
     {
         if (transform.parent.parent.name == "DeckContainer" && this.transform.childCount != 0)      // si el slot muestra las cartas de la lista de cartas del deck y no está vacío

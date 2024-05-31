@@ -7,11 +7,10 @@ using System.Threading.Tasks;
 // using UnityEditor.ShortcutManagement;
 using Unity.VisualScripting;
 using UnityEngine.SceneManagement;
+using UnityEditor;
 
 public class UIVisual : MonoBehaviour, IObserver
 {
-    [SerializeField] Subject gameManager;
-
     public GameObject CardPrefab;
 
     // Player1
@@ -77,16 +76,18 @@ public class UIVisual : MonoBehaviour, IObserver
 
     private void OnEnable()
     {
-        gameManager.AddObserver(this);
+        //GameManager.gameManager.AddObserver(this);
     }
 
     private void OnDisable()
     {
-        gameManager.RemoveObserver(this);
+        GameManager.gameManager.RemoveObserver(this);
     }
 
     void Start()
     {
+        GameManager.gameManager.AddObserver(this);
+
         Information.gameObject.SetActive(false);
         SmogForDecoyEvent.gameObject.SetActive(false);
 
@@ -168,17 +169,7 @@ public class UIVisual : MonoBehaviour, IObserver
                 return;
 
             case GameEvents.DrawCard:
-                if (GameManager.Player1.PlayerHand.PlayerHand.Count <= 10)
-                    Player1HandScript.DrawCardUI(GameManager.Player1.PlayerHand.PlayerHand[GameManager.Player1.PlayerHand.PlayerHand.Count - 1]);
-
-                if (GameManager.Player1.PlayerHand.PlayerHand.Count <= 10)
-                    Player1HandScript.DrawCardUI(GameManager.Player1.PlayerHand.PlayerHand[GameManager.Player1.PlayerHand.PlayerHand.Count - 2]);
-
-                if (GameManager.Player2.PlayerHand.PlayerHand.Count <= 10)
-                    Player2HandScript.DrawCardUI(GameManager.Player2.PlayerHand.PlayerHand[GameManager.Player2.PlayerHand.PlayerHand.Count - 1]);
-
-                if (GameManager.Player2.PlayerHand.PlayerHand.Count <= 10)
-                    Player2HandScript.DrawCardUI(GameManager.Player2.PlayerHand.PlayerHand[GameManager.Player2.PlayerHand.PlayerHand.Count - 2]);
+                DrawCard();
                 return;
 
             case GameEvents.Invoke:
@@ -199,175 +190,126 @@ public class UIVisual : MonoBehaviour, IObserver
         }
     }
 
+    private void DrawCard()
+    {
+        if (GameManager.Player1.PlayerHand.PlayerHand.Count <= 10)
+            Player1HandScript.DrawCardUI(GameManager.Player1.PlayerHand.PlayerHand[GameManager.Player1.PlayerHand.PlayerHand.Count - 1]);
+
+        if (GameManager.Player1.PlayerHand.PlayerHand.Count <= 10)
+            Player1HandScript.DrawCardUI(GameManager.Player1.PlayerHand.PlayerHand[GameManager.Player1.PlayerHand.PlayerHand.Count - 2]);
+
+        if (GameManager.Player2.PlayerHand.PlayerHand.Count <= 10)
+            Player2HandScript.DrawCardUI(GameManager.Player2.PlayerHand.PlayerHand[GameManager.Player2.PlayerHand.PlayerHand.Count - 1]);
+
+        if (GameManager.Player2.PlayerHand.PlayerHand.Count <= 10)
+            Player2HandScript.DrawCardUI(GameManager.Player2.PlayerHand.PlayerHand[GameManager.Player2.PlayerHand.PlayerHand.Count - 2]);
+    }
+
     public void AbortingDecoyEvent()
     {
         UpdateScores();
         UpdateBattlefieldUI();
 
         if (GameManager.Player1.IsActive == true && GameManager.Player2.HasPassed == false)
-        {
             StartCoroutine(ShowMessage($"Turno de {GameManager.Player2.PlayerName}"));
-        }
 
         else if (GameManager.Player2.IsActive == true && GameManager.Player1.HasPassed == false)
-        {
             StartCoroutine(ShowMessage($"Turno de {GameManager.Player1.PlayerName}"));
-        }
     }
+
     public void DecoyEventEnd(Card card)
     {
         UpdateScores();
         UpdateBattlefieldUI();
 
         if (GameManager.Player1.IsActive == true && GameManager.Player2.HasPassed == false)
-        {
-            var newCard = Instantiate(CardPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-            newCard.transform.SetParent(Player1HandScript.Hand.GetComponent<HorizontalLayoutGroup>().transform);
-            UICard ui = newCard.GetComponent<UICard>();
-            ui.PrintCard(card);
-            for (int i = 0; i < DecoyEventCardsShower.transform.childCount; i++)
-            {
-                GameObject cardToClear = DecoyEventCardsShower.transform.GetChild(i).gameObject;
-                Destroy(cardToClear);
-            }
-            SmogForDecoyEvent.gameObject.SetActive(false);
-            StartCoroutine(ShowMessage($"Turno de {GameManager.Player2.PlayerName}"));
-        }
+            InternalDecoyEventEnd(card, Player1HandScript, GameManager.Player2);
 
         if (GameManager.Player2.IsActive == true && GameManager.Player1.HasPassed == false)
+            InternalDecoyEventEnd(card, Player2HandScript, GameManager.Player1);
+    }
+
+    private void InternalDecoyEventEnd(Card card, UIHand hand, Player nextPlayer)
+    {
+        var newCard = Instantiate(CardPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+        newCard.transform.SetParent(hand.Hand.GetComponent<HorizontalLayoutGroup>().transform);
+        newCard.GetComponent<UICard>().PrintCard(card);
+        for (int i = 0; i < DecoyEventCardsShower.transform.childCount; i++)
         {
-            var newCard = Instantiate(CardPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-            newCard.transform.SetParent(Player2HandScript.Hand.GetComponent<HorizontalLayoutGroup>().transform);
-            UICard ui = newCard.GetComponent<UICard>();
-            ui.PrintCard(card);
-            for (int i = 0; i < DecoyEventCardsShower.transform.childCount; i++)
-            {
-                GameObject cardToClear = DecoyEventCardsShower.transform.GetChild(i).gameObject;
-                Destroy(cardToClear);
-            }
-            SmogForDecoyEvent.gameObject.SetActive(false);
-            StartCoroutine(ShowMessage($"Turno de {GameManager.Player1.PlayerName}"));
+            GameObject cardToClear = DecoyEventCardsShower.transform.GetChild(i).gameObject;
+            Destroy(cardToClear);
         }
+        SmogForDecoyEvent.gameObject.SetActive(false);
+        StartCoroutine(ShowMessage($"Turno de {nextPlayer.PlayerName}"));
+
     }
     public void DecoyEventInit()
     {
-        List<SilverUnityCard> CardsInDecoyRow = new();
 
         if (GameManager.Player1.IsActive == true)
+            InternalDecoyEventInit(GameManager.Player1, new());
+        else
+            InternalDecoyEventInit(GameManager.Player2, new());
+    }
+
+    private void InternalDecoyEventInit(Player activePlayer, List<SilverUnityCard> CardsInDecoyRow)
+    {
+        List<UnityCard> Row = null;
+
+        foreach (List<UnityCard> cardList in activePlayer.Battlefield.Battlefield)
         {
-            List<UnityCard> Row = null;
-
-            foreach (List<UnityCard> cardList in GameManager.Player1.Battlefield.Battlefield)
+            foreach (UnityCard unityCard in cardList)
             {
-                foreach (UnityCard unityCard in cardList)
-                {
-                    if (unityCard.Type == "Señuelo")
-                        Row = cardList;
-                }
+                if (unityCard.Type == CardTypes.Señuelo)
+                    Row = cardList;
             }
+        }
 
-            if (Row != null)
+        if (Row != null)
+        {
+            if (Row.Count == 1)
             {
-                if (Row.Count == 1)
-                {
-                    GameManager.gameManager.AbortDecoyEvent();
-                }
-
-                else
-                {
-                    foreach (UnityCard unityCard in Row)
-                    {
-                        if (unityCard is SilverUnityCard silverUnityCard)
-                            CardsInDecoyRow.Add(silverUnityCard);
-                    }
-
-                    if (CardsInDecoyRow.Count > 0)
-                    {
-                        foreach (SilverUnityCard silverUnityCard in CardsInDecoyRow)
-                        {
-                            Debug.Log(CardsInDecoyRow.Count);
-                            var newCard = Instantiate(CardToPickPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-                            newCard.transform.SetParent(DecoyEventCardsShower.transform);
-                            UICard ui = newCard.GetComponent<UICard>();
-                            ui.PrintCard(silverUnityCard);
-                        }
-
-                    }
-
-                    else
-                    {
-                        GameManager.gameManager.AbortDecoyEvent();
-                        return;
-                    }
-
-                    SmogForDecoyEvent.gameObject.SetActive(true);
-
-                }
+                GameManager.gameManager.AbortDecoyEvent();
             }
 
             else
             {
-                GameManager.gameManager.AbortDecoyEvent();
+                foreach (UnityCard unityCard in Row)
+                {
+                    if (unityCard is SilverUnityCard silverUnityCard)
+                        CardsInDecoyRow.Add(silverUnityCard);
+                }
+
+                if (CardsInDecoyRow.Count > 0)
+                {
+                    foreach (SilverUnityCard silverUnityCard in CardsInDecoyRow)
+                    {
+                        Debug.Log(CardsInDecoyRow.Count);
+                        var newCard = Instantiate(CardToPickPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+                        newCard.transform.SetParent(DecoyEventCardsShower.transform);
+                        UICard ui = newCard.GetComponent<UICard>();
+                        ui.PrintCard(silverUnityCard);
+                    }
+
+                }
+
+                else
+                {
+                    GameManager.gameManager.AbortDecoyEvent();
+                    return;
+                }
+
+                SmogForDecoyEvent.gameObject.SetActive(true);
+
             }
         }
 
         else
         {
-            List<UnityCard> Row = null;
-
-            foreach (List<UnityCard> cardList in GameManager.Player2.Battlefield.Battlefield)
-            {
-                foreach (UnityCard unityCard in cardList)
-                {
-                    if (unityCard.Type == "Señuelo")
-                        Row = cardList;
-                }
-            }
-
-            if (Row != null)
-            {
-                if (Row.Count == 1)
-                {
-                    GameManager.gameManager.AbortDecoyEvent();
-                }
-
-                else
-                {
-                    foreach (UnityCard unityCard in Row)
-                    {
-                        if (unityCard is SilverUnityCard silverUnityCard)
-                            CardsInDecoyRow.Add(silverUnityCard);
-                    }
-
-                    if (CardsInDecoyRow.Count != 0)
-                    {
-                        foreach (SilverUnityCard silverUnityCard in CardsInDecoyRow)
-                        {
-                            Debug.Log(CardsInDecoyRow.Count);
-                            var newCard = Instantiate(CardToPickPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-                            newCard.transform.SetParent(DecoyEventCardsShower.transform);
-                            UICard ui = newCard.GetComponent<UICard>();
-                            ui.PrintCard(silverUnityCard);
-                        }
-
-                    }
-
-                    else
-                    {
-                        GameManager.gameManager.AbortDecoyEvent();
-                        return;
-                    }
-
-                    SmogForDecoyEvent.gameObject.SetActive(true);
-                }
-            }
-
-            else
-            {
-                GameManager.gameManager.AbortDecoyEvent();
-            }
+            GameManager.gameManager.AbortDecoyEvent();
         }
     }
+
 
     private void InvokeUI(Card card)
     {
@@ -384,43 +326,22 @@ public class UIVisual : MonoBehaviour, IObserver
         {
             switch (weatherCard.Row)
             {
-                case "M":
-                    var newCard = Instantiate(CardPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-                    newCard.transform.SetParent(WeatherM.transform);
-                    newCard.transform.position = WeatherM.transform.position;
-                    UICard ui = newCard.GetComponent<UICard>();
-                    ui.PrintCard(card);
-
-                    WeatherEffect2M.gameObject.SetActive(true);
-                    WeatherEffect2M.raycastTarget = false;
-                    WeatherEffect1M.gameObject.SetActive(true);
-                    WeatherEffect1M.raycastTarget = false;
+                case RowTypes.Melee:
+                    InternalInvokeUI(card, WeatherM);
+                    ShowWeatherInRow(WeatherEffect2M);
+                    ShowWeatherInRow(WeatherEffect1M);
                     return;
 
-                case "R":
-                    newCard = Instantiate(CardPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-                    newCard.transform.SetParent(WeatherR.transform);
-                    newCard.transform.position = WeatherR.transform.position;
-                    ui = newCard.GetComponent<UICard>();
-                    ui.PrintCard(card);
-
-                    WeatherEffect2R.gameObject.SetActive(true);
-                    WeatherEffect2R.raycastTarget = false;
-                    WeatherEffect1R.gameObject.SetActive(true);
-                    WeatherEffect1R.raycastTarget = false;
+                case RowTypes.Ranged:
+                    InternalInvokeUI(card, WeatherR);
+                    ShowWeatherInRow(WeatherEffect2R);
+                    ShowWeatherInRow(WeatherEffect1R);
                     return;
 
-                case "S":
-                    newCard = Instantiate(CardPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-                    newCard.transform.SetParent(WeatherS.transform);
-                    newCard.transform.position = WeatherS.transform.position;
-                    ui = newCard.GetComponent<UICard>();
-                    ui.PrintCard(card);
-
-                    WeatherEffect2S.gameObject.SetActive(true);
-                    WeatherEffect2S.raycastTarget = false;
-                    WeatherEffect1S.gameObject.SetActive(true);
-                    WeatherEffect1S.raycastTarget = false;
+                case RowTypes.Sigee:
+                    InternalInvokeUI(card, WeatherS);
+                    ShowWeatherInRow(WeatherEffect2S);
+                    ShowWeatherInRow(WeatherEffect1S);
                     return;
             }
         }
@@ -431,28 +352,14 @@ public class UIVisual : MonoBehaviour, IObserver
             {
                 switch (increaseCard.Row)
                 {
-                    case "M":
-                        var newCard = Instantiate(CardPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-                        newCard.transform.SetParent(IncreaseM1.transform);
-                        newCard.transform.position = IncreaseM1.transform.position;
-                        UICard ui = newCard.GetComponent<UICard>();
-                        ui.PrintCard(card);
-                        return;
+                    case RowTypes.Melee:
+                        InternalInvokeUI(card, IncreaseM1); return;
 
-                    case "R":
-                        newCard = Instantiate(CardPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-                        newCard.transform.SetParent(IncreaseR1.transform);
-                        newCard.transform.position = IncreaseR1.transform.position;
-                        ui = newCard.GetComponent<UICard>();
-                        ui.PrintCard(card);
-                        return;
+                    case RowTypes.Ranged:
+                        InternalInvokeUI(card, IncreaseR1); return;
 
-                    case "S":
-                        newCard = Instantiate(CardPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-                        newCard.transform.SetParent(IncreaseS1.transform);
-                        newCard.transform.position = IncreaseS1.transform.position;
-                        ui = newCard.GetComponent<UICard>();
-                        ui.PrintCard(card);
+                    case RowTypes.Sigee:
+                        InternalInvokeUI(card, IncreaseS1);
                         return;
                 }
             }
@@ -464,32 +371,32 @@ public class UIVisual : MonoBehaviour, IObserver
             {
                 switch (increaseCard.Row)
                 {
-                    case "M":
-                        var newCard = Instantiate(CardPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-                        newCard.transform.SetParent(IncreaseM2.transform);
-                        newCard.transform.position = IncreaseM2.transform.position;
-                        UICard ui = newCard.GetComponent<UICard>();
-                        ui.PrintCard(card);
-                        return;
+                    case RowTypes.Melee:
+                        InternalInvokeUI(card, IncreaseM2); return;
 
-                    case "R":
-                        newCard = Instantiate(CardPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-                        newCard.transform.SetParent(IncreaseR2.transform);
-                        newCard.transform.position = IncreaseR2.transform.position;
-                        ui = newCard.GetComponent<UICard>();
-                        ui.PrintCard(card);
-                        return;
+                    case RowTypes.Ranged:
+                        InternalInvokeUI(card, IncreaseR2); return;
 
-                    case "S":
-                        newCard = Instantiate(CardPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-                        newCard.transform.SetParent(IncreaseS2.transform);
-                        newCard.transform.position = IncreaseS2.transform.position;
-                        ui = newCard.GetComponent<UICard>();
-                        ui.PrintCard(card);
+                    case RowTypes.Sigee:
+                        InternalInvokeUI(card, IncreaseS2);
                         return;
                 }
             }
         }
+    }
+
+    private void InternalInvokeUI(Card card, HorizontalLayoutGroup place)
+    {
+        var newCard = Instantiate(CardPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+        newCard.transform.SetParent(place.transform);
+        newCard.transform.position = place.transform.position;
+        newCard.GetComponent<UICard>().PrintCard(card);
+    }
+
+    private void ShowWeatherInRow(Image weatherImage)
+    {
+        weatherImage.gameObject.SetActive(true);
+        weatherImage.raycastTarget = false;
     }
 
     private void UpdateScores()
@@ -570,14 +477,6 @@ public class UIVisual : MonoBehaviour, IObserver
         WeatherEffect2S.gameObject.SetActive(false);
     }
 
-    IEnumerator DrawOnNewRound()
-    {
-        yield return new WaitForSeconds(0.1f);
-
-        Player1HandScript.DrawCardUI(GameManager.Player1.PlayerHand.PlayerHand[GameManager.Player1.PlayerHand.PlayerHand.Count - 1]);
-        Player2HandScript.DrawCardUI(GameManager.Player2.PlayerHand.PlayerHand[GameManager.Player2.PlayerHand.PlayerHand.Count - 1]);
-    }
-
     private void ClearRowUI(HorizontalLayoutGroup toClear)
     {
         for (int i = 0; i < toClear.transform.childCount; i++)
@@ -585,19 +484,18 @@ public class UIVisual : MonoBehaviour, IObserver
             GameObject card = toClear.transform.GetChild(i).gameObject;
 
             if (toClear.transform.parent.parent.name == "Player1")
-            {
-                LeanTween.move(card, Player1Cemetery.transform, 1f)
-                .setOnComplete(() => Destroy(card));
-                ShowImage(Player1Cemetery);
-            }
+                SendToCemetery(card, Player1Cemetery);
 
             if (toClear.transform.parent.parent.name == "Player2")
-            {
-                LeanTween.move(card, Player2Cemetery.transform, 1f)
-                .setOnComplete(() => Destroy(card));
-                ShowImage(Player2Cemetery);
-            }
+                SendToCemetery(card, Player2Cemetery);
         }
+    }
+
+    private void SendToCemetery(GameObject card, Image cemeteryImage)
+    {
+        LeanTween.move(card, cemeteryImage.transform, 1f)
+                .setOnComplete(() => Destroy(card));
+        ShowImage(cemeteryImage);
     }
 
     private void ClearSlot(HorizontalLayoutGroup toClear)
@@ -607,23 +505,13 @@ public class UIVisual : MonoBehaviour, IObserver
             GameObject card = toClear.transform.GetChild(i).gameObject;
 
             if (toClear.transform.parent.parent.name == "Player1")
-            {
-                LeanTween.move(card, Player1Cemetery.transform, 1f)
-                .setOnComplete(() => Destroy(card));
-                ShowImage(Player1Cemetery);
-            }
+                SendToCemetery(card, Player1Cemetery);
 
             if (toClear.transform.parent.parent.name == "Player2")
-            {
-                LeanTween.move(card, Player2Cemetery.transform, 1f)
-                .setOnComplete(() => Destroy(card));
-                ShowImage(Player2Cemetery);
-            }
+                SendToCemetery(card, Player2Cemetery);
 
             if (toClear.transform.parent.parent.name == "BattlefieldBoard")
-            {
                 Destroy(card);
-            }
         }
     }
 
@@ -680,29 +568,23 @@ public class UIVisual : MonoBehaviour, IObserver
 
             if (card.Name == "Lluvia de Plumbuses")
             {
-                WeatherEffect2M.gameObject.SetActive(true);
-                WeatherEffect2M.raycastTarget = false;
-                WeatherEffect1M.gameObject.SetActive(true);
-                WeatherEffect1M.raycastTarget = false;
+                ShowWeatherInRow(WeatherEffect2M);
+                ShowWeatherInRow(WeatherEffect1M);
             }
 
             if (card.Name == "Tormenta interdimensional")
             {
-                WeatherEffect2S.gameObject.SetActive(true);
-                WeatherEffect2S.raycastTarget = false;
-                WeatherEffect1S.gameObject.SetActive(true);
-                WeatherEffect1S.raycastTarget = false;
+                ShowWeatherInRow(WeatherEffect2S);
+                ShowWeatherInRow(WeatherEffect1S);
             }
 
             if (card.Name == "Granizo de portales")
             {
-                WeatherEffect2R.gameObject.SetActive(true);
-                WeatherEffect2R.raycastTarget = false;
-                WeatherEffect1R.gameObject.SetActive(true);
-                WeatherEffect1R.raycastTarget = false;
+                ShowWeatherInRow(WeatherEffect2R);
+                ShowWeatherInRow(WeatherEffect1R);
             }
 
-            if (card.Type == "Carta de Despeje" || card.EffectNumber == 12)
+            if (card.Type == CardTypes.Carta_de_Despeje || card.EffectNumber == 12)
             {
                 WeatherEffect1M.gameObject.SetActive(false);
                 WeatherEffect2M.gameObject.SetActive(false);
@@ -846,128 +728,34 @@ public class UIVisual : MonoBehaviour, IObserver
 
     private void UpdateBattlefieldUI()
     {
-        for (int i = 0; i < RowS1.transform.childCount; i++)
-        {
-            Card card = RowS1.transform.GetChild(i).GetComponent<UICard>().MotherCard;
-            if (card is SilverUnityCard silverUnityCard)
-            {
-                if (!GameManager.Player1.Battlefield.Battlefield[2].Contains(silverUnityCard))
-                {
-                    GameObject cardToDestroy = RowS1.transform.GetChild(i).gameObject;
-                    LeanTween.move(cardToDestroy, Player1Cemetery.transform, 1f)
-                    .setOnComplete(() => Destroy(cardToDestroy));
-                    ShowImage(Player1Cemetery);
-
-                    Debug.Log(card.Name + "ha sido enviado al cementerio");
-                }
-
-                else
-                    RowS1.transform.GetChild(i).GetComponent<UICard>().CardPower.text = silverUnityCard.ActualPower.ToString();
-
-            }
-        }
-
-        for (int i = 0; i < RowR1.transform.childCount; i++)
-        {
-            Card card = RowR1.transform.GetChild(i).GetComponent<UICard>().MotherCard;
-            if (card is SilverUnityCard silverUnityCard)
-            {
-                if (!GameManager.Player1.Battlefield.Battlefield[1].Contains(silverUnityCard))
-                {
-                    GameObject cardToDestroy = RowR1.transform.GetChild(i).gameObject;
-                    LeanTween.move(cardToDestroy, Player1Cemetery.transform, 1f)
-                    .setOnComplete(() => Destroy(cardToDestroy));
-                    ShowImage(Player1Cemetery);
-
-                    Debug.Log(card.Name + "ha sido enviado al cementerio");
-                }
-
-                else
-                    RowR1.transform.GetChild(i).GetComponent<UICard>().CardPower.text = silverUnityCard.ActualPower.ToString();
-            }
-        }
-
-        for (int i = 0; i < RowM1.transform.childCount; i++)
-        {
-            Card card = RowM1.transform.GetChild(i).GetComponent<UICard>().MotherCard;
-            if (card is SilverUnityCard silverUnityCard)
-            {
-                if (!GameManager.Player1.Battlefield.Battlefield[0].Contains(silverUnityCard))
-                {
-                    GameObject cardToDestroy = RowM1.transform.GetChild(i).gameObject;
-                    LeanTween.move(cardToDestroy, Player1Cemetery.transform, 1f)
-                    .setOnComplete(() => Destroy(cardToDestroy));
-                    ShowImage(Player1Cemetery);
-
-                    Debug.Log(card.Name + "ha sido enviado al cementerio");
-                }
-
-                else
-                    RowM1.transform.GetChild(i).GetComponent<UICard>().CardPower.text = silverUnityCard.ActualPower.ToString();
-            }
-        }
-
-        for (int i = 0; i < RowS2.transform.childCount; i++)
-        {
-            Card card = RowS2.transform.GetChild(i).GetComponent<UICard>().MotherCard;
-            if (card is SilverUnityCard silverUnityCard)
-            {
-                if (!GameManager.Player2.Battlefield.Battlefield[2].Contains(silverUnityCard))
-                {
-                    GameObject cardToDestroy = RowS2.transform.GetChild(i).gameObject;
-                    LeanTween.move(cardToDestroy, Player2Cemetery.transform, 1f)
-                    .setOnComplete(() => Destroy(cardToDestroy));
-                    ShowImage(Player2Cemetery);
-
-                    Debug.Log(card.Name + "ha sido enviado al cementerio");
-                }
-
-                else
-                    RowS2.transform.GetChild(i).GetComponent<UICard>().CardPower.text = silverUnityCard.ActualPower.ToString();
-            }
-        }
-
-        for (int i = 0; i < RowR2.transform.childCount; i++)
-        {
-            Card card = RowR2.transform.GetChild(i).GetComponent<UICard>().MotherCard;
-            if (card is SilverUnityCard silverUnityCard)
-            {
-                if (!GameManager.Player2.Battlefield.Battlefield[1].Contains(silverUnityCard))
-                {
-                    GameObject cardToDestroy = RowR2.transform.GetChild(i).gameObject;
-                    LeanTween.move(cardToDestroy, Player2Cemetery.transform, 1f)
-                    .setOnComplete(() => Destroy(cardToDestroy));
-                    ShowImage(Player2Cemetery);
-
-                    Debug.Log(card.Name + "ha sido enviado al cementerio");
-                }
-
-                else
-                    RowR2.transform.GetChild(i).GetComponent<UICard>().CardPower.text = silverUnityCard.ActualPower.ToString();
-            }
-        }
-
-        for (int i = 0; i < RowM2.transform.childCount; i++)
-        {
-            Card card = RowM2.transform.GetChild(i).GetComponent<UICard>().MotherCard;
-            if (card is SilverUnityCard silverUnityCard)
-            {
-                if (!GameManager.Player2.Battlefield.Battlefield[0].Contains(silverUnityCard))
-                {
-                    GameObject cardToDestroy = RowM2.transform.GetChild(i).gameObject;
-                    LeanTween.move(cardToDestroy, Player2Cemetery.transform, 1f)
-                    .setOnComplete(() => Destroy(cardToDestroy));
-                    ShowImage(Player2Cemetery);
-
-                    Debug.Log(card.Name + "ha sido enviado al cementerio");
-                }
-
-                else
-                    RowM2.transform.GetChild(i).GetComponent<UICard>().CardPower.text = silverUnityCard.ActualPower.ToString();
-            }
-        }
+        UpdateBattlefieldRowUI(RowS1, GameManager.Player1, 2);
+        UpdateBattlefieldRowUI(RowR1, GameManager.Player1, 1);
+        UpdateBattlefieldRowUI(RowM1, GameManager.Player1, 0);
+        UpdateBattlefieldRowUI(RowM2, GameManager.Player2, 0);
+        UpdateBattlefieldRowUI(RowR2, GameManager.Player2, 1);
+        UpdateBattlefieldRowUI(RowS2, GameManager.Player2, 2);
 
         Debug.Log("El campo ha sido actualizado");
+    }
+
+    private void UpdateBattlefieldRowUI(HorizontalLayoutGroup rowToClear, Player playerBeingUpdated, int RowCorrespondency)
+    {
+        for (int i = 0; i < rowToClear.transform.childCount; i++)
+        {
+            Card card = rowToClear.transform.GetChild(i).GetComponent<UICard>().MotherCard;
+            if (card is SilverUnityCard silverUnityCard)
+            {
+                if (!playerBeingUpdated.Battlefield.Battlefield[RowCorrespondency].Contains(silverUnityCard))
+                {
+                    GameObject cardToDestroy = rowToClear.transform.GetChild(i).gameObject;
+                    SendToCemetery(cardToDestroy, Player2Cemetery);
+                    Debug.Log(card.Name + "ha sido enviado al cementerio");
+                }
+
+                else
+                    rowToClear.transform.GetChild(i).GetComponent<UICard>().CardPower.text = silverUnityCard.ActualPower.ToString();
+            }
+        }
     }
 }
 

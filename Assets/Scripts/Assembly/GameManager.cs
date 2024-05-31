@@ -12,7 +12,12 @@ public class GameManager : Subject
     public static Player Player1;       // Jugador1
     public static Player Player2;       // Jugador2
 
-    void Start()
+    public static GameManager AwakeManager() 
+    {
+        return new GameManager();
+    }
+
+    private GameManager()
     {
         gameManager = this;
 
@@ -22,172 +27,116 @@ public class GameManager : Subject
         PickPLayerAsFirst(Player1, Player2);
 
         if (Player1.IsActive == true)
-        {
             Debug.Log($"{Player1.PlayerName} empieza");
-        }
+        
 
         if (Player2.IsActive == true)
-        {
             Debug.Log($"{Player2.PlayerName} empieza");
-        }
 
         NotifyObservers(GameEvents.Start);
-
     }
 
-    void Update()
-    {
-
-    }
-
-    public void PlayACard(Card card, string row)
+    public void PlayACard(Card card, RowTypes row)
     {
         if (Player1.IsActive == true)
-        {
-            Player1.DragAndDropMovement(Player1, Player2, card, row);
-            Debug.Log($"{Player1.PlayerName} ha movido la carta {card.Name} a la fila {row}");
+            InternalPlayACard(Player1, Player2, card, row);
 
-            if (card.Type == "Señuelo")
-            {
-                NotifyObservers(GameEvents.DecoyEventStart);
-            }
+        else
+            InternalPlayACard(Player2, Player1, card, row);
 
-            else
-            {
-                NotifyObservers(GameEvents.Summon, card);
-                ChangeTurn(Player1, Player2);
-            }
-        }
+    }
 
+    private void InternalPlayACard(Player activePlayer, Player rivalPLayer, Card card, RowTypes row)
+    {
+        activePlayer.DragAndDropMovement(activePlayer, rivalPLayer, card, row);
+        Debug.Log($"{activePlayer.PlayerName} ha movido la carta {card.Name} a la fila {row}");
+
+        if (card.Type == CardTypes.Señuelo)
+            NotifyObservers(GameEvents.DecoyEventStart);
 
         else
         {
-            Player2.DragAndDropMovement(Player2, Player1, card, row);
-            Debug.Log($"{Player2.PlayerName} ha movido la carta {card.Name} a la fila {row}");
-
-            if (card.Type == "Señuelo")
-            {
-                NotifyObservers(GameEvents.DecoyEventStart);
-            }
-
-            else
-            {
-                NotifyObservers(GameEvents.Summon, card);
-                ChangeTurn(Player2, Player1);
-            }
+            NotifyObservers(GameEvents.Summon, card);
+            ChangeTurn(activePlayer, rivalPLayer);
         }
     }
 
     public void UseLeaderSkill()
     {
         if (Player1.IsActive == true)
-        {
-            Player1.UseLeaderSkill(Player1, Player2);
-            NotifyObservers(GameEvents.Summon, Player1.PlayerLeader);
-            Debug.Log($"{Player1.PlayerName} ha usado la habilidad del lider");
-            ChangeTurn(Player1, Player2);
-        }
+            InternalUseLeaderSkill(Player1, Player2);
 
         else
-        {
-            Player2.UseLeaderSkill(Player2, Player1);
-            NotifyObservers(GameEvents.Summon, Player2.PlayerLeader);
-            Debug.Log($"{Player2.PlayerName} ha usado la habilidad del lider");
-            ChangeTurn(Player2, Player1);
-        }
-
+            InternalUseLeaderSkill(Player2, Player1);
     }
+
+    private void InternalUseLeaderSkill(Player activePlayer, Player rivalPlayer)
+    {
+        activePlayer.UseLeaderSkill(activePlayer, rivalPlayer);
+        NotifyObservers(GameEvents.Summon, activePlayer.PlayerLeader);
+        Debug.Log($"{activePlayer.PlayerName} ha usado la habilidad del lider");
+        ChangeTurn(activePlayer, rivalPlayer);
+    }
+
 
     public void PassTurn()
     {
         if (Player1.IsActive == true)
-        {
-            Player1.PassTurn();
-
-            if (Player2.HasPassed == false)
-            {
-                NotifyObservers(GameEvents.PassTurn);
-                Player2.StartTurn();
-            }
-
-            else
-                BothPLayersHasPassed();
-        }
+            InternalPassTurn(Player1, Player2);
 
         else if (Player2.IsActive == true)
+            InternalPassTurn(Player2, Player1);
+    }
+
+    private void InternalPassTurn(Player activePlayer, Player rivalPlayer)
+    {
+        activePlayer.PassTurn();
+
+        if (rivalPlayer.HasPassed == false)
         {
-            Player2.PassTurn();
-
-            if (Player1.HasPassed == false)
-            {
-                NotifyObservers(GameEvents.PassTurn);
-                Player1.StartTurn();
-            }
-
-            else
-                BothPLayersHasPassed();
+            NotifyObservers(GameEvents.PassTurn);
+            rivalPlayer.StartTurn();
         }
+
+        else
+            BothPLayersHasPassed();
     }
 
     public void FinishDecoyEvent(Card cardToSwap)
     {
         if (Player1.IsActive == true)
-        {
-            int pos = -1;
-            for (int i = 0; i < 3; i++)
-            {
-                foreach (UnityCard unity in Player1.Battlefield.Battlefield[i])
-                {
-                    if (unity.Type == "Señuelo")
-                    {
-                        pos = i;
-                    }
-                }
-            }
+            InternalFinishDecoyEvent(Player1, Player2, cardToSwap);
 
-            if (pos >= 0)
+        else
+            InternalFinishDecoyEvent(Player2, Player1, cardToSwap);
+    }
+
+    private void InternalFinishDecoyEvent(Player activePlayer, Player rivalPlayer, Card cardToSwap)
+    {
+        int pos = -1;
+        for (int i = 0; i < 3; i++)
+        {
+            foreach (UnityCard unity in activePlayer.Battlefield.Battlefield[i])
             {
-                if (cardToSwap is UnityCard unityCard)
+                if (unity.Type == CardTypes.Señuelo)
                 {
-                    Player1.Battlefield.Battlefield[pos].Remove(unityCard);
-                    Player1.PlayerHand.PlayerHand.Add(unityCard);
-                    if (unityCard is SilverUnityCard silverUnityCard)
-                        silverUnityCard.ActualPower = silverUnityCard.Power;
-                    Player1.Battlefield.UpdateBattlefieldInfo();
-                    Player2.Battlefield.UpdateBattlefieldInfo();
-                    NotifyObservers(GameEvents.DecoyEventFinish, unityCard);
-                    ChangeTurn(Player1, Player2);
+                    pos = i;
                 }
             }
         }
 
-        else
+        if (pos >= 0)
         {
-            int pos = -1;
-            for (int i = 0; i < 3; i++)
+            if (cardToSwap is UnityCard unityCard)
             {
-                foreach (UnityCard unity in Player2.Battlefield.Battlefield[i])
-                {
-                    if (unity.Type == "Señuelo")
-                    {
-                        pos = i;
-                    }
-                }
-            }
-
-            if (pos >= 0)
-            {
-                if (cardToSwap is UnityCard unityCard)
-                {
-                    Player2.Battlefield.Battlefield[pos].Remove(unityCard);
-                    Player2.PlayerHand.PlayerHand.Add(unityCard);
-                    if (unityCard is SilverUnityCard silverUnityCard)
-                        silverUnityCard.ActualPower = silverUnityCard.Power;
-                    Player1.Battlefield.UpdateBattlefieldInfo();
-                    Player2.Battlefield.UpdateBattlefieldInfo();
-                    NotifyObservers(GameEvents.DecoyEventFinish, unityCard);
-                    ChangeTurn(Player2, Player1);
-                }
+                activePlayer.Battlefield.Battlefield[pos].Remove(unityCard);
+                activePlayer.PlayerHand.PlayerHand.Add(unityCard);
+                if (unityCard is SilverUnityCard silverUnityCard)
+                    silverUnityCard.ActualPower = silverUnityCard.Power;
+                activePlayer.Battlefield.UpdateBattlefieldInfo();
+                rivalPlayer.Battlefield.UpdateBattlefieldInfo();
+                NotifyObservers(GameEvents.DecoyEventFinish, unityCard);
+                ChangeTurn(activePlayer, rivalPlayer);
             }
         }
     }
@@ -195,58 +144,52 @@ public class GameManager : Subject
     public void AbortDecoyEvent()
     {
         if (Player1.IsActive == true)
-        {
-            Player1.Battlefield.UpdateBattlefieldInfo();
-            Player2.Battlefield.UpdateBattlefieldInfo();
-            NotifyObservers(GameEvents.DecoyEventAbort);
-            ChangeTurn(Player1, Player2);
-        }
+            InternalAbortDecoyEvent(Player1, Player2);
 
         else
-        {
-            Player1.Battlefield.UpdateBattlefieldInfo();
-            Player2.Battlefield.UpdateBattlefieldInfo();
-            NotifyObservers(GameEvents.DecoyEventAbort);
-            ChangeTurn(Player2, Player1);
-        }
+            InternalAbortDecoyEvent(Player2, Player1);
     }
 
-    public void InvokeACard(Card card, string row)
+    private void InternalAbortDecoyEvent(Player activePlayer, Player rivalPlayer)
+    {
+        activePlayer.Battlefield.UpdateBattlefieldInfo();
+        rivalPlayer.Battlefield.UpdateBattlefieldInfo();
+        NotifyObservers(GameEvents.DecoyEventAbort);
+        ChangeTurn(activePlayer, rivalPlayer);
+    }
+
+    public void InvokeACard(Card card, RowTypes row)
     {
         if (Player1.IsActive == true)
-        {
-            InvokeMovement(Player1, Player2, card, row);
-            Debug.Log($"La carta {card.Name} ha sido invocada por {Player1.PlayerName}");
-            NotifyObservers(GameEvents.Invoke, card);
-            //ChangeTurn(Player1, Player2);
-        }
+            InternalInvokeACard(Player1, Player2, card, row);
 
         else
-        {
-            InvokeMovement(Player2, Player1, card, row);
-            Debug.Log($"La carta {card.Name} ha sido invocada por {Player2.PlayerName}");
-            NotifyObservers(GameEvents.Invoke, card);
-        }
+            InternalInvokeACard(Player2, Player1, card, row);
     }
 
-    public void InvokeMovement(Player activePlayer, Player rivalPlayer, Card card, string Row)
+    private void InternalInvokeACard(Player activePlayer, Player rivalPlayer, Card card, RowTypes row)
     {
-        if (Row == "M" || Row == "R" || Row == "S")
+        InvokeMovement(activePlayer, rivalPlayer, card, row);
+        Debug.Log($"La carta {card.Name} ha sido invocada por {activePlayer.PlayerName}");
+        NotifyObservers(GameEvents.Invoke, card);
+    }
+
+    private void InvokeMovement(Player activePlayer, Player rivalPlayer, Card card, RowTypes Row)
+    {
+        if (Row == RowTypes.Melee || Row == RowTypes.Ranged || Row == RowTypes.Sigee)
         {
             if (card is IncreaseCard increaseCard)
             {
-                activePlayer.Battlefield.IncreaseColumn[activePlayer.Battlefield.RowCorrespondency[Row]] = increaseCard;
-                Player1.PlayerHand.RemoveCardFromDeck(card);
-
+                activePlayer.Battlefield.IncreaseColumn[PlayerBattlefield.RowCorrespondency[Row]] = increaseCard;
+                activePlayer.PlayerHand.RemoveCardFromDeck(card);
                 activePlayer.Battlefield.UpdateBattlefieldInfo();
                 rivalPlayer.Battlefield.UpdateBattlefieldInfo();
             }
 
             if (card is WeatherCard weatherCard)
             {
-                PlayerBattlefield.WeatherRow[activePlayer.Battlefield.RowCorrespondency[Row]] = weatherCard;
-                Player1.PlayerHand.RemoveCardFromDeck(card);
-
+                PlayerBattlefield.WeatherRow[PlayerBattlefield.RowCorrespondency[Row]] = weatherCard;
+                activePlayer.PlayerHand.RemoveCardFromDeck(card);
                 activePlayer.Battlefield.UpdateBattlefieldInfo();
                 rivalPlayer.Battlefield.UpdateBattlefieldInfo();
             }
@@ -258,27 +201,24 @@ public class GameManager : Subject
         if (Player1.HasPassed == false || Player2.HasPassed == false)
         {
             if (Player1.IsActive == true)
-            {
-                if (Player2.HasPassed == false)
-                {
-                    Player1.FinishTurn();
-                    Player2.StartTurn();
-                }
-            }
+                InternalChangeTurn(Player1, Player2);
 
             else
-            {
-                if (Player1.HasPassed == false)
-                {
-                    Player2.FinishTurn();
-                    Player1.StartTurn();
-                }
-            }
+                InternalChangeTurn(Player2, Player1);
         }
 
         else
         {
             throw new ArgumentException("Turno no posible");
+        }
+    }
+
+    private void InternalChangeTurn(Player activePlayer, Player rivalPlayer)
+    {
+        if (activePlayer.HasPassed == false)
+        {
+            activePlayer.FinishTurn();
+            rivalPlayer.StartTurn();
         }
     }
 
@@ -288,15 +228,10 @@ public class GameManager : Subject
         int choice = random.Next(2);
 
         if (choice == 0)
-        {
             Player1.StartTurn();
-        }
 
         else
-        {
             Player2.StartTurn();
-        }
-
     }
 
     public void BothPLayersHasPassed()
@@ -320,61 +255,20 @@ public class GameManager : Subject
         {
             Player1.PlayerHand.DrawCard();
             Player2.PlayerHand.DrawCard();
-            //NotifyObservers(GameEvents.DrawCard);
 
             Player1.PlayerHand.DrawCard();
             Player2.PlayerHand.DrawCard();
             NotifyObservers(GameEvents.DrawCard);
-
-            for (int i = 0; i < Player1.PlayerHand.PlayerHand.Count; i++)
-            {
-                Debug.Log($"{Player1.PlayerName} tiene a la carta {Player1.PlayerHand.PlayerHand[i].Name} en la mano");
-            }
-
-            for (int i = 0; i < Player2.PlayerHand.PlayerHand.Count; i++)
-            {
-                Debug.Log($"{Player2.PlayerName} tiene a la carta {Player2.PlayerHand.PlayerHand[i].Name} en la mano");
-            }
         }
     }
 
     private void SetRoundWinner(Player Player1, Player Player2)
     {
         if (Player1.Battlefield.TotalScore > Player2.Battlefield.TotalScore)
-        {
-            Player1.AddVictory();
-
-            if (Player1.GamesWon == 2)
-            {
-                NotifyObservers(GameEvents.FinishGame);
-                GameOver = true;
-            }
-
-            else
-            {
-                Player1.NewRound();
-                Player2.NewRound();
-                Player1.StartTurn();
-            }
-        }
+            InternalSetRoundWinner(Player1, Player2);
 
         else if (Player2.Battlefield.TotalScore > Player1.Battlefield.TotalScore)
-        {
-            Player2.AddVictory();
-
-            if (Player2.GamesWon == 2)
-            {
-                NotifyObservers(GameEvents.FinishGame);
-                GameOver = true;
-            }
-
-            else
-            {
-                Player1.NewRound();
-                Player2.NewRound();
-                Player2.StartTurn();
-            }
-        }
+            InternalSetRoundWinner(Player2, Player1);
 
         else
         {
@@ -395,6 +289,24 @@ public class GameManager : Subject
                 PickPLayerAsFirst(Player1, Player2);
                 NotifyObservers(GameEvents.Start);
             }
+        }
+    }
+
+    private void InternalSetRoundWinner(Player winner, Player looser)
+    {
+        winner.AddVictory();
+
+        if (winner.GamesWon == 2)
+        {
+            NotifyObservers(GameEvents.FinishGame);
+            GameOver = true;
+        }
+
+        else
+        {
+            winner.NewRound();
+            looser.NewRound();
+            winner.StartTurn();
         }
     }
 

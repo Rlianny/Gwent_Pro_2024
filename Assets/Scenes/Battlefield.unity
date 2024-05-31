@@ -521,54 +521,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 7268214438383308772, guid: 74f662bdb98a6ddfba09b1b5ea7f5e7e, type: 3}
   m_PrefabInstance: {fileID: 1761147913}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &188359187
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 188359188}
-  - component: {fileID: 188359189}
-  m_Layer: 5
-  m_Name: GameManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &188359188
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 188359187}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1074858555}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 926.5, y: -465}
-  m_SizeDelta: {x: 20, y: 20}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &188359189
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 188359187}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ffde33956a2c398a6b1d0d76ac224c04, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &196801089
 GameObject:
   m_ObjectHideFlags: 0
@@ -923,9 +875,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 188359189}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: PassTurn
+      - m_Target: {fileID: 2077813712}
+        m_TargetAssemblyTypeName: ManagerActions, Assembly-CSharp
+        m_MethodName: Pass
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1106,7 +1058,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84198c475aca29e4caba2a692e279614, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CardType: R
+  CardType: 1
   Row: {fileID: 248913838}
   CardBeingDropped: {fileID: 0}
   Pop: {fileID: 8300000, guid: bff830be9083fa66083eb2c3dbdee157, type: 3}
@@ -2176,7 +2128,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cb21e77080d7f27b9a3c3b20f4de6da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameManager: {fileID: 188359189}
   PickleRick: {fileID: 8300000, guid: 58edd9e4198662ebfb027bd399374bc1, type: 3}
   DontHateThePlayer: {fileID: 8300000, guid: 2c7af0567d8ff8cfa8eb251b6c8bc26e, type: 3}
   EvilMortySpeech: {fileID: 8300000, guid: 672250ef1243fcd7cb37d495b9a142ad, type: 3}
@@ -2208,7 +2159,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75b14e7d7547cdf37848a07ddfacfbb3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameManager: {fileID: 188359189}
   CardPrefab: {fileID: 1771059711689953786, guid: 2997b6ed487f51d1abf6fb29ce8de53e, type: 3}
   Player1Name: {fileID: 952120459}
   Player1Faction: {fileID: 1892210697}
@@ -3431,6 +3381,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4919425476982193469, guid: 8d2ee0021d3e95ee6826d8565f6ff3b6, type: 3}
       insertIndex: -1
       addedObject: {fileID: 583387636}
+    - targetCorrespondingSourceObject: {fileID: 4919425476982193469, guid: 8d2ee0021d3e95ee6826d8565f6ff3b6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 583387637}
   m_SourcePrefab: {fileID: 100100000, guid: 8d2ee0021d3e95ee6826d8565f6ff3b6, type: 3}
 --- !u!224 &583387633 stripped
 RectTransform:
@@ -3454,7 +3407,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2a21c328aaa5dbf58cbb4ecc5cf1242, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameManager: {fileID: 188359189}
   Hand: {fileID: 583387634}
   CardPrefab: {fileID: 1771059711689953786, guid: 2997b6ed487f51d1abf6fb29ce8de53e, type: 3}
   Interaction: {fileID: 583387636}
@@ -3473,6 +3425,48 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!23 &583387637
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 583387634}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1001 &590359191
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3768,7 +3762,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84198c475aca29e4caba2a692e279614, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CardType: R
+  CardType: 1
   Row: {fileID: 642271130}
   CardBeingDropped: {fileID: 0}
   Pop: {fileID: 8300000, guid: bff830be9083fa66083eb2c3dbdee157, type: 3}
@@ -3956,60 +3950,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d95c1b32569eae12e92140a242446f33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CardType: Carta de Aumento
-  RowCorrespondency: R
+  CardType: 3
+  RowCorrespondency: 1
   Slot: {fileID: 771085057}
   CardBeingDropped: {fileID: 0}
   Pop: {fileID: 8300000, guid: bff830be9083fa66083eb2c3dbdee157, type: 3}
   UIAudible: {fileID: 391175266}
---- !u!1 &775596399
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 775596400}
-  - component: {fileID: 775596401}
-  m_Layer: 5
-  m_Name: GameData
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &775596400
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 775596399}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1074858555}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 926.5, y: -485}
-  m_SizeDelta: {x: 20, y: 20}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &775596401
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 775596399}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d6a3b1f4839c2b153bb7fc81c1921459, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &825023332 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7268214438383308772, guid: 74f662bdb98a6ddfba09b1b5ea7f5e7e, type: 3}
@@ -5221,8 +5167,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d95c1b32569eae12e92140a242446f33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CardType: Carta de Aumento
-  RowCorrespondency: M
+  CardType: 3
+  RowCorrespondency: 0
   Slot: {fileID: 968899606}
   CardBeingDropped: {fileID: 0}
   Pop: {fileID: 8300000, guid: bff830be9083fa66083eb2c3dbdee157, type: 3}
@@ -5499,6 +5445,7 @@ GameObject:
   - component: {fileID: 1074858551}
   - component: {fileID: 1074858550}
   - component: {fileID: 1074858556}
+  - component: {fileID: 1074858557}
   m_Layer: 5
   m_Name: Battlefield
   m_TagString: Untagged
@@ -5619,8 +5566,7 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 775596400}
-  - {fileID: 188359188}
+  - {fileID: 2077813713}
   - {fileID: 391175265}
   - {fileID: 981249659}
   - {fileID: 1649604424}
@@ -5730,6 +5676,18 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1074858557
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1074858549}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93bdd56505197f524b8aad86d289d790, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1083886418
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6409,8 +6367,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 188359189}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+      - m_Target: {fileID: 2077813712}
+        m_TargetAssemblyTypeName: ManagerActions, Assembly-CSharp
         m_MethodName: UseLeaderSkill
         m_Mode: 1
         m_Arguments:
@@ -6963,7 +6921,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84198c475aca29e4caba2a692e279614, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CardType: M
+  CardType: 0
   Row: {fileID: 1369846446}
   CardBeingDropped: {fileID: 0}
   Pop: {fileID: 8300000, guid: bff830be9083fa66083eb2c3dbdee157, type: 3}
@@ -7088,9 +7046,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 188359189}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: PassTurn
+      - m_Target: {fileID: 2077813712}
+        m_TargetAssemblyTypeName: ManagerActions, Assembly-CSharp
+        m_MethodName: Pass
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -7492,8 +7450,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d95c1b32569eae12e92140a242446f33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CardType: Carta de Aumento
-  RowCorrespondency: R
+  CardType: 3
+  RowCorrespondency: 1
   Slot: {fileID: 1430659674}
   CardBeingDropped: {fileID: 0}
   Pop: {fileID: 8300000, guid: bff830be9083fa66083eb2c3dbdee157, type: 3}
@@ -7601,8 +7559,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d95c1b32569eae12e92140a242446f33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CardType: Carta de Aumento
-  RowCorrespondency: M
+  CardType: 3
+  RowCorrespondency: 0
   Slot: {fileID: 1506615254}
   CardBeingDropped: {fileID: 0}
   Pop: {fileID: 8300000, guid: bff830be9083fa66083eb2c3dbdee157, type: 3}
@@ -8288,8 +8246,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 188359189}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+      - m_Target: {fileID: 2077813712}
+        m_TargetAssemblyTypeName: ManagerActions, Assembly-CSharp
         m_MethodName: UseLeaderSkill
         m_Mode: 1
         m_Arguments:
@@ -8519,8 +8477,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d95c1b32569eae12e92140a242446f33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CardType: Carta de Aumento
-  RowCorrespondency: S
+  CardType: 3
+  RowCorrespondency: 2
   Slot: {fileID: 1691266048}
   CardBeingDropped: {fileID: 0}
   Pop: {fileID: 8300000, guid: bff830be9083fa66083eb2c3dbdee157, type: 3}
@@ -8733,8 +8691,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d95c1b32569eae12e92140a242446f33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CardType: Carta de Clima
-  RowCorrespondency: R
+  CardType: 4
+  RowCorrespondency: 1
   Slot: {fileID: 1761147915}
   CardBeingDropped: {fileID: 0}
   Pop: {fileID: 8300000, guid: bff830be9083fa66083eb2c3dbdee157, type: 3}
@@ -8947,8 +8905,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d95c1b32569eae12e92140a242446f33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CardType: Carta de Clima
-  RowCorrespondency: M
+  CardType: 4
+  RowCorrespondency: 0
   Slot: {fileID: 1881507378}
   CardBeingDropped: {fileID: 0}
   Pop: {fileID: 8300000, guid: bff830be9083fa66083eb2c3dbdee157, type: 3}
@@ -9426,8 +9384,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d95c1b32569eae12e92140a242446f33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CardType: Carta de Clima
-  RowCorrespondency: S
+  CardType: 4
+  RowCorrespondency: 2
   Slot: {fileID: 1979009883}
   CardBeingDropped: {fileID: 0}
   Pop: {fileID: 8300000, guid: bff830be9083fa66083eb2c3dbdee157, type: 3}
@@ -9460,7 +9418,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84198c475aca29e4caba2a692e279614, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CardType: M
+  CardType: 0
   Row: {fileID: 2016236449}
   CardBeingDropped: {fileID: 0}
   Pop: {fileID: 8300000, guid: bff830be9083fa66083eb2c3dbdee157, type: 3}
@@ -9640,6 +9598,54 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3065617311856742932, guid: 4c640b77c7bb8ce93bfd2d5ecd694fd1, type: 3}
   m_PrefabInstance: {fileID: 2057950168}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2077813711
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2077813713}
+  - component: {fileID: 2077813712}
+  m_Layer: 5
+  m_Name: ManagerSimulator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2077813712
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2077813711}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 117e9ab84947cabf29e7d09139ead732, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!224 &2077813713
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2077813711}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1074858555}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2082450233
 GameObject:
   m_ObjectHideFlags: 0
@@ -9935,7 +9941,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84198c475aca29e4caba2a692e279614, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CardType: S
+  CardType: 2
   Row: {fileID: 2123465764}
   CardBeingDropped: {fileID: 0}
   Pop: {fileID: 8300000, guid: bff830be9083fa66083eb2c3dbdee157, type: 3}
@@ -10311,7 +10317,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84198c475aca29e4caba2a692e279614, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CardType: S
+  CardType: 2
   Row: {fileID: 1738013784608181829}
   CardBeingDropped: {fileID: 0}
   Pop: {fileID: 8300000, guid: bff830be9083fa66083eb2c3dbdee157, type: 3}
@@ -10444,8 +10450,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d95c1b32569eae12e92140a242446f33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CardType: Carta de Aumento
-  RowCorrespondency: S
+  CardType: 3
+  RowCorrespondency: 2
   Slot: {fileID: 2320359554036153696}
   CardBeingDropped: {fileID: 0}
   Pop: {fileID: 8300000, guid: bff830be9083fa66083eb2c3dbdee157, type: 3}
@@ -10670,6 +10676,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4919425476982193469, guid: 8d2ee0021d3e95ee6826d8565f6ff3b6, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8933253019043194139}
+    - targetCorrespondingSourceObject: {fileID: 4919425476982193469, guid: 8d2ee0021d3e95ee6826d8565f6ff3b6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8933253019043194140}
   m_SourcePrefab: {fileID: 100100000, guid: 8d2ee0021d3e95ee6826d8565f6ff3b6, type: 3}
 --- !u!224 &8933253019043194136 stripped
 RectTransform:
@@ -10693,7 +10702,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2a21c328aaa5dbf58cbb4ecc5cf1242, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameManager: {fileID: 188359189}
   Hand: {fileID: 8933253019043194137}
   CardPrefab: {fileID: 1771059711689953786, guid: 2997b6ed487f51d1abf6fb29ce8de53e, type: 3}
   Interaction: {fileID: 8933253019043194139}
@@ -10712,6 +10720,48 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!23 &8933253019043194140
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8933253019043194137}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class UIAudible : MonoBehaviour, IObserver
 {
-    [SerializeField] Subject gameManager;
     [SerializeField] public AudioClip PickleRick;
     [SerializeField] public AudioClip DontHateThePlayer;
     [SerializeField] public AudioClip EvilMortySpeech;
@@ -25,22 +24,25 @@ public class UIAudible : MonoBehaviour, IObserver
     [SerializeField] public AudioClip BothPlayersWin;
 
     private Dictionary<string, AudioClip> SoundsEffectForCharacters = new();
+
     private Dictionary<string, AudioClip> SoundOfGameOver = new();
     public AudioSource SoundEffect;
     public AudioSource BackgroundMusic;
 
     private void OnEnable()
     {
-        gameManager.AddObserver(this);
+        // GameManager.gameManager.AddObserver(this);
     }
 
     private void OnDisable()
     {
-        gameManager.RemoveObserver(this);
+        GameManager.gameManager.RemoveObserver(this);
     }
 
     void Start()
     {
+        GameManager.gameManager.AddObserver(this);
+
         SoundsEffectForCharacters.Add("Rick Sánchez", Wabbalubbadubdub);
         SoundsEffectForCharacters.Add("Morty Smith", OhGeez);
         SoundsEffectForCharacters.Add("Butter Robot", WhatsMyPurpose);
@@ -96,7 +98,7 @@ public class UIAudible : MonoBehaviour, IObserver
                     BackgroundMusic.loop = false;
                 }
 
-                if(GameManager.Player1.GamesWon == 2 && GameManager.Player2.GamesWon == 2)
+                if (GameManager.Player1.GamesWon == 2 && GameManager.Player2.GamesWon == 2)
                 {
                     BackgroundMusic.clip = SoundOfGameOver["Both"];
                     BackgroundMusic.Play();

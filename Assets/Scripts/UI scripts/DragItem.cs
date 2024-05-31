@@ -34,9 +34,9 @@ public class DragItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
     {
         // si la carta no es soltada sobre un objeto que pueda recibirla restablecemos sus propiedades iniciales
 
-        if (CardBeingDragged.GetComponent<UICard>().MotherCard.Type == "Carta de Despeje")
+        if (CardBeingDragged.GetComponent<UICard>().MotherCard.Type == CardTypes.Carta_de_Despeje)
         {
-            GameManager.gameManager.PlayACard(CardBeingDragged.GetComponent<UICard>().MotherCard, "R");
+            GameManager.gameManager.PlayACard(CardBeingDragged.GetComponent<UICard>().MotherCard, RowTypes.Ranged);
             Destroy(CardBeingDragged.gameObject);
             CardBeingDragged = null;
         }

@@ -29,7 +29,7 @@ public class CardsCollection
             Debug.Log($"{card.Name} ha entrado al campo de batalla");
             count++;
 
-            if (card.Type != "Líder")        // si la carta no es el Líder de una facción 
+            if (card.Type != CardTypes.Líder)        // si la carta no es el Líder de una facción 
             {
                 if (!AllFactions.Keys.Contains(card.Faction))        //  si la facción no estaba como llave del diccionario la agregamos y agregamos la carta 
                 {

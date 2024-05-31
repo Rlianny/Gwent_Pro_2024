@@ -40,7 +40,7 @@ public class DeckCreator
     {
         if (card is SilverUnityCard silverCard)
         {
-            if (CardActualAppearances(silverCard) < silverCard.PossibleAppearances)
+            if (CardActualAppearances(silverCard) < SilverUnityCard.PossibleAppearances)
             {
                 Card copy = new SilverUnityCard(card);
                 CardDeck.Add(copy);

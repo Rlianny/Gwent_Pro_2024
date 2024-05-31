@@ -7,6 +7,6 @@ public class RestartData : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        GameData.gameData.RestartData();
+        GameData.RestartData();
     }
 }

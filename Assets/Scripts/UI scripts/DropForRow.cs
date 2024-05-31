@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 public class DropForRow : MonoBehaviour, IDropHandler
 {
-    public string CardType; // El tipo de carta que esta fila acepta.
+    public RowTypes CardType; // El tipo de carta que esta fila acepta.
     public HorizontalLayoutGroup Row;       // HorizontalLayoutGroup que guarda las cartas
     public GameObject CardBeingDropped;     // carta siendo soltada sobre la fila
     public static bool WasDroped = false;
