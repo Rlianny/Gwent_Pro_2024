@@ -54,7 +54,7 @@ public class IncreaseMeleeRowEffect : IncreaseEffect
     {
         Card toInvoke = null;
 
-        if (ActivePlayer.Battlefield.IncreaseColumn[0] == null)
+        if (ActivePlayer.Battlefield.GetIncreaseCardInRow(RowTypes.Melee) == null)
         {
             foreach (Card toFind in ActivePlayer.PlayerHand.GameDeck)
             {
@@ -83,7 +83,7 @@ public class IncreaseRangedRowEffect : IncreaseEffect
     {
         Card toInvoke = null;
 
-        if (ActivePlayer.Battlefield.IncreaseColumn[1] == null)
+        if (ActivePlayer.Battlefield.GetIncreaseCardInRow(RowTypes.Ranged) == null)
         {
             foreach (Card toFind in ActivePlayer.PlayerHand.GameDeck)
             {
@@ -112,7 +112,7 @@ public class IncreaseSigeeRowEffect : IncreaseEffect
     {
         Card toInvoke = null;
 
-        if (ActivePlayer.Battlefield.IncreaseColumn[2] == null)
+        if (ActivePlayer.Battlefield.GetIncreaseCardInRow(RowTypes.Sigee) == null)
         {
             foreach (Card toFind in ActivePlayer.PlayerHand.GameDeck)
             {
@@ -146,7 +146,7 @@ public class WeatherMeleeRowEffect : WeatherEffect
     {
         Card toInvoke = null;
 
-        if (PlayerBattlefield.WeatherRow[0] == null)
+        if (PlayerBattlefield.GetWeatherCardInRow(RowTypes.Melee) == null)
         {
             foreach (Card toFind in ActivePlayer.PlayerHand.GameDeck)
             {
@@ -175,7 +175,7 @@ public class WeatherRangedRowEffect : WeatherEffect
     {
         Card toInvoke = null;
 
-        if (PlayerBattlefield.WeatherRow[1] == null)
+        if (PlayerBattlefield.GetWeatherCardInRow(RowTypes.Ranged) == null)
         {
             foreach (Card toFind in ActivePlayer.PlayerHand.GameDeck)
             {
@@ -203,7 +203,7 @@ public class WeatherSigeeRowEffect : WeatherEffect
     {
         Card toInvoke = null;
 
-        if (PlayerBattlefield.WeatherRow[2] == null)
+        if (PlayerBattlefield.GetWeatherCardInRow(RowTypes.Sigee) == null)
         {
             foreach (Card toFind in ActivePlayer.PlayerHand.GameDeck)
             {
@@ -252,9 +252,9 @@ public class DeleteTheLeastEffect : DeleteEffect
         int pos = -1;
         SilverUnityCard cardToDelete = null;
 
-        for (int i = 0; i < RivalPlayer.Battlefield.Battlefield.Length; i++)
+        for (int i = 0; i < 3; i++)
         {
-            foreach (var unity in RivalPlayer.Battlefield.Battlefield[i])
+            foreach (var unity in RivalPlayer.Battlefield.GetRowFromBattlefield(Tools.RowForIndex[i]))
             {
                 if (unity is SilverUnityCard silverUnityCard && silverUnityCard.ActualPower < minPower)
                 {
@@ -272,14 +272,14 @@ public class DeleteTheLeastEffect : DeleteEffect
             {
                 if (cardToDelete != null)
                 {
-                    ActivePlayer.Battlefield.Battlefield[minPowerIndex].Remove(cardToDelete);
+                    ActivePlayer.Battlefield.RemoveCardFromBattlefield(cardToDelete, Tools.RowForIndex[minPowerIndex]);
                 }
             }
             else
             {
                 if (cardToDelete != null)
                 {
-                    RivalPlayer.Battlefield.Battlefield[minPowerIndex].Remove(cardToDelete);
+                    RivalPlayer.Battlefield.RemoveCardFromBattlefield(cardToDelete, Tools.RowForIndex[minPowerIndex]);
                 }
             }
 
@@ -300,9 +300,9 @@ public class DeleteTheMostEfect : DeleteEffect
         int pos = -1;
         SilverUnityCard cardToDelete = null;
 
-        for (int i = 0; i < RivalPlayer.Battlefield.Battlefield.Length; i++)
+        for (int i = 0; i < 3; i++)
         {
-            foreach (var unity in RivalPlayer.Battlefield.Battlefield[i])
+            foreach (var unity in RivalPlayer.Battlefield.GetRowFromBattlefield(Tools.RowForIndex[i]))
             {
                 if (unity is SilverUnityCard silverUnityCard && silverUnityCard.ActualPower > maxPower)
                 {
@@ -314,9 +314,9 @@ public class DeleteTheMostEfect : DeleteEffect
             }
         }
 
-        for (int i = 0; i < ActivePlayer.Battlefield.Battlefield.Length; i++)
+        for (int i = 0; i < 3; i++)
         {
-            foreach (var unity in ActivePlayer.Battlefield.Battlefield[i])
+            foreach (var unity in ActivePlayer.Battlefield.GetRowFromBattlefield(Tools.RowForIndex[i]))
             {
                 if (unity is SilverUnityCard silverUnityCard && silverUnityCard.ActualPower > maxPower)
                 {
@@ -334,14 +334,14 @@ public class DeleteTheMostEfect : DeleteEffect
             {
                 if (cardToDelete != null)
                 {
-                    RivalPlayer.Battlefield.Battlefield[maxPowerIndex].Remove(cardToDelete);
+                    RivalPlayer.Battlefield.RemoveCardFromBattlefield(cardToDelete, Tools.RowForIndex[maxPowerIndex]);
                 }
             }
             else
             {
                 if (cardToDelete != null)
                 {
-                    ActivePlayer.Battlefield.Battlefield[maxPowerIndex].Remove(cardToDelete);
+                    ActivePlayer.Battlefield.RemoveCardFromBattlefield(cardToDelete, Tools.RowForIndex[maxPowerIndex]);
                 }
             }
 
@@ -358,8 +358,10 @@ public class CloseBondEffect : Effect
     {
         int n = 0;
 
-        foreach (var cardList in ActivePlayer.Battlefield.Battlefield)
+        for (int i = 0; i < 3; i++)
         {
+            List<UnityCard> cardList = ActivePlayer.Battlefield.GetRowFromBattlefield(Tools.RowForIndex[i]);
+
             if (cardList.Count > 0)
             {
                 foreach (var unityCard in cardList)
@@ -370,8 +372,10 @@ public class CloseBondEffect : Effect
             }
         }
 
-        foreach (var cardList in ActivePlayer.Battlefield.Battlefield)
+        for (int i = 0; i < 3; i++)
         {
+            List<UnityCard> cardList = ActivePlayer.Battlefield.GetRowFromBattlefield(Tools.RowForIndex[i]);
+
             if (cardList.Count > 0)
             {
                 foreach (var unityCard in cardList)
@@ -398,8 +402,10 @@ public class ClearARowEffect : Effect
         int minCount = int.MaxValue;
 
 
-        foreach (List<UnityCard> cardList in RivalPlayer.Battlefield.Battlefield)
+        for (int i = 0; i < 3; i++)
         {
+            List<UnityCard> cardList = ActivePlayer.Battlefield.GetRowFromBattlefield(Tools.RowForIndex[i]);
+
             if (cardList.Count > 0 && cardList.Count < minCount && Tools.NumberOfSilversInRow(cardList) > 0)
             {
                 minCount = cardList.Count;
@@ -407,8 +413,10 @@ public class ClearARowEffect : Effect
             }
         }
 
-        foreach (List<UnityCard> cardList in ActivePlayer.Battlefield.Battlefield)
+        for (int i = 0; i < 3; i++)
         {
+            List<UnityCard> cardList = ActivePlayer.Battlefield.GetRowFromBattlefield(Tools.RowForIndex[i]);
+
             if (cardList.Count > 0 && cardList.Count < minCount && Tools.NumberOfSilversInRow(cardList) > 0)
             {
                 minCount = cardList.Count;
@@ -440,13 +448,13 @@ public class ClearanceEffect : Effect
 
         for (int i = 0; i < 3; i++)
         {
-            foreach (UnityCard unityCard in ActivePlayer.Battlefield.Battlefield[i])
+            foreach (UnityCard unityCard in ActivePlayer.Battlefield.GetRowFromBattlefield(Tools.RowForIndex[i]))
             {
                 if (unityCard is SilverUnityCard silverUnityCard)
                     silverUnityCard.ActualPower = silverUnityCard.Power;
             }
 
-            foreach (UnityCard unityCard in RivalPlayer.Battlefield.Battlefield[i])
+            foreach (UnityCard unityCard in RivalPlayer.Battlefield.GetRowFromBattlefield(Tools.RowForIndex[i]))
             {
                 if (unityCard is SilverUnityCard silverUnityCard)
                     silverUnityCard.ActualPower = silverUnityCard.Power;
@@ -463,20 +471,21 @@ public class AverageEffect : Effect
     public override void TakeEffect(Player ActivePlayer, Player RivalPlayer, Card card)
     {
         int average;
-        int cardsInField = Tools.NumberOfUnitysOnBattlefield(ActivePlayer.Battlefield.Battlefield) + Tools.NumberOfUnitysOnBattlefield(RivalPlayer.Battlefield.Battlefield);
+
+        int cardsInField = ActivePlayer.Battlefield.NumberOfUnitysOnBattlefield() + RivalPlayer.Battlefield.NumberOfUnitysOnBattlefield();
         average = (ActivePlayer.Battlefield.TotalScore + RivalPlayer.Battlefield.TotalScore) / cardsInField;
 
         for (int i = 0; i < 3; i++)
         {
-            for (int j = 0; j < ActivePlayer.Battlefield.Battlefield[i].Count; j++)
+            for (int j = 0; j < ActivePlayer.Battlefield.GetRowFromBattlefield(Tools.RowForIndex[i]).Count; j++)
             {
-                if (ActivePlayer.Battlefield.Battlefield[i][j] is SilverUnityCard silverUnityCard)
+                if (ActivePlayer.Battlefield.GetCardFromBattlefield(Tools.RowForIndex[i], j) is SilverUnityCard silverUnityCard)
                     silverUnityCard.ActualPower = average;
             }
 
-            for (int k = 0; k < RivalPlayer.Battlefield.Battlefield[i].Count; k++)
+            for (int k = 0; k < RivalPlayer.Battlefield.GetRowFromBattlefield(Tools.RowForIndex[i]).Count; k++)
             {
-                if (RivalPlayer.Battlefield.Battlefield[i][k] is SilverUnityCard silverUnityCard)
+                if (RivalPlayer.Battlefield.GetCardFromBattlefield(Tools.RowForIndex[i], k) is SilverUnityCard silverUnityCard)
                     silverUnityCard.ActualPower = average;
             }
         }
@@ -500,7 +509,7 @@ public class SupremacyEffect : Effect
     {
         for (int i = 0; i < 3; i++)
         {
-            foreach (UnityCard unityCard in RivalPlayer.Battlefield.Battlefield[i])
+            foreach (UnityCard unityCard in RivalPlayer.Battlefield.GetRowFromBattlefield(Tools.RowForIndex[i]))
             {
                 if (unityCard is SilverUnityCard silverUnityCard)
                     silverUnityCard.ActualPower = 1;

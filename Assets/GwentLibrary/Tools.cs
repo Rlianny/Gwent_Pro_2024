@@ -5,22 +5,12 @@ using Unity.VisualScripting;
 
 public static class Tools
 {
-    /// <summary>
-    /// Este método cuenta la cantidad de cartas en el campo de batalla de un jugador.
-    /// </summary>
-    /// <param name="battlefield">El campo de batalla del que se contarán las cartas.</param>
-    /// <returns>La cantidad de cartas en el campo de un jugador.</returns>
-    public static int NumberOfUnitysOnBattlefield(List<UnityCard>[] battlefield)
+    public static Dictionary<int, RowTypes> RowForIndex = new()
     {
-        int count = 0;
-
-        foreach (List<UnityCard> cardList in battlefield)
-        {
-            count += cardList.Count;
-        }
-
-        return count;
-    }
+        {0, RowTypes.Melee},
+        {1, RowTypes.Ranged},
+        {2, RowTypes.Sigee},
+    };
 
     public static int NumberOfSilversInRow(List<UnityCard> rowCards)
     {

@@ -116,7 +116,7 @@ public class GameManager : Subject
         int pos = -1;
         for (int i = 0; i < 3; i++)
         {
-            foreach (UnityCard unity in activePlayer.Battlefield.Battlefield[i])
+            foreach (UnityCard unity in activePlayer.Battlefield.GetRowFromBattlefield(Tools.RowForIndex[i]))
             {
                 if (unity.Type == CardTypes.Señuelo)
                 {
@@ -129,7 +129,7 @@ public class GameManager : Subject
         {
             if (cardToSwap is UnityCard unityCard)
             {
-                activePlayer.Battlefield.Battlefield[pos].Remove(unityCard);
+                activePlayer.Battlefield.RemoveCardFromBattlefield(unityCard, Tools.RowForIndex[pos]);
                 activePlayer.PlayerHand.PlayerHand.Add(unityCard);
                 if (unityCard is SilverUnityCard silverUnityCard)
                     silverUnityCard.ActualPower = silverUnityCard.Power;
@@ -180,7 +180,7 @@ public class GameManager : Subject
         {
             if (card is IncreaseCard increaseCard)
             {
-                activePlayer.Battlefield.IncreaseColumn[PlayerBattlefield.RowCorrespondency[Row]] = increaseCard;
+                activePlayer.Battlefield.AddCardToIncreaseColumn(increaseCard, Row);
                 activePlayer.PlayerHand.RemoveCardFromDeck(card);
                 activePlayer.Battlefield.UpdateBattlefieldInfo();
                 rivalPlayer.Battlefield.UpdateBattlefieldInfo();
@@ -188,7 +188,7 @@ public class GameManager : Subject
 
             if (card is WeatherCard weatherCard)
             {
-                PlayerBattlefield.WeatherRow[PlayerBattlefield.RowCorrespondency[Row]] = weatherCard;
+                PlayerBattlefield.AddCardToWeatherRow(weatherCard, Row);
                 activePlayer.PlayerHand.RemoveCardFromDeck(card);
                 activePlayer.Battlefield.UpdateBattlefieldInfo();
                 rivalPlayer.Battlefield.UpdateBattlefieldInfo();

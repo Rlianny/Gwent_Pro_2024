@@ -95,25 +95,25 @@ public class Player
     /// <param name="rivalPlayer">El jugador rival al momento de la llamada del método.</param>
     /// <param name="card">Carta que será manipulada.</param>
     /// <param name="Row">Lugar al que se moverá la carta.</param>
-    public void DragAndDropMovement(Player activePlayer, Player rivalPlayer, Card card, RowTypes Row)
+    public void DragAndDropMovement(Player activePlayer, Player rivalPlayer, Card card, RowTypes row)
     {
-        if (Row == RowTypes.Melee || Row == RowTypes.Ranged || Row == RowTypes.Sigee)
+        if (row == RowTypes.Melee || row == RowTypes.Ranged || row == RowTypes.Sigee)
         {
             if (card is UnityCard unityCard)
             {
-                Battlefield.Battlefield[PlayerBattlefield.RowCorrespondency[Row]].Add(unityCard);
+                Battlefield.AddCardToBattlefiel(unityCard, row);
                 RemoveCardAndActivateEffect(activePlayer, rivalPlayer, unityCard);
             }
 
             if (card is IncreaseCard increaseCard)
             {
-                Battlefield.IncreaseColumn[PlayerBattlefield.RowCorrespondency[Row]] = increaseCard;
+                Battlefield.AddCardToIncreaseColumn(increaseCard, row);
                 RemoveCardAndActivateEffect(activePlayer, rivalPlayer, increaseCard);
             }
 
             if (card is WeatherCard weatherCard)
             {
-                PlayerBattlefield.WeatherRow[PlayerBattlefield.RowCorrespondency[Row]] = weatherCard;
+                PlayerBattlefield.AddCardToWeatherRow(weatherCard, row);
                 RemoveCardAndActivateEffect(activePlayer, rivalPlayer, weatherCard);
             }
 

@@ -7,12 +7,12 @@ using Unity.VisualScripting;
 
 public class PlayerBattlefield
 {
-    public List<UnityCard>[] Battlefield { get; private set; } = new List<UnityCard>[3];
-    public IncreaseCard[] IncreaseColumn { get; private set; } = new IncreaseCard[3];
-    public static WeatherCard[] WeatherRow { get; private set; } = new WeatherCard[3];
-    public int MeleeRowScore { get; private set; }
-    public int RangedRowScore { get; private set; }
-    public int SigeeRowScore { get; private set; }
+    private List<UnityCard>[] battlefield = new List<UnityCard>[3];
+    private IncreaseCard[] increaseColumn = new IncreaseCard[3];
+    private static WeatherCard[] weatherRow = new WeatherCard[3];
+    public int MeleeRowScore;
+    public int RangedRowScore;
+    public int SigeeRowScore;
     public int TotalScore { get; private set; }
     public static Dictionary<RowTypes, int> RowCorrespondency { get; private set; } = new()
     {
@@ -23,12 +23,54 @@ public class PlayerBattlefield
 
     public PlayerBattlefield()
     {
-        Battlefield[0] = new();
-        Battlefield[1] = new();
-        Battlefield[2] = new();
+        battlefield[0] = new();
+        battlefield[1] = new();
+        battlefield[2] = new();
 
         UpdateBattlefieldInfo();
     }
+
+    public UnityCard GetCardFromBattlefield(RowTypes row, int position)
+    {
+        return battlefield[RowCorrespondency[row]][position];
+    }
+
+    public IncreaseCard GetIncreaseCardInRow(RowTypes row)
+    {
+        return increaseColumn[RowCorrespondency[row]];
+    }
+
+    public static WeatherCard GetWeatherCardInRow(RowTypes row)
+    {
+        return weatherRow[RowCorrespondency[row]];
+    }
+
+    public List<UnityCard> GetRowFromBattlefield(RowTypes row)
+    {
+        return battlefield[RowCorrespondency[row]];
+    }
+
+    public void AddCardToIncreaseColumn(IncreaseCard increaseCard, RowTypes row)
+    {
+        increaseColumn[RowCorrespondency[row]] = increaseCard;
+    }
+
+    public static void AddCardToWeatherRow(WeatherCard weatherCard, RowTypes row)
+    {
+        weatherRow[RowCorrespondency[row]] = weatherCard;
+    }
+
+    public void AddCardToBattlefiel(UnityCard card, RowTypes row)
+    {
+        battlefield[RowCorrespondency[row]].Add(card);
+    }
+
+    public void RemoveCardFromBattlefield(UnityCard card, RowTypes row)
+    {
+        battlefield[RowCorrespondency[row]].Remove(card);
+    }
+
+
 
     /// <summary>
     /// Este métodod calcula la puntuación de una fila específica sin tener en cuenta factores como climas u aumentos.
@@ -70,40 +112,36 @@ public class PlayerBattlefield
     /// </summary>
     public void UpdateBattlefieldInfo()
     {
-        MeleeRowScore = ScoreCalculatorWithModiffiers(0);
-        RangedRowScore = ScoreCalculatorWithModiffiers(1);
-        SigeeRowScore = ScoreCalculatorWithModiffiers(2);
+        MeleeRowScore = ScoreCalculatorWithModiffiers(RowTypes.Melee);
+        RangedRowScore = ScoreCalculatorWithModiffiers(RowTypes.Ranged);
+        SigeeRowScore = ScoreCalculatorWithModiffiers(RowTypes.Sigee);
         TotalScore = TotalScoreCalculator(MeleeRowScore, RangedRowScore, SigeeRowScore);
     }
 
-    /// <summary>
-    /// Este método calcula el poder total de una fila teniendo en cuenta factores como el clima o el aumento que afectan o no a la fila.
-    /// </summary>
-    /// <param name="rowPos">Fila de la cual se calculará el poder.</param>
-    /// <returns>El poder total de la fila.</returns>
-    private int ScoreCalculatorWithModiffiers(int rowPos)
+    
+    private int ScoreCalculatorWithModiffiers(RowTypes row)
     {
-        if (Battlefield[rowPos].Count > 0)
+        if (GetRowFromBattlefield(row).Count > 0)
         {
-            if (WeatherRow[rowPos] == null && IncreaseColumn[rowPos] == null)
+            if (GetWeatherCardInRow(row) == null && GetIncreaseCardInRow(row) == null)
             {
-                Debug.Log("No hay climas ni aumentos afectando a la fila" + rowPos.ToString());
-                return ScoreCalculator(Battlefield[rowPos]);
+                Debug.Log("No hay climas ni aumentos afectando a la fila" + row.ToString());
+                return ScoreCalculator(GetRowFromBattlefield(row));
             }
 
             else
             {
-                if (WeatherRow[rowPos] != null)
+                if (GetWeatherCardInRow(row) != null)
                 {
-                    WeatherStatus(rowPos);
+                    WeatherStatus(row);
                 }
 
-                if (IncreaseColumn[rowPos] != null)
+                if (GetIncreaseCardInRow(row) != null)
                 {
-                    IncreaseStatus(rowPos);
+                    IncreaseStatus(row);
                 }
 
-                return ScoreCalculator(Battlefield[rowPos]);
+                return ScoreCalculator(GetRowFromBattlefield(row));
             }
 
         }
@@ -111,28 +149,24 @@ public class PlayerBattlefield
         else return 0;
     }
 
-    /// <summary>
-    /// Este método aplica el efecto de Clima a una fila.
-    /// </summary>
-    /// <param name="rowPos">Fila a la cual se aplicará el clima.</param>
-    private void WeatherStatus(int rowPos)
+    private void WeatherStatus(RowTypes row)
     {
-        foreach (UnityCard unityCard in Battlefield[rowPos])
+        foreach (UnityCard unityCard in GetRowFromBattlefield(row))
         {
             if (unityCard is SilverUnityCard silverUnityCard)
                 silverUnityCard.ActualPower = 1;
         }
 
-        Debug.Log($"Clima aplicado a la fila {rowPos}");
+        Debug.Log($"Clima aplicado a la fila {row}");
     }
 
     /// <summary>
     /// Este método aplica el efecto de Aumento a una fila.
     /// </summary>
     /// <param name="rowPos">Fila a la cual se aplicará el aumento.</param>
-    private void IncreaseStatus(int rowPos)
+    private void IncreaseStatus(RowTypes row)
     {
-        foreach (UnityCard unityCard in Battlefield[rowPos])
+        foreach (UnityCard unityCard in GetRowFromBattlefield(row))
         {
             if (unityCard is SilverUnityCard silverUnityCard)
             {
@@ -144,7 +178,7 @@ public class PlayerBattlefield
         }
 
 
-        Debug.Log($"Aumento aplicado a la fila {rowPos}");
+        Debug.Log($"Aumento aplicado a la fila {row}");
     }
 
     /// <summary>
@@ -154,8 +188,8 @@ public class PlayerBattlefield
     {
         for (int i = 0; i <= 2; i++)
         {
-            Battlefield[i] = null;
-            Battlefield[i] = new();
+            battlefield[i] = null;
+            battlefield[i] = new();
         }
         ClearWeatherRow();
         ClearIncreaseRow();
@@ -168,13 +202,25 @@ public class PlayerBattlefield
     /// </summary>
     public static void ClearWeatherRow()
     {
-        WeatherRow = null;
-        WeatherRow = new WeatherCard[3];
+        weatherRow = null;
+        weatherRow = new WeatherCard[3];
     }
 
     public void ClearIncreaseRow()
     {
-        IncreaseColumn = null;
-        IncreaseColumn = new IncreaseCard[3];
+        increaseColumn = null;
+        increaseColumn = new IncreaseCard[3];
+    }
+
+    public int NumberOfUnitysOnBattlefield()
+    {
+        int count = 0;
+
+        foreach (List<UnityCard> cardList in battlefield)
+        {
+            count += cardList.Count;
+        }
+
+        return count;
     }
 }

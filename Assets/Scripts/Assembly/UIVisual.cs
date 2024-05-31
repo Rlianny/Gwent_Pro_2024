@@ -256,8 +256,10 @@ public class UIVisual : MonoBehaviour, IObserver
     {
         List<UnityCard> Row = null;
 
-        foreach (List<UnityCard> cardList in activePlayer.Battlefield.Battlefield)
+        for (int i = 0; i < 3; i++)
         {
+            List<UnityCard> cardList = activePlayer.Battlefield.GetRowFromBattlefield(Tools.RowForIndex[i]);
+            
             foreach (UnityCard unityCard in cardList)
             {
                 if (unityCard.Type == CardTypes.Señuelo)
@@ -745,7 +747,7 @@ public class UIVisual : MonoBehaviour, IObserver
             Card card = rowToClear.transform.GetChild(i).GetComponent<UICard>().MotherCard;
             if (card is SilverUnityCard silverUnityCard)
             {
-                if (!playerBeingUpdated.Battlefield.Battlefield[RowCorrespondency].Contains(silverUnityCard))
+                if (!playerBeingUpdated.Battlefield.GetRowFromBattlefield(Tools.RowForIndex[RowCorrespondency]).Contains(silverUnityCard))
                 {
                     GameObject cardToDestroy = rowToClear.transform.GetChild(i).gameObject;
                     SendToCemetery(cardToDestroy, Player2Cemetery);
