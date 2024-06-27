@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Text.RegularExpressions;
 
+
 public enum TokenTypes
 {
     Identifier,
     Keyword,
-    Separators,
+    Punctuation,
     ArithmeticOperator, ComparisonOperator, LogicalOperator, AssignmentOperator, MembershipOperator, IncrementDecrementOPerator, StringOperator,
     NumericLiteral, StringLiteral, BooleanLiteral,
     Comments,
@@ -19,34 +20,34 @@ public enum TokenSubtypes
     Comma, OpenParenthesis, CloseParenthesis, OpenBracket, CloseBracket, OpenBrace, CloseBrace, Colon, Semicolon, Lambda, Dot,
     effect, card, Name, While, For, String, Number, Bool, Params, Action, Type, Faction, Power, Range, OnActivation, Effect, Selector, Source, Single, Predicate, PostAction,
     True, False, NumericLiteral, StringLiteral, Identifier, Comments, WhiteSpaces,
-    Addition, Subtraction, Multiplication, Division, Potentiation, Equality, AND, OR, GreaterThanOrEqual, LessThanOrEqual, GreaterThan, LessThan, In, PostIncrement, PostDecrement, StringConcatenation, StringConcatenationSpaced, Assignment,
+    Addition, Subtraction, Multiplication, Division, Potentiation, Equality, AND, OR, GreaterThanOrEqual, LessThanOrEqual, Equal, GreaterThan, LessThan, In, PostIncrement, PostDecrement, StringConcatenation, StringConcatenationSpaced, Assignment,
 }
 
 public static class LexicalComponents
 {
     public static Dictionary<TokenTypes, Regex> tokenRegexPatterns = new()
     {
-        { TokenTypes.Separators, new Regex("^\\,|^\\(|^\\)|^\\[|^\\]|^\\{|^\\}|^\\:|^\\;|^\\=>|^\\.") },
+        { TokenTypes.Punctuation, new Regex("^\\,|^\\(|^\\)|^\\[|^\\]|^\\{|^\\}|^\\:|^\\;|^\\=>|^\\.") },
         { TokenTypes.Keyword, new Regex("^effect$?(?![a-zA-Z0-9])|^card$?(?![a-zA-Z0-9])|^Name$?(?![a-zA-Z0-9])|^while$?(?![a-zA-Z0-9])|^for$?(?![a-zA-Z0-9])|^String$?(?![a-zA-Z0-9])|^Params$?(?![a-zA-Z0-9])|^Number$?(?![a-zA-Z0-9])|^Bool$?(?![a-zA-Z0-9])|^Action$?|^Type$?(?![a-zA-Z0-9])|^Faction$?(?![a-zA-Z0-9])|^Power$?(?![a-zA-Z0-9])|^Range$?(?![a-zA-Z0-9])|^OnActivation$?(?![a-zA-Z0-9])|^Effect$?(?![a-zA-Z0-9])|^Selector$?(?![a-zA-Z0-9])|^Source$?(?![a-zA-Z0-9])|^Single$?(?![a-zA-Z0-9])|^Predicate$?(?![a-zA-Z0-9])|^PostAction$(?![a-zA-Z0-9])") },
         { TokenTypes.BooleanLiteral, new Regex("^true$|^false$") },
-        { TokenTypes.NumericLiteral, new Regex("^-?\\+?\\d+(\\.\\d+)(?![a-zA-Z0-9])") },
+        { TokenTypes.NumericLiteral, new Regex(@"^\d+(\.\d+)?\b") },
         { TokenTypes.StringLiteral, new Regex("^\"[^\"]*\"") },
+        { TokenTypes.IncrementDecrementOPerator, new Regex("^\\+\\+| ^\\--")},
         { TokenTypes.ArithmeticOperator, new Regex("^\\+|^-|^\\*|^/|^\\^")},
         { TokenTypes.ComparisonOperator, new Regex("^>=|^<=|^==|^<|^>")},
-        { TokenTypes.LogicalOperator, new Regex("^&&|^\\|\\|")},
         { TokenTypes.AssignmentOperator, new Regex("^=")},
+        { TokenTypes.LogicalOperator, new Regex("^&&|^\\|\\|")},
         { TokenTypes.MembershipOperator, new Regex("^in$?(?![a-zA-Z0-9])")},
-        { TokenTypes.IncrementDecrementOPerator, new Regex("^\\+\\+| ^\\--")},
         { TokenTypes.StringOperator, new Regex("^@@|^@") },
         { TokenTypes.Identifier, new Regex("^([a-zA-Z_]\\w*)") },
-        { TokenTypes.WhiteSpaces, new Regex(@"\s+") },
         { TokenTypes.Comments, new Regex(@"\/\/[^/\n]*") },
+        { TokenTypes.WhiteSpaces, new Regex(@"\s+") },
     };
 
     public static Dictionary<TokenTypes, Dictionary<string, TokenSubtypes>> SubtypesCorrespondecy = new()
     {
         {
-            TokenTypes.Separators, new Dictionary<string, TokenSubtypes>
+            TokenTypes.Punctuation, new Dictionary<string, TokenSubtypes>
             {
                 {",", TokenSubtypes.Comma},
                 {"(", TokenSubtypes.OpenParenthesis},
@@ -82,7 +83,8 @@ public static class LexicalComponents
                 {"Source", TokenSubtypes.Source},
                 {"Single", TokenSubtypes.Single},
                 {"Predicate", TokenSubtypes.Predicate},
-                {"PostAction", TokenSubtypes.PostAction}
+                {"PostAction", TokenSubtypes.PostAction},
+                {"Power", TokenSubtypes.Power},
             }
         },
         {
@@ -109,6 +111,7 @@ public static class LexicalComponents
                 {"<=", TokenSubtypes.LessThanOrEqual},
                 {"<", TokenSubtypes.LessThan},
                 {">", TokenSubtypes.GreaterThan},
+                {"==", TokenSubtypes.Equal},
             }
         },
         {
@@ -145,6 +148,5 @@ public static class LexicalComponents
             }
         },
     };
-
-
+    
 }

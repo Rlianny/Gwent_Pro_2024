@@ -4,12 +4,11 @@ using UnityEngine;
 using System;
 using System.Linq;
 
-public static class Lexer
+public class Lexer
 {
-    private static int row;
-    private static List<Token> tokens = new();
-
-    public static List<Token> Tokenize(string input)
+    private int row;
+    private List<Token> tokens = new();
+    public List<Token> Tokenize(string input)
     {
         string[] lines = input.Split('\n', StringSplitOptions.RemoveEmptyEntries);
 
@@ -21,8 +20,7 @@ public static class Lexer
         row = 0;
         return tokens;
     }
-
-    private static void LineTokenizer(string input)
+    private void LineTokenizer(string input)
     {
         int index = 1;
         while (index < input.Length)

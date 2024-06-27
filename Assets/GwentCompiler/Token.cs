@@ -6,16 +6,14 @@ public class Token
 {
     public string Lexeme { get; private set; }
     public TokenTypes Type { get; private set; }
-    public int Row { get; private set; }
-    public int Column { get; private set; }
     public TokenSubtypes Subtype { get; private set; }
+    public CodeLocation Location {get; private set; }
 
     public Token(string lexeme, TokenTypes type, int row, int column)
     {
         Lexeme = lexeme;
         Type = type;
-        Row = row;
-        Column = column;
+        Location = new CodeLocation(row, column);
 
         switch(type)
         {
@@ -46,3 +44,15 @@ public class Token
 
     }
 }
+
+public class CodeLocation
+    {
+        public int Row { get; private set; }
+        public int Column { get; private set; }
+
+        public CodeLocation(int row, int column)
+        {
+            Row = row;
+            Column = column;
+        }
+    }
