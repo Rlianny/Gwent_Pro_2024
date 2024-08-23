@@ -9,7 +9,7 @@ public static class Tools
     {
         {0, RowTypes.Melee},
         {1, RowTypes.Ranged},
-        {2, RowTypes.Sigee},
+        {2, RowTypes.Siege},
     };
 
     public static int NumberOfSilversInRow(List<UnityCard> rowCards)
@@ -41,7 +41,7 @@ public static class Tools
                 continue;
 
                 case 'S':
-                rowTypes.Add(RowTypes.Sigee);
+                rowTypes.Add(RowTypes.Siege);
                 continue;
             }
         }
@@ -62,7 +62,7 @@ public static class Tools
                 return RowTypes.Ranged;
 
                 case 'S':
-                return RowTypes.Sigee;
+                return RowTypes.Siege;
             }
         }
 
@@ -85,6 +85,6 @@ public enum RowTypes
 {
     Melee,
     Ranged, 
-    Sigee,
+    Siege,
 }
 

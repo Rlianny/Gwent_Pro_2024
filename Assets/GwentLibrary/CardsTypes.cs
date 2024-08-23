@@ -4,13 +4,12 @@ using UnityEngine;
 using System;
 using System.Linq;
 using UnityEditor;
+using Unity.VisualScripting;
 
 public class LeaderCard : Card
 {
-    public LeaderCard(string[] CardInfoArray) : base(CardInfoArray)
-    {
-
-    }
+    public LeaderCard(string[] CardInfoArray) : base(CardInfoArray) { }
+    public LeaderCard(CompiledCard compiledCard) : base(compiledCard) { }
 }
 
 public abstract class UnityCard : Card
@@ -35,14 +34,42 @@ public abstract class UnityCard : Card
             Power = unityCard.Power;
         }
     }
+
+    public UnityCard(CompiledCard compiledCard) : base(compiledCard)
+    {
+        Power = compiledCard.Power;
+
+        List<RowTypes> rowTypes = new();
+        string rowString = "";
+
+        foreach (var row in compiledCard.Range)
+        {
+            if (row == "Melee")
+            {
+                rowTypes.Add(RowTypes.Melee);
+                rowString += "M";
+            }
+            if (row == "Ranged")
+            {
+                rowTypes.Add(RowTypes.Ranged);
+                rowString += "R";
+            }
+            if (row == "Siege")
+            {
+                rowTypes.Add(RowTypes.Siege);
+                rowString += "S";
+            }
+        }
+
+        Row = rowTypes;
+        RowString = rowString;
+    }
 }
 
 public class HeroCard : UnityCard
 {
-    public HeroCard(string[] CardInfoArray) : base(CardInfoArray)
-    {
-
-    }
+    public HeroCard(string[] CardInfoArray) : base(CardInfoArray) { }
+    public HeroCard(CompiledCard compiledCard) : base(compiledCard) { }
 }
 
 public class SilverUnityCard : UnityCard
@@ -60,6 +87,11 @@ public class SilverUnityCard : UnityCard
         {
             ActualPower = silverUnityCard.Power;
         }
+    }
+
+    public SilverUnityCard(CompiledCard compiledCard) : base(compiledCard)
+    {
+        ActualPower = compiledCard.Power;
     }
 }
 

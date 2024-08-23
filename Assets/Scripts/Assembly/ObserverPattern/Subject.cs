@@ -9,18 +9,18 @@ public abstract class Subject
     public void AddObserver(IObserver observer)
     {
         observers.Add(observer);
-    } 
+    }
 
     public void RemoveObserver(IObserver observer)
     {
         observers.Add(observer);
     }
 
-    protected void NotifyObservers(System.Enum action, Card card = null)
+    protected void NotifyObservers(GameEventReport report)
     {
-        foreach(IObserver observer in observers)
+        foreach (IObserver observer in observers)
         {
-            observer.OnNotify(action, card);
+            observer.OnNotify(report);
         }
     }
 }

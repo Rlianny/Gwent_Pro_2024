@@ -7,6 +7,7 @@ public class ChangeSceneToSetPlayerName : MonoBehaviour
 {
     public void ChangeScene()
     {
+        CharacterManager.Init();
         SceneManager.LoadScene("SetPlayerName");
     }
 }

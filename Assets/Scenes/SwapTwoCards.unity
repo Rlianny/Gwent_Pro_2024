@@ -1113,7 +1113,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cb97f5d4747b05998fa2c5502b5f4ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CardToSwapPrefab: {fileID: 5815809487128682040, guid: e4fa4cb0059e9a2898e5d29b123b9fcd, type: 3}
+  CardToSwapPrefab: {fileID: 4825065505168714978, guid: f1199f24c2d508cfb88055ceee8a0f6c, type: 3}
   Player1Hand: {fileID: 164844610}
   Player2Hand: {fileID: 597982778}
   Player1Text: {fileID: 2047961196}

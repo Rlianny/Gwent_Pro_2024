@@ -112,11 +112,11 @@ public class IncreaseSigeeRowEffect : IncreaseEffect
     {
         Card toInvoke = null;
 
-        if (ActivePlayer.Battlefield.GetIncreaseCardInRow(RowTypes.Sigee) == null)
+        if (ActivePlayer.Battlefield.GetIncreaseCardInRow(RowTypes.Siege) == null)
         {
             foreach (Card toFind in ActivePlayer.PlayerHand.GameDeck)
             {
-                if (toFind is IncreaseCard increaseCard && increaseCard.Row == RowTypes.Sigee)
+                if (toFind is IncreaseCard increaseCard && increaseCard.Row == RowTypes.Siege)
                 {
                     toInvoke = increaseCard;
                 }
@@ -126,7 +126,7 @@ public class IncreaseSigeeRowEffect : IncreaseEffect
 
         if (toInvoke != null)
         {
-            GameManager.gameManager.InvokeACard(toInvoke, RowTypes.Sigee);
+            GameManager.gameManager.InvokeACard(toInvoke, RowTypes.Siege);
             return;
         }
     }
@@ -203,21 +203,20 @@ public class WeatherSigeeRowEffect : WeatherEffect
     {
         Card toInvoke = null;
 
-        if (PlayerBattlefield.GetWeatherCardInRow(RowTypes.Sigee) == null)
+        if (PlayerBattlefield.GetWeatherCardInRow(RowTypes.Siege) == null)
         {
             foreach (Card toFind in ActivePlayer.PlayerHand.GameDeck)
             {
-                if (toFind is WeatherCard weatherCard && weatherCard.Row == RowTypes.Sigee)
+                if (toFind is WeatherCard weatherCard && weatherCard.Row == RowTypes.Siege)
                 {
                     toInvoke = weatherCard;
                 }
             }
-
         }
 
         if (toInvoke != null)
         {
-            GameManager.gameManager.InvokeACard(toInvoke, RowTypes.Sigee);
+            GameManager.gameManager.InvokeACard(toInvoke, RowTypes.Siege);
             return;
         }
     }

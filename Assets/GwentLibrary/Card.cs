@@ -19,6 +19,7 @@ public abstract class Card
     public int EffectNumber { get; private set; } // número en correspondecia con el efecto de la carta
     public string CharacterDescription { get; private set; } // descripción del personaje representado por la carta
     public string Quote { get; private set; }
+    public int Owner { get; private set; }
 
     /// <summary>
     /// Constructor de la clase Card.
@@ -50,6 +51,21 @@ public abstract class Card
         EffectNumber = card.EffectNumber;
         CharacterDescription = card.CharacterDescription;
         Quote = card.Quote;
+    }
+
+    public Card(CompiledCard compiledCard)
+    {
+        type = compiledCard.Type;
+        Name = compiledCard.Name;
+        Faction = compiledCard.Faction;
+        EffectDescription = compiledCard.EffectDescription;
+        CharacterDescription = compiledCard.CharacterDescription;
+        Quote = compiledCard.Quote;
+    }
+
+    public void SetOwner(int id)
+    {
+        Owner = id;
     }
 
     /// <summary>
@@ -122,6 +138,12 @@ public abstract class Card
 
             case "Carta de Despeje":
                 return CardTypes.Carta_de_Despeje;
+
+            case "Plata":
+                return CardTypes.Unidad_de_Plata;
+
+            case "Oro":
+                return CardTypes.Unidad_Héroe;
 
             default:
                 throw new ArgumentException("La carta tiene un tipo no definido");

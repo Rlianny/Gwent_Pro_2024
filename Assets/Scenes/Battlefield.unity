@@ -2159,7 +2159,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75b14e7d7547cdf37848a07ddfacfbb3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CardPrefab: {fileID: 1771059711689953786, guid: 2997b6ed487f51d1abf6fb29ce8de53e, type: 3}
+  CardPrefab: {fileID: 2501588315085993445, guid: 151183c90130b4717bd22dddd97f154c, type: 3}
   Player1Name: {fileID: 952120459}
   Player1Faction: {fileID: 1892210697}
   Player1FirstVictory: {fileID: 1703483346}
@@ -3408,7 +3408,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Hand: {fileID: 583387634}
-  CardPrefab: {fileID: 1771059711689953786, guid: 2997b6ed487f51d1abf6fb29ce8de53e, type: 3}
+  CardPrefab: {fileID: 2501588315085993445, guid: 151183c90130b4717bd22dddd97f154c, type: 3}
   Interaction: {fileID: 583387636}
   LeaderInteraction: {fileID: 1611319002}
   LeaderSkillIsEnable: 1
@@ -10703,7 +10703,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Hand: {fileID: 8933253019043194137}
-  CardPrefab: {fileID: 1771059711689953786, guid: 2997b6ed487f51d1abf6fb29ce8de53e, type: 3}
+  CardPrefab: {fileID: 2501588315085993445, guid: 151183c90130b4717bd22dddd97f154c, type: 3}
   Interaction: {fileID: 8933253019043194139}
   LeaderInteraction: {fileID: 1295576857}
   LeaderSkillIsEnable: 1

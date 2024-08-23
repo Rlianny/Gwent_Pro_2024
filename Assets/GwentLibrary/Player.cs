@@ -8,6 +8,8 @@ using Unity.VisualScripting;
 
 public class Player
 {
+    private static int IDSelector;
+    public int PlayerID;
     public string PlayerName { get; private set; }      // nombre del jugador
     public string PlayerFaction { get; private set; }       // facción del jugador
     public Card PlayerLeader { get; private set; }      // carta líder de la facción del jugador
@@ -33,6 +35,12 @@ public class Player
         HasPassed = false;
         GamesWon = 0;
         IsActive = false;
+        PlayerID = GetNewID();
+    }
+
+    private int GetNewID()
+    {
+        return IDSelector++;
     }
 
     /// <summary>
@@ -97,7 +105,7 @@ public class Player
     /// <param name="Row">Lugar al que se moverá la carta.</param>
     public void DragAndDropMovement(Player activePlayer, Player rivalPlayer, Card card, RowTypes row)
     {
-        if (row == RowTypes.Melee || row == RowTypes.Ranged || row == RowTypes.Sigee)
+        if (row == RowTypes.Melee || row == RowTypes.Ranged || row == RowTypes.Siege)
         {
             if (card is UnityCard unityCard)
             {

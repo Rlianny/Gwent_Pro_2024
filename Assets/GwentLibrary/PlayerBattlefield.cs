@@ -14,11 +14,12 @@ public class PlayerBattlefield
     public int RangedRowScore;
     public int SigeeRowScore;
     public int TotalScore { get; private set; }
+    public List<Card> Graveyard = new();
     public static Dictionary<RowTypes, int> RowCorrespondency { get; private set; } = new()
     {
         {RowTypes.Melee, 0},
         {RowTypes.Ranged, 1},
-        {RowTypes.Sigee, 2},
+        {RowTypes.Siege, 2},
     };
 
     public PlayerBattlefield()
@@ -70,6 +71,11 @@ public class PlayerBattlefield
         battlefield[RowCorrespondency[row]].Remove(card);
     }
 
+    public void SendToGraveyard(Card card)
+    {
+        Graveyard.Add(card);
+    }
+
 
 
     /// <summary>
@@ -114,11 +120,11 @@ public class PlayerBattlefield
     {
         MeleeRowScore = ScoreCalculatorWithModiffiers(RowTypes.Melee);
         RangedRowScore = ScoreCalculatorWithModiffiers(RowTypes.Ranged);
-        SigeeRowScore = ScoreCalculatorWithModiffiers(RowTypes.Sigee);
+        SigeeRowScore = ScoreCalculatorWithModiffiers(RowTypes.Siege);
         TotalScore = TotalScoreCalculator(MeleeRowScore, RangedRowScore, SigeeRowScore);
     }
 
-    
+
     private int ScoreCalculatorWithModiffiers(RowTypes row)
     {
         if (GetRowFromBattlefield(row).Count > 0)

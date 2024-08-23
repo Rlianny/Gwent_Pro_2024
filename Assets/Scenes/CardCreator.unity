@@ -8806,7 +8806,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b891d7f3ce5a95ca58028e09f007a589, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CardPrefab: {fileID: 1434711207634163401, guid: 0ca636124e70b6706aa4dc754b5e3a0f, type: 3}
+  CardPrefab: {fileID: 5777239584531269760, guid: 778e1997e99d2400aab9f6e96498f2ff, type: 3}
   CollectionShower: {fileID: 1089991677}
   DeckShower: {fileID: 72981256}
   LeaderImage: {fileID: 818696259}

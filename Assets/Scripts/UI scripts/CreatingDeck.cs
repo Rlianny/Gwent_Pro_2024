@@ -126,7 +126,7 @@ public class CreatingDeck : MonoBehaviour
 
                     if (type == "Sigee")
                     {
-                        if (card is UnityCard unityCard && unityCard.Row.Contains(RowTypes.Sigee) && (card.Faction == "Neutral" || card.Faction == actualDeck.Faction))
+                        if (card is UnityCard unityCard && unityCard.Row.Contains(RowTypes.Siege) && (card.Faction == "Neutral" || card.Faction == actualDeck.Faction))
                             cardsToShow.Add(card);
 
                         StringToChangeCollection.text = "Asedio";
@@ -206,7 +206,7 @@ public class CreatingDeck : MonoBehaviour
 
                 if (type == "Sigee")
                 {
-                    if (card is UnityCard unityCard && unityCard.Row.Contains(RowTypes.Sigee))
+                    if (card is UnityCard unityCard && unityCard.Row.Contains(RowTypes.Siege))
                         cardsToShow.Add(card);
 
                     StringToChangeDeck.text = "Asedio";

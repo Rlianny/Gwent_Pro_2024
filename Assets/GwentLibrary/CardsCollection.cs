@@ -90,4 +90,21 @@ public class CardsCollection
             default: throw new ArgumentException("La carta tiene un tipo no definido");
         }
     }
+
+    private static Card TypeCreator(CompiledCard compiledCard)
+    {
+        switch (compiledCard.Type)
+        {
+            case "Plata":
+                return new LeaderCard(compiledCard);
+
+            case "Oro":
+                return new HeroCard(compiledCard);
+
+            case "Líder":
+                return new SilverUnityCard(compiledCard);
+
+            default: throw new ArgumentException("La carta tiene un tipo no definido");
+        }
+    }
 }

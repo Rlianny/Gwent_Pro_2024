@@ -138,22 +138,22 @@ public class UIVisual : MonoBehaviour, IObserver
         Player1DeckCount.text = "  " + GameManager.Player1.PlayerHand.GameDeck.Count.ToString();
         Player2DeckCount.text = "  " + GameManager.Player2.PlayerHand.GameDeck.Count.ToString();
     }
-    public void OnNotify(System.Enum action, Card card)
+    public void OnNotify(GameEventReport eventReport)
     {
-        Debug.Log($"UIVisual ha sido notificado para {action.ToString()}");
+        Debug.Log($"UIVisual ha sido notificado para {eventReport.GameEvent.ToString()}");
 
-        switch (action)
+        switch (eventReport.GameEvent)
         {
             case GameEvents.Start:
-                StartCoroutine(StartGame());
+                StartCoroutine(StartGame(eventReport));
                 return;
 
             case GameEvents.Summon:
-                StartCoroutine(Summon(card));
+                StartCoroutine(Summon(eventReport));
                 return;
 
             case GameEvents.PassTurn:
-                StartCoroutine(PassTurn());
+                StartCoroutine(PassTurn(eventReport));
                 return;
 
             case GameEvents.FinishRound:
@@ -161,7 +161,7 @@ public class UIVisual : MonoBehaviour, IObserver
                 return;
 
             case GameEvents.StartRound:
-                StartCoroutine(StartRound());
+                StartCoroutine(StartRound(eventReport));
                 return;
 
             case GameEvents.FinishGame:
@@ -173,19 +173,19 @@ public class UIVisual : MonoBehaviour, IObserver
                 return;
 
             case GameEvents.Invoke:
-                InvokeUI(card);
+                InvokeUI(eventReport);
                 return;
 
             case GameEvents.DecoyEventStart:
-                DecoyEventInit();
+                DecoyEventInit(eventReport);
                 return;
 
             case GameEvents.DecoyEventFinish:
-                DecoyEventEnd(card);
+                DecoyEventEnd(eventReport);
                 return;
 
             case GameEvents.DecoyEventAbort:
-                AbortingDecoyEvent();
+                AbortingDecoyEvent(eventReport);
                 return;
         }
     }
@@ -205,28 +205,26 @@ public class UIVisual : MonoBehaviour, IObserver
             Player2HandScript.DrawCardUI(GameManager.Player2.PlayerHand.PlayerHand[GameManager.Player2.PlayerHand.PlayerHand.Count - 2]);
     }
 
-    public void AbortingDecoyEvent()
+    public void AbortingDecoyEvent(GameEventReport eventReport)
     {
         UpdateScores();
         UpdateBattlefieldUI();
 
-        if (GameManager.Player1.IsActive == true && GameManager.Player2.HasPassed == false)
-            StartCoroutine(ShowMessage($"Turno de {GameManager.Player2.PlayerName}"));
+        if (eventReport.RivalPlayer.HasPassed == false)
+            StartCoroutine(ShowMessage($"Turno de {eventReport.RivalPlayer.PlayerName}"));
 
-        else if (GameManager.Player2.IsActive == true && GameManager.Player1.HasPassed == false)
-            StartCoroutine(ShowMessage($"Turno de {GameManager.Player1.PlayerName}"));
     }
 
-    public void DecoyEventEnd(Card card)
+    public void DecoyEventEnd(GameEventReport eventReport)
     {
         UpdateScores();
         UpdateBattlefieldUI();
 
         if (GameManager.Player1.IsActive == true && GameManager.Player2.HasPassed == false)
-            InternalDecoyEventEnd(card, Player1HandScript, GameManager.Player2);
+            InternalDecoyEventEnd(eventReport.Card, Player1HandScript, GameManager.Player2);
 
         if (GameManager.Player2.IsActive == true && GameManager.Player1.HasPassed == false)
-            InternalDecoyEventEnd(card, Player2HandScript, GameManager.Player1);
+            InternalDecoyEventEnd(eventReport.Card, Player2HandScript, GameManager.Player1);
     }
 
     private void InternalDecoyEventEnd(Card card, UIHand hand, Player nextPlayer)
@@ -243,105 +241,72 @@ public class UIVisual : MonoBehaviour, IObserver
         StartCoroutine(ShowMessage($"Turno de {nextPlayer.PlayerName}"));
 
     }
-    public void DecoyEventInit()
+    public void DecoyEventInit(GameEventReport eventReport)
     {
+        List<UnityCard> Row = eventReport.ActivePlayer.Battlefield.GetRowFromBattlefield(eventReport.RowOfCard);
+        List<SilverUnityCard> CardsInDecoyRow = new();
 
-        if (GameManager.Player1.IsActive == true)
-            InternalDecoyEventInit(GameManager.Player1, new());
+        if (Row.Count == 1) GameManager.gameManager.AbortDecoyEvent();
         else
-            InternalDecoyEventInit(GameManager.Player2, new());
-    }
-
-    private void InternalDecoyEventInit(Player activePlayer, List<SilverUnityCard> CardsInDecoyRow)
-    {
-        List<UnityCard> Row = null;
-
-        for (int i = 0; i < 3; i++)
         {
-            List<UnityCard> cardList = activePlayer.Battlefield.GetRowFromBattlefield(Tools.RowForIndex[i]);
-            
-            foreach (UnityCard unityCard in cardList)
+            foreach (UnityCard unityCard in Row)
             {
-                if (unityCard.Type == CardTypes.Señuelo)
-                    Row = cardList;
+                if (unityCard is SilverUnityCard silverUnityCard)
+                    CardsInDecoyRow.Add(silverUnityCard);
             }
-        }
 
-        if (Row != null)
-        {
-            if (Row.Count == 1)
+            if (CardsInDecoyRow.Count > 0)
             {
-                GameManager.gameManager.AbortDecoyEvent();
+                foreach (SilverUnityCard silverUnityCard in CardsInDecoyRow)
+                {
+                    Debug.Log(CardsInDecoyRow.Count);
+                    var newCard = Instantiate(CardToPickPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+                    newCard.transform.SetParent(DecoyEventCardsShower.transform);
+                    UICard ui = newCard.GetComponent<UICard>();
+                    ui.PrintCard(silverUnityCard);
+                }
+
             }
 
             else
             {
-                foreach (UnityCard unityCard in Row)
-                {
-                    if (unityCard is SilverUnityCard silverUnityCard)
-                        CardsInDecoyRow.Add(silverUnityCard);
-                }
-
-                if (CardsInDecoyRow.Count > 0)
-                {
-                    foreach (SilverUnityCard silverUnityCard in CardsInDecoyRow)
-                    {
-                        Debug.Log(CardsInDecoyRow.Count);
-                        var newCard = Instantiate(CardToPickPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-                        newCard.transform.SetParent(DecoyEventCardsShower.transform);
-                        UICard ui = newCard.GetComponent<UICard>();
-                        ui.PrintCard(silverUnityCard);
-                    }
-
-                }
-
-                else
-                {
-                    GameManager.gameManager.AbortDecoyEvent();
-                    return;
-                }
-
-                SmogForDecoyEvent.gameObject.SetActive(true);
-
+                GameManager.gameManager.AbortDecoyEvent();
+                return;
             }
-        }
 
-        else
-        {
-            GameManager.gameManager.AbortDecoyEvent();
+            SmogForDecoyEvent.gameObject.SetActive(true);
+
         }
     }
 
-
-    private void InvokeUI(Card card)
+    private void InvokeUI(GameEventReport eventReport)
     {
         UpdateScores();
         UpdateBattlefieldUI();
 
-        if (GameManager.Player1.IsActive == true && GameManager.Player2.HasPassed == false)
-            StartCoroutine(ShowMessage($"Turno de {GameManager.Player2.PlayerName}"));
+        if(!eventReport.RivalPlayer.HasPassed)
+        {
+            StartCoroutine(ShowMessage($"Turno de {eventReport.RivalPlayer.PlayerName}"));
+        }
 
-        if (GameManager.Player2.IsActive == true && GameManager.Player1.HasPassed == false)
-            StartCoroutine(ShowMessage($"Turno de {GameManager.Player1.PlayerName}"));
-
-        if (card is WeatherCard weatherCard)
+        if (eventReport.Card is WeatherCard weatherCard)
         {
             switch (weatherCard.Row)
             {
                 case RowTypes.Melee:
-                    InternalInvokeUI(card, WeatherM);
+                    InternalInvokeUI(eventReport.Card, WeatherM);
                     ShowWeatherInRow(WeatherEffect2M);
                     ShowWeatherInRow(WeatherEffect1M);
                     return;
 
                 case RowTypes.Ranged:
-                    InternalInvokeUI(card, WeatherR);
+                    InternalInvokeUI(eventReport.Card, WeatherR);
                     ShowWeatherInRow(WeatherEffect2R);
                     ShowWeatherInRow(WeatherEffect1R);
                     return;
 
-                case RowTypes.Sigee:
-                    InternalInvokeUI(card, WeatherS);
+                case RowTypes.Siege:
+                    InternalInvokeUI(eventReport.Card, WeatherS);
                     ShowWeatherInRow(WeatherEffect2S);
                     ShowWeatherInRow(WeatherEffect1S);
                     return;
@@ -350,18 +315,18 @@ public class UIVisual : MonoBehaviour, IObserver
 
         else if (GameManager.Player1.IsActive == true)
         {
-            if (card is IncreaseCard increaseCard)
+            if (eventReport.Card is IncreaseCard increaseCard)
             {
                 switch (increaseCard.Row)
                 {
                     case RowTypes.Melee:
-                        InternalInvokeUI(card, IncreaseM1); return;
+                        InternalInvokeUI(eventReport.Card, IncreaseM1); return;
 
                     case RowTypes.Ranged:
-                        InternalInvokeUI(card, IncreaseR1); return;
+                        InternalInvokeUI(eventReport.Card, IncreaseR1); return;
 
-                    case RowTypes.Sigee:
-                        InternalInvokeUI(card, IncreaseS1);
+                    case RowTypes.Siege:
+                        InternalInvokeUI(eventReport.Card, IncreaseS1);
                         return;
                 }
             }
@@ -369,18 +334,18 @@ public class UIVisual : MonoBehaviour, IObserver
 
         else if (GameManager.Player2.IsActive == true)
         {
-            if (card is IncreaseCard increaseCard)
+            if (eventReport.Card is IncreaseCard increaseCard)
             {
                 switch (increaseCard.Row)
                 {
                     case RowTypes.Melee:
-                        InternalInvokeUI(card, IncreaseM2); return;
+                        InternalInvokeUI(eventReport.Card, IncreaseM2); return;
 
                     case RowTypes.Ranged:
-                        InternalInvokeUI(card, IncreaseR2); return;
+                        InternalInvokeUI(eventReport.Card, IncreaseR2); return;
 
-                    case RowTypes.Sigee:
-                        InternalInvokeUI(card, IncreaseS2);
+                    case RowTypes.Siege:
+                        InternalInvokeUI(eventReport.Card, IncreaseS2);
                         return;
                 }
             }
@@ -532,61 +497,47 @@ public class UIVisual : MonoBehaviour, IObserver
             ShowImage(Player2SecondVictory);
     }
 
-    private IEnumerator StartGame()
+    private IEnumerator StartGame(GameEventReport eventReport)
     {
         UpdateScores();
 
         yield return new WaitForSeconds(2f);
 
-        if (GameManager.Player1.IsActive == true)
-        {
-            StartCoroutine(ShowMessage($"{GameManager.Player1.PlayerName} empieza..."));
-        }
-
-        if (GameManager.Player2.IsActive == true)
-        {
-            StartCoroutine(ShowMessage($"{GameManager.Player2.PlayerName} empieza..."));
-        }
+        StartCoroutine(ShowMessage($"{eventReport.ActivePlayer.PlayerName} empieza..."));
     }
 
-    private IEnumerator Summon(Card card)
+    private IEnumerator Summon(GameEventReport eventReport)
     {
         UpdateScores();
         UpdateBattlefieldUI();
 
-        if (card != null)
+        if (eventReport.Card != null)
         {
-            if (GameManager.Player1.IsActive == true && GameManager.Player2.HasPassed == false)
+
+            if (eventReport.ActivePlayer.IsActive == true && eventReport.RivalPlayer.HasPassed == false)
             {
-                StartCoroutine(ShowMessage($"Turno de {GameManager.Player2.PlayerName}"));
+                StartCoroutine(ShowMessage($"Turno de {eventReport.RivalPlayer.PlayerName}"));
             }
 
-            else if (GameManager.Player2.IsActive == true && GameManager.Player1.HasPassed == false)
-            {
-                StartCoroutine(ShowMessage($"Turno de {GameManager.Player1.PlayerName}"));
-            }
-
-
-
-            if (card.Name == "Lluvia de Plumbuses")
+            if (eventReport.Card.Name == "Lluvia de Plumbuses")
             {
                 ShowWeatherInRow(WeatherEffect2M);
                 ShowWeatherInRow(WeatherEffect1M);
             }
 
-            if (card.Name == "Tormenta interdimensional")
+            if (eventReport.Card.Name == "Tormenta interdimensional")
             {
                 ShowWeatherInRow(WeatherEffect2S);
                 ShowWeatherInRow(WeatherEffect1S);
             }
 
-            if (card.Name == "Granizo de portales")
+            if (eventReport.Card.Name == "Granizo de portales")
             {
                 ShowWeatherInRow(WeatherEffect2R);
                 ShowWeatherInRow(WeatherEffect1R);
             }
 
-            if (card.Type == CardTypes.Carta_de_Despeje || card.EffectNumber == 12)
+            if (eventReport.Card.Type == CardTypes.Carta_de_Despeje || eventReport.Card.EffectNumber == 12)
             {
                 WeatherEffect1M.gameObject.SetActive(false);
                 WeatherEffect2M.gameObject.SetActive(false);
@@ -599,7 +550,7 @@ public class UIVisual : MonoBehaviour, IObserver
                 ClearSlot(WeatherM);
             }
 
-            if (card.EffectNumber == 7)
+            if (eventReport.Card.EffectNumber == 7)
             {
                 if (GameManager.Player1.IsActive == true)
                 {
@@ -612,14 +563,14 @@ public class UIVisual : MonoBehaviour, IObserver
                 }
             }
 
-            if (card.EffectNumber == 16)
+            if (eventReport.Card.EffectNumber == 16)
             {
                 Player1HandScript.LeaderSkillIsEnable = false;
                 Player2HandScript.LeaderSkillIsEnable = false;
 
             }
 
-            if (card.EffectNumber == 15)
+            if (eventReport.Card.EffectNumber == 15)
             {
                 if (GameManager.Player1.IsActive == true)
                 {
@@ -637,24 +588,15 @@ public class UIVisual : MonoBehaviour, IObserver
             yield return null;
     }
 
-    IEnumerator PassTurn()
+    IEnumerator PassTurn(GameEventReport eventReport)
     {
-        if (GameManager.Player1.HasPassed == true && GameManager.Player2.HasPassed == false)
+        if (eventReport.ActivePlayer.HasPassed == true && eventReport.RivalPlayer.HasPassed == false)
         {
-            StartCoroutine(ShowMessage($"{GameManager.Player1.PlayerName} ha pasado"));
+            StartCoroutine(ShowMessage($"{eventReport.ActivePlayer} ha pasado"));
 
             yield return new WaitForSeconds(2f);
 
-            StartCoroutine(ShowMessage($"Turno de {GameManager.Player2.PlayerName}"));
-        }
-
-        else if (GameManager.Player2.HasPassed == true && GameManager.Player1.HasPassed == false)
-        {
-            StartCoroutine(ShowMessage($"{GameManager.Player2.PlayerName} ha pasado turno"));
-
-            yield return new WaitForSeconds(2f);
-
-            StartCoroutine(ShowMessage($"Turno de {GameManager.Player1.PlayerName}"));
+            StartCoroutine(ShowMessage($"Turno de {eventReport.RivalPlayer.PlayerName}"));
         }
     }
 
@@ -684,20 +626,14 @@ public class UIVisual : MonoBehaviour, IObserver
 
     }
 
-    IEnumerator StartRound()
+    IEnumerator StartRound(GameEventReport eventReport)
     {
         ShowVictories();
 
-        if (GameManager.Player1.IsActive == true && GameManager.Player2.HasPassed == false)
+        if (eventReport.RivalPlayer.HasPassed == false)
         {
             yield return new WaitForSeconds(4f);
-            StartCoroutine(ShowMessage($"Turno de {GameManager.Player1.PlayerName}"));
-        }
-
-        else if (GameManager.Player2.IsActive == true && GameManager.Player1.HasPassed == false)
-        {
-            yield return new WaitForSeconds(4f);
-            StartCoroutine(ShowMessage($"Turno de {GameManager.Player2.PlayerName}"));
+            StartCoroutine(ShowMessage($"Turno de {eventReport.ActivePlayer.PlayerName}"));
         }
 
         UpdateScores();

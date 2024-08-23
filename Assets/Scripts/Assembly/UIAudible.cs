@@ -67,17 +67,17 @@ public class UIAudible : MonoBehaviour, IObserver
 
     }
 
-    public void OnNotify(System.Enum action, Card card)
+    public void OnNotify(GameEventReport eventReport)
     {
-        UnityEngine.Debug.Log($"UIAudible ha sido notificado para {action.ToString()}");
+        UnityEngine.Debug.Log($"UIAudible ha sido notificado para {eventReport.GameEvent.ToString()}");
 
-        switch (action)
+        switch (eventReport.GameEvent)
         {
             case GameEvents.Summon:
-                if (card != null)
+                if (eventReport.Card != null)
                 {
-                    if (SoundsEffectForCharacters.ContainsKey(card.Name))
-                        PlaySoundEffect(SoundsEffectForCharacters[card.Name]);
+                    if (SoundsEffectForCharacters.ContainsKey(eventReport.Card.Name))
+                        PlaySoundEffect(SoundsEffectForCharacters[eventReport.Card.Name]);
                 }
                 return;
 
@@ -108,10 +108,10 @@ public class UIAudible : MonoBehaviour, IObserver
                 return;
 
             case GameEvents.Invoke:
-                if (card != null)
+                if (eventReport.Card != null)
                 {
-                    if (SoundsEffectForCharacters.ContainsKey(card.Name))
-                        PlaySoundEffect(SoundsEffectForCharacters[card.Name]);
+                    if (SoundsEffectForCharacters.ContainsKey(eventReport.Card.Name))
+                        PlaySoundEffect(SoundsEffectForCharacters[eventReport.Card.Name]);
                 }
                 return;
 
