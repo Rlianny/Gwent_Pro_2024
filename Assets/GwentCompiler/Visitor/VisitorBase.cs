@@ -18,7 +18,7 @@ public abstract class VisitorBase<TResult> : IVisitor<TResult>, IErrorReporter
 
     public void Report(Error error)
     {
-        System.Console.WriteLine(error.Argument);
+        Debug.Log(error.Argument);
     }
 
     /// <summary>

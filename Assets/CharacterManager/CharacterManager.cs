@@ -21,14 +21,23 @@ public static class CharacterManager
         if (!string.IsNullOrEmpty(query) && Content.FilesRoot.Length != 0)
         {
             SearchResult result = Engine.Query(query, Content);
-            Debug.Log(result.ItemsArray[0].Score);
+            //Debug.Log(result.ItemsArray[0].Score);
 
             if (result.ItemsArray[0].Score < 0.03) return "Morty Oculto";
-            return result.ItemsArray[0].Title;
+
+            int count = 0;
+
+            if (query.StartsWith("Morty"))
+            {
+                while (!result.ItemsArray[count].Title.StartsWith("Morty"))
+                {
+                    count++;
+                }
+            }
+
+            return result.ItemsArray[count].Title;
         }
 
-        // SearchItem ToChange = new SearchItem("Error", "Realice una nueva búsqueda", (float)0.05);
-        // SearchItem[] Change = new SearchItem[] { ToChange };
         return null;
 
     }

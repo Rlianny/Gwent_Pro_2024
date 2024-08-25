@@ -1,3 +1,15 @@
 using UnityEngine;
 using System;
-public abstract class CompiledObject { }
+using System.IO;
+using System.Text;
+using System.Runtime.Serialization.Formatters.Binary;
+
+
+[Serializable]
+public abstract class CompiledObject
+{
+    public void Save()
+    {
+        FileFormatter.Save(this);
+    }
+}

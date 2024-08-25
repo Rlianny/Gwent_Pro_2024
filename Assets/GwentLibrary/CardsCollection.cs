@@ -11,41 +11,33 @@ public class CardsCollection
     public List<Card> Collection { get; private set; } = new(); // Lista que contiene todas las cartas del juego
     public Dictionary<string, List<Card>> AllFactions { get; private set; } = new(); // Diccionario que tiene como key los nombres de las facciones y como value las cartas pertenecientes a la facción (no incluye al líder)
     public Dictionary<string, Card> AllLeaders { get; private set; } = new();  // Diccionario que tiene como key los nombres de las facciones y como value a la carta líder de la facción
+    public static Dictionary<string, Card> AllCardsName = new();
 
     /// <summary>
     /// Este método es el constructor de la clase CardsCollection, que representa el contenedor de todas las cartas existentes en el juego.
     /// </summary>
-    /// <param name="CardInfoArray">Lista donde cada posición es un array que contiene la información de la carta.</param>
-    public CardsCollection(List<string[]> CardInfoArray)
+    /// <param name="cardInfoArray">Lista donde cada posición es un array que contiene la información de la carta.</param>
+    public CardsCollection(List<string[]> cardInfoArray, List<CompiledObject> compileds)
     {
-        NumberOfCards = CardInfoArray.Count;
+        AllCardsName = new();
+        NumberOfCards = cardInfoArray.Count + compileds.Count;
 
         int count = 0;
 
-        foreach (string[] infoArray in CardInfoArray)
+        foreach (string[] infoArray in cardInfoArray)
         {
             Card card = TypeCreator(infoArray[0], infoArray);
-            Collection.Add(card);
-            Debug.Log($"{card.Name} ha entrado al campo de batalla");
             count++;
+            CardBorn(card);
+        }
 
-            if (card.Type != CardTypes.Líder)        // si la carta no es el Líder de una facción 
+        foreach (var compiledObj in compileds)
+        {
+            if (compiledObj is CompiledCard compiledCard)
             {
-                if (!AllFactions.Keys.Contains(card.Faction))        //  si la facción no estaba como llave del diccionario la agregamos y agregamos la carta 
-                {
-                    List<Card> Temp = new();
-                    AllFactions.Add(card.Faction, Temp);
-                    Temp.Add(card);
-                }
-                else        // si la facción ya estaba establecida como llave del diccionario solo añadimos la carta
-                {
-                    AllFactions[card.Faction].Add(card);
-                }
-            }
-            else
-            {
-                if (!AllLeaders.ContainsKey(card.Faction))
-                    AllLeaders.Add(card.Faction, card);
+                Card card = TypeCreator(compiledCard);
+                count++;
+                CardBorn(card);
             }
         }
 
@@ -55,6 +47,34 @@ public class CardsCollection
             Debug.Log("Todas las cartas han sido cargadas");
     }
 
+    private void CardBorn(Card card)
+    {
+        Collection.Add(card);
+
+        if (!AllCardsName.ContainsKey(card.Name))
+            AllCardsName.Add(card.Name, card);
+
+        Debug.Log($"{card.Name} ha entrado al campo de batalla");
+
+        if (card.Type != CardTypes.Líder)        // si la carta no es el Líder de una facción 
+        {
+            if (!AllFactions.Keys.Contains(card.Faction))        //  si la facción no estaba como llave del diccionario la agregamos y agregamos la carta 
+            {
+                List<Card> Temp = new();
+                AllFactions.Add(card.Faction, Temp);
+                Temp.Add(card);
+            }
+            else        // si la facción ya estaba establecida como llave del diccionario solo añadimos la carta
+            {
+                AllFactions[card.Faction].Add(card);
+            }
+        }
+        else
+        {
+            if (!AllLeaders.ContainsKey(card.Faction))
+                AllLeaders.Add(card.Faction, card);
+        }
+    }
 
     /// <summary>
     /// Este método elige el tipo de carta que será creado en correspondecia con el tipo declarado en la base de datos.
@@ -95,13 +115,13 @@ public class CardsCollection
     {
         switch (compiledCard.Type)
         {
-            case "Plata":
+            case "Líder":
                 return new LeaderCard(compiledCard);
 
             case "Oro":
                 return new HeroCard(compiledCard);
 
-            case "Líder":
+            case "Plata":
                 return new SilverUnityCard(compiledCard);
 
             default: throw new ArgumentException("La carta tiene un tipo no definido");

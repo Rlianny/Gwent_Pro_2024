@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 
+[Serializable]
 public class Parameter
 {
     public string Name { get; private set; } 

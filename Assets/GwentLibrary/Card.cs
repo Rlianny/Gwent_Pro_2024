@@ -8,18 +8,19 @@ using TMPro;
 public abstract class Card
 {
     public string type;
-    public CardTypes Type // tipo de carta
+    public CardTypes Type
     {
         get { return TypeClassifier(type); }
         private set { type = TypeClassifier(type).ToString().Replace('_', ' '); }
     }
     public string Name { get; private set; }
     public string Faction { get; private set; }
-    public string EffectDescription { get; private set; } // descripción del efecto de la carta
-    public int EffectNumber { get; private set; } // número en correspondecia con el efecto de la carta
+    public string EffectDescription { get; private set; }
+    public int EffectNumber { get; private set; }
     public string CharacterDescription { get; private set; } // descripción del personaje representado por la carta
     public string Quote { get; private set; }
     public int Owner { get; private set; }
+    public List<EffectActivation> OnActivation { get; private set; }
 
     /// <summary>
     /// Constructor de la clase Card.
@@ -61,6 +62,7 @@ public abstract class Card
         EffectDescription = compiledCard.EffectDescription;
         CharacterDescription = compiledCard.CharacterDescription;
         Quote = compiledCard.Quote;
+        OnActivation = compiledCard.OnActivation;
     }
 
     public void SetOwner(int id)

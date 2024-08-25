@@ -9,15 +9,15 @@ public partial class ObjectCompiler : VisitorBase<object>
     public ObjectCompiler(List<IProgramNode> nodes)
     {
         this.nodes = nodes;
-    }  
+    }
 
     public List<CompiledObject> CompileObjects()
     {
         List<CompiledObject> compiledObjects = new();
-        
-        foreach(var node in nodes)
+
+        foreach (var node in nodes)
         {
-            if(node is CardDeclaration cardDeclaration)
+            if (node is CardDeclaration cardDeclaration)
             {
                 try
                 {
@@ -26,7 +26,7 @@ public partial class ObjectCompiler : VisitorBase<object>
                 catch (RuntimeError ex)
                 {
                     hadError = true;
-                    Console.WriteLine(ex.Message);
+                    Debug.Log(ex.Message);
                 }
             }
             if (node is EffectDeclaration effectDeclaration)
@@ -38,7 +38,7 @@ public partial class ObjectCompiler : VisitorBase<object>
                 catch (RuntimeError ex)
                 {
                     hadError = true;
-                    Console.WriteLine(ex.Message);
+                    Debug.Log(ex.Message);
                 }
             }
         }

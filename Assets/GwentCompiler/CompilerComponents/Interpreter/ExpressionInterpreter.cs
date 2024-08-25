@@ -173,7 +173,7 @@ public partial class Interpreter : VisitorBase<object>
 
     public object Visit(Variable variable)
     {
-        return environment.Get(variable.Value);
+        return Environment.Get(variable.Value);
     }
 
     public object Visit(GroupExpression group)
@@ -185,20 +185,20 @@ public partial class Interpreter : VisitorBase<object>
     {
         var value = Evaluate(expr.Value);
         if (value == null || expr.Name == null) return null;
-        environment.Assign(expr.Name.Value.Lexeme, value);
+        Environment.Assign(expr.Name.Value.Lexeme, value);
         return value;
     }
 
     public object Visit(IncrementOrDecrementOperationExpr expr)
     {
         if (expr.Name == null) return null;
-        var value = environment.Get(expr.Name.Value);
+        var value = Environment.Get(expr.Name.Value);
 
         if (value is double valueInt)
         {
             if (expr.Operation.Subtype == TokenSubtypes.PostDecrement) valueInt--;
             else valueInt++;
-            environment.Assign(expr.Name.Value.Lexeme, valueInt);
+            Environment.Assign(expr.Name.Value.Lexeme, valueInt);
             return valueInt;
         }
         else throw new RuntimeError("The operand must be a numeric value", expr.Operation.Location);
@@ -340,4 +340,32 @@ public partial class Interpreter : VisitorBase<object>
     }
 
     // ShuffleMethodExpression
+
+    public object Visit(CardPropertyAccessExpr expr)
+    {
+        var variable = Environment.Get(expr.Variable.Value);
+        if (variable is Card card)
+        {
+            switch(expr.Access.Subtype)
+            {
+                case TokenSubtypes.Type:
+                return card.Type;
+
+                case TokenSubtypes.Name:
+                return card.Name;
+
+                case TokenSubtypes.Faction:
+                return card.Faction;
+
+                case TokenSubtypes.Power:
+                if(card is UnityCard unityCard) return unityCard.Power;
+                else throw new RuntimeError("This card does not have an accessible 'power' property", expr.Access.Location);
+
+                default:
+                throw new RuntimeError($"Card does not contain a definition for the '{expr.Access.Lexeme}' access type", expr.Access.Location);
+            }
+        }
+        throw new RuntimeError($"The variable '{expr.Variable.Value.Lexeme}' must be a Card", expr.Variable.Value.Location);
+
+    }
 }

@@ -1,0 +1,27 @@
+card
+{
+    Name: "Beluga",
+    Type: "Plata",
+    Faction: "Smiths Interdimensionales",
+    Power: 10,
+    Range: ["Melee", "Siege"],
+    CharacterDescription: "Es una criatura acuatica que proviene del océano, muy parecido a un pez",
+    EffectDescription: "Reduce en 5 los puntos de las cartas del tablero",
+    Quote: "Blu blu blu",
+    OnActivation:
+    [
+        {
+            Effect:
+            {
+                Name: "Damage",
+                Amount: 5,
+            },
+            Selector:
+            {
+                Source: "board",
+                Single: false,
+                Predicate: (unit) => unit.Faction == "Rickpublica"
+            },
+        }
+    ]
+}

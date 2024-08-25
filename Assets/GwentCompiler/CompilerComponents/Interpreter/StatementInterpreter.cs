@@ -1,5 +1,8 @@
 using UnityEngine;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 public partial class Interpreter : VisitorBase<object>
 {
     public object Visit(ExpressionStmt expressionStatement)
@@ -17,7 +20,7 @@ public partial class Interpreter : VisitorBase<object>
 
     public object Visit(BlockStmt block)
     {
-        ExecuteBlock(block, new Environment(environment));
+        ExecuteBlock(block, new Environment(Environment));
         return null;
     }
 
@@ -40,6 +43,27 @@ public partial class Interpreter : VisitorBase<object>
 
     public object Visit(ForStmt forStmt)
     {
-        throw new NotImplementedException();
+        Environment previous = this.Environment;
+        try
+        {
+            var collection = Evaluate(forStmt.Collection);
+
+            if (collection is IEnumerable<object> enumerable)
+            {
+                var list = enumerable.ToList();
+                foreach (var item in list)
+                {
+                    Environment.Assign(forStmt.Variable.Value.Lexeme, item);
+                    Execute(forStmt.Body);
+                }
+            }
+        }
+
+        finally
+        {
+            this.Environment = previous;
+        }
+        
+        return null;
     }
 }

@@ -12,6 +12,7 @@ public abstract class Effect
 {
     public static Dictionary<int, Effect> EffectDictionary { get; private set; } = new()
     {
+        {0, new PersonalizedEffect()},
         {1, new IncreaseMeleeRowEffect()},
         {2, new IncreaseRangedRowEffect()},
         {3, new IncreaseSigeeRowEffect()},
@@ -31,6 +32,26 @@ public abstract class Effect
         {17, new VoidEffect()},
     };
 
+    protected static Dictionary<string, CompiledEffect> AllCompiledEffects { get; } = new();
+
+    public static bool RegisterEffect(CompiledEffect compiledEffect)
+    {
+        if(!AllCompiledEffects.ContainsKey(compiledEffect.Name))
+        {
+            AllCompiledEffects.Add(compiledEffect.Name, compiledEffect);
+            return true;
+        }
+        else return false;
+    }
+
+    public static CompiledEffect GetCompiledEffect(string name)
+    {
+        if(AllCompiledEffects.ContainsKey(name)) return AllCompiledEffects[name];
+        else return null;
+    }
+
+    public static bool CheckEffectExistance(string effectName) => AllCompiledEffects.ContainsKey(effectName);
+
     /// <summary>
     /// Este método manipula el campo de batalla realizando el efecto de la carta.
     /// </summary>
@@ -38,6 +59,80 @@ public abstract class Effect
     /// <param name="RivalPlayer">El jugador rival al momento de la llamada del método.</param>
     /// <param name="card">La carta desde la cual se activa el efecto.</param>
     public abstract void TakeEffect(Player ActivePlayer, Player RivalPlayer, Card card);
+}
+
+public class PersonalizedEffect : Effect
+{
+    private CompiledEffect baseEffect;
+
+    public override void TakeEffect(Player ActivePlayer, Player RivalPlayer, Card card)
+    {
+        foreach (var effect in card.OnActivation)
+        {
+            PersonalizeEffect(effect.EffectName);
+
+            List<Card> targets = GetTargets(ActivePlayer, RivalPlayer, card, effect);
+            Context context = new();
+
+            Interpreter interpreter = new();
+            interpreter.Environment.Assign(baseEffect.ContextId, context);
+            interpreter.Environment.Assign(baseEffect.TargetsId, targets);
+
+            foreach (var pair in effect.Parameters)
+            {
+                interpreter.Environment.Assign(pair.Key.Name, pair.Value);
+            }
+
+            interpreter.Execute(baseEffect.Block);
+
+        }
+    }
+
+    private List<Card> GetTargets(Player ActivePlayer, Player RivalPlayer, Card card, EffectActivation effect)
+    {
+        List<Card> targets = new();
+        List<Card> source = null;
+
+        switch (effect.SelectorSource)
+        {
+            case "board":
+                source = Context.Board;
+                break;
+            case "hand":
+                source = Context.Hand;
+                break;
+            case "otherHand":
+                source = Context.HandOfPlayer(RivalPlayer.PlayerID);
+                break;
+            case "deck":
+                source = Context.Deck;
+                break;
+            case "otherDeck":
+                source = Context.DeckOfPlayer(RivalPlayer.PlayerID);
+                break;
+            case "field":
+                source = Context.Field;
+                break;
+            case "otherField":
+                source = Context.FieldOfPlayer(RivalPlayer.PlayerID);
+                break;
+        }
+
+        foreach (Card sourceCard in source)
+        {
+            if (effect.SelectorPredicate.Invoke(sourceCard))
+            {
+                targets.Add(sourceCard);
+                if (effect.SelectorSingle) break;
+            }
+        }
+
+        return targets;
+    }
+    private void PersonalizeEffect(string effectName)
+    {
+        baseEffect = AllCompiledEffects[effectName];
+    }
 }
 
 public abstract class IncreaseEffect : Effect

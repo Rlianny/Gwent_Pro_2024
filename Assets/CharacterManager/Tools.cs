@@ -1,11 +1,11 @@
-using System.Text.RegularExpressions; // Regex 
-using System.Text; //NormalizationForm
+using System.Text.RegularExpressions;
+using System.Text;
 using UnityEngine;
 using System;
 
 public class CharacterTools
 {
-    private static string RemoveAccentsAndPunctuations(string inputString) //
+    private static string RemoveAccentsAndPunctuations(string inputString)
     {
         return Regex.Replace(inputString.Normalize(NormalizationForm.FormD), @"[^a-zA-z0-9 ]+", " "); 
     }

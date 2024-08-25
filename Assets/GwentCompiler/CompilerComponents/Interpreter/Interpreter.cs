@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public partial class Interpreter : VisitorBase<object>
 {
-    private Environment environment = new Environment();
+    public Environment Environment = new Environment();
 
     #region Principal Methods
 
@@ -37,22 +37,22 @@ public partial class Interpreter : VisitorBase<object>
         return null;
     }
 
-    private object Evaluate(IExpression expression)
+    public object Evaluate(IExpression expression)
     {
         return VisitBase(expression);
     }
 
-    private void Execute(IStatement statement)
+    public void Execute(IStatement statement)
     {
         VisitBase(statement);
     }
 
-    public void ExecuteBlock(BlockStmt block, Environment environment)
+    private void ExecuteBlock(BlockStmt block, Environment environment)
     {
-        Environment previous = this.environment;
+        Environment previous = this.Environment;
         try
         {
-            this.environment = environment;
+            this.Environment = environment;
             foreach (var stmt in block.Statements)
             {
                 Execute(stmt);
@@ -60,7 +60,7 @@ public partial class Interpreter : VisitorBase<object>
         }
         finally
         {
-            this.environment = previous;
+            this.Environment = previous;
         }
     }
     #endregion

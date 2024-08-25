@@ -35,10 +35,7 @@ public class DataFolder
             Files[count] = file;
             count++;
 
-            Debug.Log($"{file.FileName} founded");
-
             TF.Add(file.FileName, file.WordFreq);
-            //Relevance.Add(file.FileName, file.WordFreq);
         }
 
 

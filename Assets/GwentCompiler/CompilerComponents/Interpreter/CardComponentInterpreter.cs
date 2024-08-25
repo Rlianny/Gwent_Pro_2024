@@ -178,12 +178,13 @@ public partial class Interpreter : VisitorBase<object>
         string selectorSource = null;
         bool selectorSingle = false;
         EffectActivation postAction = null;
+        Delegate @delegate = null;
 
         var name = Evaluate(data.Effect.EffectName);
         if (name is string stringName) effectName = stringName;
         else throw new RuntimeError("The 'Name' must be a string value", data.Effect.Colon);
 
-        if (FakeEffect.AllEffects.ContainsKey(stringName))
+        if (Effect.CheckEffectExistance(stringName))
         {
             Dictionary<Parameter, object> parameter = new();
 
@@ -215,16 +216,16 @@ public partial class Interpreter : VisitorBase<object>
 
                     else throw new RuntimeError("The parameter value must be string, number or boolean", activationParam.Colon);
 
-                    if (FakeEffect.AllEffects[stringName].Parameters.Contains(newParam)) parameter.Add(newParam, paramValue);
+                    if (Effect.GetCompiledEffect(stringName).Parameters.Contains(newParam)) parameter.Add(newParam, paramValue);
 
                     else throw new RuntimeError("Invalid parameter declaration, this effect does not contain this parameter", activationParam.VarName.Value.Location);
                 }
 
-                if (FakeEffect.AllEffects[stringName].Parameters.Count != parameter.Count) throw new RuntimeError("Invalid parameter declaration, there are still parameters to declare", data.Effect.ActivationParams[0].Colon);
+                if (Effect.GetCompiledEffect(stringName).Parameters.Count != parameter.Count) throw new RuntimeError("Invalid parameter declaration, there are still parameters to declare", data.Effect.ActivationParams[0].Colon);
                 Params = parameter;
             }
 
-            else if (FakeEffect.AllEffects[stringName].Parameters == null) Params = null;
+            else if (Effect.GetCompiledEffect(stringName).Parameters == null) Params = null;
 
             else throw new RuntimeError("Parameters must be declared", data.Effect.Colon);
         }
@@ -252,7 +253,7 @@ public partial class Interpreter : VisitorBase<object>
                 else throw new RuntimeError("The 'Single' must to be a boolean value", data.Selector.Single.Operator);
             }
 
-            //Predicate Verification
+            @delegate = new Delegate(data.Selector.Predicate.LambdaExpression);
         }
 
         else if (isRoot == false)
@@ -270,6 +271,6 @@ public partial class Interpreter : VisitorBase<object>
                 postAction = (EffectActivation)post;
         }
 
-        return new EffectActivation(effectName, Params, selectorSource, selectorSingle, postAction);
+        return new EffectActivation(effectName, Params, selectorSource, selectorSingle, @delegate, postAction);
     }
 }

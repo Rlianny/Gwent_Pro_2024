@@ -24,8 +24,9 @@ public class CreatingDeck : MonoBehaviour
     void Start()
     {
         // string path = System.IO.Path.Combine(Application.dataPath, "CardsCollection");
-        string path = "CardsCollection";
-        cardsCollection = new CardsCollection(CardsCreator.GetCardInfoList(path));
+        string pathTxt = "CardsCollection";
+        string pathSerialized = "Assets/CardsCollection/Serialized";
+        cardsCollection = new CardsCollection(CardsCreator.GetCardInfoList(pathTxt), CardsCreator.LoadAll(pathSerialized));
 
         InitButton.interactable = false;
 

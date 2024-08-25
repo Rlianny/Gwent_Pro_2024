@@ -14,9 +14,8 @@ public class Query
 
         QueryWordsArray = CharacterTools.TxtProcessor(InputQuery);
         DataQuery = GetQueryRelevance(QueryWordsArray);
-
-        //Debug.Log($"The Query {input} has been processed");
     }
+
     static private Dictionary<string, float> GetQueryRelevance(string[] QueryWordsArray)
     {
         Dictionary<string, float> DataQuery = new Dictionary<string, float>();
@@ -34,11 +33,9 @@ public class Query
 
         foreach (string key in DataQuery.Keys)
         {
-            //DataQuery[key] = DataQuery[key] / QueryWordsArray.Length;
             if (DataFolder.IDF.ContainsKey(key))
             {
                 DataQueryToReturn.Add(key, DataQuery[key] * DataFolder.IDF[key]);
-                //DataQuery[key] = DataQuery[key] * DataFolder.IDF[key];
             }
             else DataQueryToReturn.Add(key, DataQuery[key] / QueryWordsArray.Length);
         }

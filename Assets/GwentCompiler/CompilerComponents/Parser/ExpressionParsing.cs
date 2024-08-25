@@ -288,7 +288,7 @@ public partial class Parser
                     IExpression args = null;
 
 
-                    if (access.Subtype == TokenSubtypes.HandOfPlayer || access.Subtype == TokenSubtypes.FieldOfPlayer || access.Subtype == TokenSubtypes.GraveyardOfPlayer || access.Subtype == TokenSubtypes.DeckOfPlayer || access.Subtype == TokenSubtypes.Type || access.Subtype == TokenSubtypes.Name || access.Subtype == TokenSubtypes.Faction || access.Subtype == TokenSubtypes.Power)
+                    if (access.Subtype == TokenSubtypes.HandOfPlayer || access.Subtype == TokenSubtypes.FieldOfPlayer || access.Subtype == TokenSubtypes.GraveyardOfPlayer || access.Subtype == TokenSubtypes.DeckOfPlayer)
                     {
                         if (Match(TokenSubtypes.OpenParenthesis))
                         {
@@ -345,8 +345,19 @@ public partial class Parser
                             expr = new FieldOfPlayerAccessExpr(var, dot, access, args, true);
                             break;
 
+                        case TokenSubtypes.Type:
+                            expr = new CardPropertyAccessExpr(var, dot, access, args, false);
+                            break;
 
-                        default:
+                        case TokenSubtypes.Name:
+                            expr = new CardPropertyAccessExpr(var, dot, access, args, false);
+                            break;
+
+                        case TokenSubtypes.Faction:
+                            expr = new CardPropertyAccessExpr(var, dot, access, args, false);
+                            break;
+
+                        case TokenSubtypes.Power:
                             expr = new CardPropertyAccessExpr(var, dot, access, args, false);
                             break;
                     }

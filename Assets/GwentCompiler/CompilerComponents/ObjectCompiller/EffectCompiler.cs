@@ -18,7 +18,7 @@ public partial class ObjectCompiler
         if(node.Action != null) block = node.Action.BlockStmt;
 
         if(effectName != null && block != null)
-        return new CompiledEffect(effectName, parameters, block);
+        return new CompiledEffect(effectName, parameters, node.Action.TargetsId.Value.Lexeme, node.Action.ContextId.Value.Lexeme, block);
         else throw new RuntimeError("Missing effect fields", node.EffectLocation.Location);
 
 

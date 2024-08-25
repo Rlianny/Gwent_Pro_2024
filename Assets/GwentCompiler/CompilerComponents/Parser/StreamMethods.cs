@@ -116,14 +116,14 @@ public partial class Parser
 
     public void Report(Error error)
     {
-        Console.WriteLine(error);
+        Debug.Log(error);
     }
 
     private void Synchronize(List<TokenSubtypes> synchronizer)
-    {   
-        if(synchronizer == null) return; 
+    {
+        if (synchronizer == null) return;
         Advance();
-        
+
 
         while (!IsAtEnd())
         {

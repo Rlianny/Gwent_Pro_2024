@@ -4,6 +4,8 @@ using UnityEngine;
 using System.Dynamic;
 using System.IO;
 using System.Linq;
+using System;
+using System.Runtime.Serialization.Formatters.Binary;
 
 public static class CardsCreator
 {
@@ -18,7 +20,7 @@ public static class CardsCreator
 
         List<string[]> CardInfoList = new List<string[]>();
 
-        foreach(TextAsset text in textFiles)
+        foreach (TextAsset text in textFiles)
         {
             Debug.Log(text.text);
             CardInfoList.Add(GetCardInfoArray(text));
@@ -26,7 +28,23 @@ public static class CardsCreator
 
         return CardInfoList;
     }
-    
+
+    public static List<CompiledObject> LoadAll(string path)
+    {
+        List<CompiledObject> objects = new();
+
+        foreach (string file in Directory.GetFiles(path, "*.bin"))
+        {
+            CompiledObject obj = FileFormatter.Load(file);
+            if (obj is CompiledCard) objects.Add(obj);
+
+            else if (obj is CompiledEffect compiledEffect)
+                Effect.RegisterEffect(compiledEffect);
+        }
+
+        return objects;
+    }
+
     private static string[] GetCardInfoArray(TextAsset text)
     {
         string[] cardInfo = text.text.Split('\n');
