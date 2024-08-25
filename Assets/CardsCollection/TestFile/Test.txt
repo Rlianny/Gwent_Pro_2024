@@ -1,9 +1,29 @@
+effect
+{
+    Name: "Damage",
+    Params:
+    {
+        Amount : Number
+    },
+    Action: (target, context) => 
+    {
+        for target in targets
+        {
+            i = 0;
+            while(i++ < Amount)
+            target.Power--;
+        }
+    }
+}
+
+
+
 card
 {
     Name: "Beluga",
-    Type: "Plata",
+    Type: "Oro",
     Faction: "Smiths Interdimensionales",
-    Power: 10,
+    Power: 7,
     Range: ["Melee", "Siege"],
     CharacterDescription: "Es una criatura acuatica que proviene del océano, muy parecido a un pez",
     EffectDescription: "Reduce en 5 los puntos de las cartas del tablero",
@@ -20,7 +40,7 @@ card
             {
                 Source: "board",
                 Single: false,
-                Predicate: (unit) => unit.Faction == "Rickpublica"
+                Predicate: (unit) => unit.Faction == "Smiths Interdimensionales"
             },
         }
     ]
