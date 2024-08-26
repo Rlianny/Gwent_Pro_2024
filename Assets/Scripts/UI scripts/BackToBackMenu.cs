@@ -7,6 +7,6 @@ public class BackToBackMenu : MonoBehaviour
 {
     public void ChangeScene()
     {
-        SceneManager.LoadScene("MainMenutoBack");
+        SceneManager.LoadScene("MainMenuToBack");
     }
 }

@@ -23,6 +23,8 @@ public class GwentCompiler
             return;
         }
 
+        List<Card> compileds = new();
+
         ObjectCompiler objectCompiller = new ObjectCompiler(program);
         List<CompiledObject> compiledObjects = objectCompiller.CompileObjects();
         foreach (var obj in compiledObjects)
@@ -33,13 +35,18 @@ public class GwentCompiler
 
                 if (CardsCollection.AllCardsName.ContainsKey(compiledCard.Name))
                 {
+                    if (CompilerOutput.compilerOutput != null)
+                        CompilerOutput.compilerOutput.Report($"A card with the name '{compiledCard.Name}' already exists, please rename this card to save it");
                     Debug.Log($"A card with the name '{compiledCard.Name}' already exists, please rename this card to save it");
                 }
 
                 else
                 {
                     obj.Save();
+                    if (CompilerOutput.compilerOutput != null)
+                        CompilerOutput.compilerOutput.Report($"'{compiledCard.Name}' has arrived on the battlefield");
                     Debug.Log("Se ha guardado un objeto");
+                    compileds.Add(CardsCollection.TypeCreator(compiledCard));
                 }
             }
 
@@ -47,15 +54,25 @@ public class GwentCompiler
             {
                 if (Effect.CheckEffectExistance(compiledEffect.Name))
                 {
-                    Debug.Log($"A effect with the name '{compiledEffect.Name}' already exists, please rename this effect to save it");
+                    if (CompilerOutput.compilerOutput != null)
+                        CompilerOutput.compilerOutput.Report($"A effect with the name '{compiledEffect.Name}' already exists, please rename this effect to save it"); Debug.Log($"A effect with the name '{compiledEffect.Name}' already exists, please rename this effect to save it");
+                    Debug.Log($"A effect with the name '{compiledEffect.Name}' already exists, please rename this effect to save it"); Debug.Log($"A effect with the name '{compiledEffect.Name}' already exists, please rename this effect to save it");
                 }
                 else
                 {
                     obj.Save();
+                    Effect.RegisterEffect(compiledEffect);
+                    if (CompilerOutput.compilerOutput != null)
+                        CompilerOutput.compilerOutput.Report($"The effect '{compiledEffect.Name}' has been saved successfully");
                     Debug.Log("Se ha guardado un objeto");
                 }
             }
 
+        }
+
+        if (CompilerOutput.compilerOutput != null && compileds.Count > 0)
+        {
+            CompilerOutput.compilerOutput.ShowNewCards(compileds);
         }
     }
 

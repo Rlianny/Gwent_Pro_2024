@@ -82,7 +82,7 @@ public class CardsCollection
     /// <param name="TipeLetter">String que representa el tipo de carta.</param>
     /// <param name="CardInfoArray">Array que contiene toda la información de la carta.</param>
     /// <returns>Instancia de objeto que hereda de carta.</returns>
-    private static Card TypeCreator(string TipeLetter, string[] CardInfoArray)
+    public static Card TypeCreator(string TipeLetter, string[] CardInfoArray)
     {
         switch (TipeLetter)
         {
@@ -111,7 +111,7 @@ public class CardsCollection
         }
     }
 
-    private static Card TypeCreator(CompiledCard compiledCard)
+    public static Card TypeCreator(CompiledCard compiledCard)
     {
         switch (compiledCard.Type)
         {
