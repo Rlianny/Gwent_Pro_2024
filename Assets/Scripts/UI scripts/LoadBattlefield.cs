@@ -13,12 +13,6 @@ public class LoadBattlefield : MonoBehaviour
         StartCoroutine(StartLoading());
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     IEnumerator StartLoading()
     {
         yield return new WaitForSeconds(3);

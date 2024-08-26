@@ -18,6 +18,12 @@ EditorBuildSettings:
     path: Assets/Scenes/SetPlayerName.unity
     guid: 6ee34a004cd0e9b95a95c9106d7d3d2a
   - enabled: 1
+    path: Assets/Scenes/PlayerDeck.unity
+    guid: ba0d321fd2ff973cbb6f680b4c0b5bc1
+  - enabled: 1
+    path: Assets/Scenes/CardShower.unity
+    guid: 1b067577dbd880845b063246d460d05f
+  - enabled: 0
     path: Assets/Scenes/CardCreator.unity
     guid: a47d65aaf0aa33e9d97c43046a9d4dcc
   - enabled: 1

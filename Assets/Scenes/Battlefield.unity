@@ -2209,7 +2209,7 @@ MonoBehaviour:
   WeatherS: {fileID: 1979009883}
   SmogForDecoyEvent: {fileID: 348018687}
   DecoyEventCardsShower: {fileID: 1332473025}
-  CardToPickPrefab: {fileID: 2419997946037045200, guid: 95c0e5197de7a1430b387b9d1e0ce249, type: 3}
+  CardToPickPrefab: {fileID: 2492652126075164511, guid: f8f5ac5101c1bad7cac556eb5c8e5bdc, type: 3}
 --- !u!1 &391227074
 GameObject:
   m_ObjectHideFlags: 0

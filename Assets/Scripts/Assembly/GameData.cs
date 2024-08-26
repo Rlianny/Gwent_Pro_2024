@@ -18,7 +18,7 @@ public static class GameData
     {
         if (Player2Name == null)
         {
-            Player1InitialDeck = CreatingDeck.actualDeck;
+            Player1InitialDeck = PlayerDeckManager.actualDeck;
             Player1 = new Player(Player1Name, Player1InitialDeck.Faction, Player1InitialDeck);
             Player1.PlayerLeader.SetOwner(Player1.PlayerID);
             foreach (Card card in Player1.PlayerHand.GameDeck)
@@ -29,7 +29,7 @@ public static class GameData
 
         else
         {
-            Player2InitialDeck = CreatingDeck.actualDeck;
+            Player2InitialDeck = PlayerDeckManager.actualDeck;
             Player2 = new Player(Player2Name, Player2InitialDeck.Faction, Player2InitialDeck);
             Player2.PlayerLeader.SetOwner(Player2.PlayerID);
             foreach (Card card in Player2.PlayerHand.GameDeck)
