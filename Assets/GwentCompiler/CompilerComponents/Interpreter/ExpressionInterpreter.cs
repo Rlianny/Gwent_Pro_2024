@@ -185,7 +185,38 @@ public partial class Interpreter : VisitorBase<object>
     {
         var value = Evaluate(expr.Value);
         if (value == null || expr.Name == null) return null;
-        Environment.Assign(expr.Name.Value.Lexeme, value);
+
+        if (expr.Name is Variable variable)
+            Environment.Assign(variable.Value.Lexeme, value);
+
+        if (expr.Name is CardPropertyAccessExpr cardProperty)
+        {
+            Card card = (Card)Environment.Get(cardProperty.Variable.Value);
+
+            switch (cardProperty.Access.Subtype)
+            {
+                case TokenSubtypes.Power:
+
+                    if (value is double || value is int)
+                    {
+                        int power = ParsePowerToInt(value.ToString());
+
+                        if (card is SilverUnityCard silverUnityCard)
+                        {
+                            silverUnityCard.ActualPower = power;
+
+                            if (silverUnityCard.ActualPower < 0)
+                            {
+                                silverUnityCard.ActualPower = 0;
+                            }
+                        }
+
+                    }
+                    else throw new RuntimeError("The assigned value must be numeric value", cardProperty.Access.Location);
+                    break;
+            }
+        }
+
         return value;
     }
 
@@ -346,23 +377,24 @@ public partial class Interpreter : VisitorBase<object>
         var variable = Environment.Get(expr.Variable.Value);
         if (variable is Card card)
         {
-            switch(expr.Access.Subtype)
+            switch (expr.Access.Subtype)
             {
                 case TokenSubtypes.Type:
-                return card.Type;
+                    return card.Type;
 
                 case TokenSubtypes.Name:
-                return card.Name;
+                    return card.Name;
 
                 case TokenSubtypes.Faction:
-                return card.Faction;
+                    return card.Faction;
 
                 case TokenSubtypes.Power:
-                if(card is UnityCard unityCard) return unityCard.Power;
-                else throw new RuntimeError("This card does not have an accessible 'power' property", expr.Access.Location);
+                    if (card is HeroCard heroCard) return (double)heroCard.Power;
+                    else if (card is SilverUnityCard silverUnityCard) return (double)silverUnityCard.ActualPower;
+                    else throw new RuntimeError("This card does not have an accessible 'power' property", expr.Access.Location);
 
                 default:
-                throw new RuntimeError($"Card does not contain a definition for the '{expr.Access.Lexeme}' access type", expr.Access.Location);
+                    throw new RuntimeError($"Card does not contain a definition for the '{expr.Access.Lexeme}' access type", expr.Access.Location);
             }
         }
         throw new RuntimeError($"The variable '{expr.Variable.Value.Lexeme}' must be a Card", expr.Variable.Value.Location);

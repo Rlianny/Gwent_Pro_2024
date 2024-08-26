@@ -8,6 +8,7 @@ public interface IStatement : IASTNode
    
 }
 
+[Serializable]
 public class ExpressionStmt : IStatement
 {
     public IExpression Expression {get; private set;}
@@ -18,6 +19,7 @@ public class ExpressionStmt : IStatement
     }
 }
 
+[Serializable]
 public class PrintStmt : IStatement
 {
     public IExpression Expression {get; private set;}
@@ -28,6 +30,7 @@ public class PrintStmt : IStatement
     }
 }
 
+[Serializable]
 public class BlockStmt : IStatement
 {
     public List<IStatement> Statements {get; private set;}
@@ -37,6 +40,7 @@ public class BlockStmt : IStatement
     }
 }
 
+[Serializable]
 public class IfStmt : IStatement
 {
     public IExpression Condition {get; private set;}
@@ -51,6 +55,7 @@ public class IfStmt : IStatement
     }
 }
 
+[Serializable]
 public class WhileStmt : IStatement
 {
     public IExpression Condition {get; private set;}
@@ -63,6 +68,7 @@ public class WhileStmt : IStatement
     }
 }
 
+[Serializable]
 public class ForStmt : IStatement
 {
     public Variable Variable {get; private set;}

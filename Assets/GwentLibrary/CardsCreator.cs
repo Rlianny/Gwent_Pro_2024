@@ -36,10 +36,17 @@ public static class CardsCreator
         foreach (string file in Directory.GetFiles(path, "*.bin"))
         {
             CompiledObject obj = FileFormatter.Load(file);
-            if (obj is CompiledCard) objects.Add(obj);
+            if (obj is CompiledCard compiledCard)
+            {
+                objects.Add(compiledCard);
+                Debug.Log($"La carta '{compiledCard.Name} ha sido cargada'");
+            }
 
-            else if (obj is CompiledEffect compiledEffect)
+            if (obj is CompiledEffect compiledEffect)
+            {
                 Effect.RegisterEffect(compiledEffect);
+                Debug.Log($"El efecto '{compiledEffect.Name} ha sido cargado'");
+            }
         }
 
         return objects;

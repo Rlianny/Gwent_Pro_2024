@@ -89,5 +89,11 @@ public partial class Interpreter : VisitorBase<object>
         return true;
     }
 
+    private int ParsePowerToInt(string stringPower)
+    {
+        string[] stringArray = stringPower.Split('.');
+        return int.Parse(stringArray[0]);
+    }
+
     #endregion
 }

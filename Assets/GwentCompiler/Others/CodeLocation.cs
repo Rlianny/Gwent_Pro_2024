@@ -1,5 +1,7 @@
 using UnityEngine;
 using System;
+
+[Serializable]
 public class CodeLocation
 {
     public int Row { get; private set; }

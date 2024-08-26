@@ -143,6 +143,7 @@ public class Player
         rivalPlayer.Battlefield.UpdateBattlefieldInfo();
 
         card.ActivateEffect(activePlayer, rivalPlayer, card);
+        Debug.Log("Se ha hecho el efecto");
 
         activePlayer.Battlefield.UpdateBattlefieldInfo();
         rivalPlayer.Battlefield.UpdateBattlefieldInfo();

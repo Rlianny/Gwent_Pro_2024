@@ -14,7 +14,7 @@ public partial class Interpreter : VisitorBase<object>
     public object Visit(PrintStmt printStatement)
     {
         object value = Evaluate(printStatement.Expression);
-        System.Console.WriteLine(Stringify(value));
+        Debug.Log(Stringify(value));
         return null;
     }
 

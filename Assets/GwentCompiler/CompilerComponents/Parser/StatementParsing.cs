@@ -99,11 +99,9 @@ public partial class Parser
     // *ForStmt* -> "for" "(" Variable "in" Expression ")" Block;
     private IStatement ForStatement()
     {
-        Consume(TokenSubtypes.OpenParenthesis, "Expect '(' after for.", null);
         Variable variable = new Variable(Consume(TokenSubtypes.Identifier, "Expect identifier in for statement", new List<TokenSubtypes>{TokenSubtypes.CloseParenthesis}));
         Consume(TokenSubtypes.In, "Expect 'in' in for statement", new List<TokenSubtypes>{TokenSubtypes.CloseParenthesis});
         IExpression collection = Expression();
-        Consume(TokenSubtypes.CloseParenthesis, "Expect ')' in for statement.", null);
         List<IStatement> body = null;
         if (Match(TokenSubtypes.OpenBrace))
         {

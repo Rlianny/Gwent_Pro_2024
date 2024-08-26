@@ -24,6 +24,7 @@ public class EffectActivation
     }
 }
 
+[Serializable]
 public class Delegate
 {
     public Variable Identifier { get; private set; }

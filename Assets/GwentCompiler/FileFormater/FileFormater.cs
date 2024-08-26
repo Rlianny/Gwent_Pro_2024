@@ -15,7 +15,15 @@ public static class FileFormatter
         BinaryFormatter binaryFormatter = new();
         Stream stream = new FileStream(combinedPath, FileMode.Create, FileAccess.Write, FileShare.None);
 
-        binaryFormatter.Serialize(stream, @object);
+        try
+        {
+            binaryFormatter.Serialize(stream, @object);
+        }
+        catch (Exception ex)
+        {
+            Debug.Log("Serialization Error");
+            Debug.Log(ex.ToString());
+        }
         stream.Close();
         Debug.Log("Serializing...");
     }
@@ -24,8 +32,17 @@ public static class FileFormatter
     {
         BinaryFormatter binaryFormatter = new();
         Stream stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.None);
+        CompiledObject loaded = null;
 
-        CompiledObject loaded = (CompiledObject)binaryFormatter.Deserialize(stream);
+        try
+        {
+            loaded = (CompiledObject)binaryFormatter.Deserialize(stream);
+        }
+        catch (Exception ex)
+        {
+            Debug.Log("Deserialization Error");
+            Debug.Log(ex.ToString());
+        }
 
         stream.Close();
         Debug.Log("Deserializing...");

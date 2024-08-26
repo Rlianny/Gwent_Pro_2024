@@ -36,7 +36,7 @@ public abstract class Effect
 
     public static bool RegisterEffect(CompiledEffect compiledEffect)
     {
-        if(!AllCompiledEffects.ContainsKey(compiledEffect.Name))
+        if (!AllCompiledEffects.ContainsKey(compiledEffect.Name))
         {
             AllCompiledEffects.Add(compiledEffect.Name, compiledEffect);
             return true;
@@ -46,7 +46,7 @@ public abstract class Effect
 
     public static CompiledEffect GetCompiledEffect(string name)
     {
-        if(AllCompiledEffects.ContainsKey(name)) return AllCompiledEffects[name];
+        if (AllCompiledEffects.ContainsKey(name)) return AllCompiledEffects[name];
         else return null;
     }
 
@@ -71,6 +71,8 @@ public class PersonalizedEffect : Effect
         {
             PersonalizeEffect(effect.EffectName);
 
+            UnityEngine.Debug.Log($"Se ejecutará el efecto {effect.EffectName}");
+
             List<Card> targets = GetTargets(ActivePlayer, RivalPlayer, card, effect);
             Context context = new();
 
@@ -83,7 +85,20 @@ public class PersonalizedEffect : Effect
                 interpreter.Environment.Assign(pair.Key.Name, pair.Value);
             }
 
+            foreach (var target in targets)
+            {
+                if (target is SilverUnityCard unityCard)
+                    UnityEngine.Debug.Log($"La carta {target.Name} tiene {unityCard.ActualPower}");
+            }
+
+            UnityEngine.Debug.Log(baseEffect.Block.Statements.Count);
             interpreter.Execute(baseEffect.Block);
+
+            foreach (var target in targets)
+            {
+                if (target is SilverUnityCard unityCard)
+                    UnityEngine.Debug.Log($"La carta {target.Name} tiene {unityCard.ActualPower}");
+            }
 
         }
     }
@@ -120,7 +135,7 @@ public class PersonalizedEffect : Effect
 
         foreach (Card sourceCard in source)
         {
-            if (effect.SelectorPredicate.Invoke(sourceCard))
+            if (sourceCard is SilverUnityCard && effect.SelectorPredicate.Invoke(sourceCard))
             {
                 targets.Add(sourceCard);
                 if (effect.SelectorSingle) break;

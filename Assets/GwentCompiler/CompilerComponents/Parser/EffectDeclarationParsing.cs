@@ -9,43 +9,43 @@ public partial class Parser
     {
         Token effectLocation = Previous();
         EffectDeclaration parsedEffect = new EffectDeclaration(effectLocation);
-        
+
         Consume(TokenSubtypes.OpenBrace, "Effect must declare a body", null);
 
-        while(!Match(TokenSubtypes.CloseBrace))
+        while (!Match(TokenSubtypes.CloseBrace))
         {
-            if(Match(TokenSubtypes.Name))
+            if (Match(TokenSubtypes.Name))
             {
                 IEffectComponent value = GenericField();
-                if(value == null)
+                if (value == null)
                     GenerateError("The effect must to declare a name", Previous().Location);
-                
+
                 else if (!parsedEffect.SetComponent(value))
                     GenerateError("The effect name has been defined before", Previous().Location);
 
                 continue;
             }
 
-            if(Match(TokenSubtypes.Params))
+            if (Match(TokenSubtypes.Params))
             {
                 IEffectComponent value = Params();
-                if(value == null)
+                if (value == null)
                     GenerateError("The effect must to declare parameters", Previous().Location);
-                
+
                 else if (!parsedEffect.SetComponent(value))
                     GenerateError("The effect parameters has been defined before", Previous().Location);
                 continue;
             }
 
-            if(Match(TokenSubtypes.Action))
+            if (Match(TokenSubtypes.Action))
             {
                 IEffectComponent value = Action();
-                if(value == null)
+                if (value == null)
                     GenerateError("The effect must to declare an action", Previous().Location);
-                
+
                 else if (!parsedEffect.SetComponent(value))
                     GenerateError("The effect action has been defined before", Previous().Location);
-                
+
                 continue;
             }
 
@@ -64,9 +64,9 @@ public partial class Parser
         while (!Match(TokenSubtypes.CloseBrace))
         {
             ParsedParam param = ParsedEffectParam();
-            if(param != null)
-            @params.Add(param);
-            else 
+            if (param != null)
+                @params.Add(param);
+            else
             {
                 Synchronize(new List<TokenSubtypes>() { TokenSubtypes.CloseBrace });
                 break;
@@ -82,13 +82,13 @@ public partial class Parser
         Token token = Peek();
         Token colon = Consume(TokenSubtypes.Colon, "Was expected ':'", null);
         CodeLocation colonLocation = Previous().Location;
-        if (expression is Variable var && Match(new List<TokenSubtypes>() {TokenSubtypes.Number, TokenSubtypes.String, TokenSubtypes.Bool}))
+        if (expression is Variable var && Match(new List<TokenSubtypes>() { TokenSubtypes.Number, TokenSubtypes.String, TokenSubtypes.Bool }))
         {
             Token type = Previous();
             return new ParsedParam(var, colonLocation, type);
         }
         GenerateError("Was expected a variable", token.Location);
-        Synchronize(new List<TokenSubtypes>() { TokenSubtypes.CloseBrace });
+        Synchronize(null);
         return null;
     }
 
@@ -100,7 +100,7 @@ public partial class Parser
         Variable targetsVar = null;
         Token location = Previous();
         var targets = Expression();
-        if(targets is Variable variableTargets)
+        if (targets is Variable variableTargets)
         {
             targetsVar = variableTargets;
         }
@@ -109,7 +109,7 @@ public partial class Parser
         Variable contextVar = null;
         location = Previous();
         var context = Expression();
-        if(context is Variable variableContext)
+        if (context is Variable variableContext)
         {
             contextVar = variableContext;
         }
@@ -119,15 +119,15 @@ public partial class Parser
         BlockStmt block = null;
         location = Previous();
         IStatement statement = Statement();
-        if(statement is BlockStmt blockStmt)
+        if (statement is BlockStmt blockStmt)
         {
             block = blockStmt;
         }
         else GenerateError("Block was expected", location.Location);
         Consume(TokenSubtypes.Semicolon, "Was expected ';'", null);
-        if(targetsVar != null && contextVar != null && block != null)
-        return new EffectAction(targetsVar, contextVar, block);
+        if (targetsVar != null && contextVar != null && block != null)
+            return new EffectAction(targetsVar, contextVar, block);
         else return null;
     }
-    
+
 }

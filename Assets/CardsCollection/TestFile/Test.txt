@@ -5,18 +5,19 @@ effect
     {
         Amount : Number
     },
-    Action: (target, context) => 
+    Action: (targets, context) => 
     {
         for target in targets
         {
             i = 0;
-            while(i++ < Amount)
-            target.Power--;
+            while(i < Amount)
+            {
+                target.Power = target.Power - 1;
+                i = i + 1;
+            }
         }
-    }
+    };
 }
-
-
 
 card
 {

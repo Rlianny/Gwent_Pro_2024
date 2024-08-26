@@ -48,11 +48,16 @@ public class GwentCompiler
                 }
             }
 
-            if(obj is CompiledEffect compiledEffect)
+            if (obj is CompiledEffect compiledEffect)
             {
-                if(Effect.CheckEffectExistance(compiledEffect.Name))
+                if (Effect.CheckEffectExistance(compiledEffect.Name))
                 {
                     Debug.Log($"A effect with the name '{compiledEffect.Name}' already exists, please rename this effect to save it");
+                }
+                else
+                {
+                    obj.Save();
+                    Debug.Log("Se ha guardado un objeto");
                 }
             }
 

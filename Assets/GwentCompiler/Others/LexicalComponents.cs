@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
-
+[Serializable]
 public enum TokenTypes
 {
     Identifier,
@@ -17,6 +17,7 @@ public enum TokenTypes
     EOF,
 }
 
+[Serializable]
 public enum TokenSubtypes
 {
     Comma, OpenParenthesis, CloseParenthesis, OpenBracket, CloseBracket, OpenBrace, CloseBrace, Colon, Semicolon, Lambda, Dot,
