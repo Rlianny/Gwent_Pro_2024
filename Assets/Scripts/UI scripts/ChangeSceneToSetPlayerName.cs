@@ -7,14 +7,14 @@ public class ChangeSceneToSetPlayerName : MonoBehaviour
 {
     public void Start()
     {
-        string pathTxt = "CardsCollection";
-        string pathSerialized = "Assets/CardsCollection/Serialized";
+        string pathTxt = PathContainer.CardDataBaseDirectoryPath;
+        string pathSerialized = PathContainer.SerializedFilesDirectoryPath;
         CardsCollection cardsCollection = new CardsCollection(CardsCreator.GetCardInfoList(pathTxt), CardsCreator.LoadAll(pathSerialized));
     }
     public void ChangeScene()
     {
         CharacterManager.Init();
-        GwentCompiler.Compile();
+        GwentCompiler.Compile(GwentCompiler.GetFileContent(PathContainer.TestFilePath));
         SceneManager.LoadScene("SetPlayerName");
     }
 }

@@ -5,13 +5,8 @@ using System.IO;
 
 public class GwentCompiler
 {
-    public static void Compile()
+    public static void Compile(string path)
     {
-
-        string file = "Assets/CardsCollection/TestFile/Test.txt";
-
-        string path = GetFileContent(file);
-
         Lexer lexer = new Lexer();
         List<Token> tokens = lexer.Tokenize(path);
         if (lexer.hadError)
@@ -64,7 +59,7 @@ public class GwentCompiler
         }
     }
 
-    private static string GetFileContent(string root) // método que devuleve el contenido del archivo
+    public static string GetFileContent(string root) // método que devuleve el contenido del archivo
     {
         StreamReader reader = new StreamReader(root); // leemos el contenido del archivo
         string FileContent = reader.ReadToEnd();
@@ -74,6 +69,8 @@ public class GwentCompiler
 
     private static void CompilationError()
     {
+        if (CompilerOutput.compilerOutput != null)
+            CompilerOutput.compilerOutput.Report("Compilation failed, fix all errorr and try again");
         Debug.Log("Compilation failed, fix all errorr and try again");
     }
 

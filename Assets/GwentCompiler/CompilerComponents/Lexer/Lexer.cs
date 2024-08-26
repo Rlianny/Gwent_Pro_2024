@@ -17,6 +17,7 @@ public class Lexer : IErrorReporter
     public List<Token> Tokenize(string input)
     {
         source = input;
+        Debug.Log(input);
         string[] lines = input.Split('\n');
 
         foreach (string line in lines)
@@ -41,7 +42,7 @@ public class Lexer : IErrorReporter
                 var regex = token.Value;
                 var match = regex.Match(input.Substring(current));
 
-                if (match.Success)
+                if (match.Success )
                 {
                     if (token.Key != TokenTypes.WhiteSpaces)
                     {
@@ -55,20 +56,20 @@ public class Lexer : IErrorReporter
             }
             if (!Match)
             {
-                Advance(input);
-                GenerateError("Unexpected symbol", new CodeLocation(row, current + 1));
+                GenerateError($"Unexpected symbol {input[current]}", new CodeLocation(row, current + 1));
+                Advance();
             }
         }
     }
 
-    private void Advance(string input)
+    private void Advance()
     {
         current++;
     }
 
     public void GenerateError(string message, CodeLocation errorLocation)
     {
-        LexicalError newError = new LexicalError(message, errorLocation);
+        Error newError = new LexicalError(message, errorLocation);
 
         if (!(Error.AllErrors.Count > 0 && newError.ErrorLocation.Column == IErrorReporter.lastColumn + 1 && newError.ErrorLocation.Row == IErrorReporter.lastRow))
         {
@@ -83,6 +84,8 @@ public class Lexer : IErrorReporter
 
     public void Report(Error error)
     {
-        System.Console.WriteLine(error);
+        if (CompilerOutput.compilerOutput != null)
+            CompilerOutput.compilerOutput.Report(error.ToString());
+        Debug.Log(error);
     }
 }

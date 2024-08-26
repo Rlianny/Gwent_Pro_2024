@@ -116,6 +116,8 @@ public partial class Parser
 
     public void Report(Error error)
     {
+        if (CompilerOutput.compilerOutput != null)
+            CompilerOutput.compilerOutput.Report(error.ToString());
         Debug.Log(error);
     }
 
