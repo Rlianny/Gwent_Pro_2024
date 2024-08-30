@@ -428,7 +428,16 @@ public partial class Interpreter : VisitorBase<object>
         else throw new RuntimeError($"The method '{expr.Method.Lexeme}' is only accessible from card lists", expr.Method.Location);
     }
 
-    // ShuffleMethodExpression
+    public object Visit(ShuffleMethodExpr expr)
+    {
+        var value = Evaluate(expr.AccessExpression);
+        if (value is List<Card> cardList)
+        {
+            cardList = DeckCreator.Shuffle(cardList);
+            return cardList;
+        }
+        else throw new RuntimeError($"The method '{expr.Method.Lexeme}' is only accessible from card lists", expr.Method.Location);
+    }
 
     public object Visit(CardPropertyAccessExpr expr)
     {

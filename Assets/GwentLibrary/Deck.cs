@@ -99,6 +99,23 @@ public class DeckCreator
         }
     }
 
+    public static List<Card> Shuffle(List<Card> cards)
+    {
+        int i = 0;
+        System.Random random = new System.Random();
+        Card temp;
+        while(i < cards.Count)
+        {
+            int aleatory1 = random.Next(0, cards.Count-1);
+            int aleatory2 = random.Next(0, cards.Count-1);
+            temp = cards[aleatory1];
+            cards[aleatory1] = cards[aleatory2];
+            cards[aleatory2] = temp;
+            i++;
+        }
+        return cards;
+    }
+
     /// <summary>
     /// Este método actualiza la información referente al mazo.
     /// </summary>
