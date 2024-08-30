@@ -22,16 +22,18 @@ public class SceneManagement : MonoBehaviour
 
     public void LoadCompiler() // compiler
     {
-        CharacterManager.Init();
+        //CharacterManager.Init();
         SceneManager.LoadScene("Compiler");
+    }
+
+    public void LoadPlayerDeck()
+    {
+        SceneManager.LoadScene("PlayerDeck");
     }
 
     public void LoadSetPlayerName()
     {
-        string pathTxt = PathContainer.CardDataBaseDirectoryPath;
-        string pathSerialized = PathContainer.SerializedFilesDirectoryPath;
-        CardsCollection cardsCollection = new CardsCollection(CardsCreator.GetCardInfoList(pathTxt), CardsCreator.LoadAll(pathSerialized));
-        CharacterManager.Init();
+        //CharacterManager.Init();
         GwentCompiler.Compile(GwentCompiler.GetFileContent(PathContainer.TestFilePath));
         SceneManager.LoadScene("SetPlayerName");
     }

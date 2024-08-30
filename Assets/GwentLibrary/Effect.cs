@@ -67,52 +67,124 @@ public class PersonalizedEffect : Effect
 
     public override void TakeEffect(Player ActivePlayer, Player RivalPlayer, Card card)
     {
+        if (card.OnActivation == null) UnityEngine.Debug.Log("on activation null");
         foreach (var effect in card.OnActivation)
         {
-            PersonalizeEffect(effect.EffectName);
-
-            UnityEngine.Debug.Log($"Se ejecutará el efecto {effect.EffectName}");
-
-            List<Card> targets = GetTargets(ActivePlayer, RivalPlayer, card, effect);
-            Context context = new();
-
-            Interpreter interpreter = new();
-            interpreter.Environment.Assign(baseEffect.ContextId, context);
-            interpreter.Environment.Assign(baseEffect.TargetsId, targets);
-
-            foreach (var pair in effect.Parameters)
-            {
-                interpreter.Environment.Assign(pair.Key.Name, pair.Value);
-            }
-
-            foreach (var target in targets)
-            {
-                if (target is SilverUnityCard unityCard)
-                    UnityEngine.Debug.Log($"La carta {target.Name} tiene {unityCard.ActualPower}");
-            }
-
-            UnityEngine.Debug.Log(baseEffect.Block.Statements.Count);
-            interpreter.Execute(baseEffect.Block);
-
-            foreach (var target in targets)
-            {
-                if (target is SilverUnityCard unityCard)
-                    UnityEngine.Debug.Log($"La carta {target.Name} tiene {unityCard.ActualPower}");
-            }
-
+            InterpretEffect(ActivePlayer, RivalPlayer, card, effect);
         }
     }
 
-    private List<Card> GetTargets(Player ActivePlayer, Player RivalPlayer, Card card, EffectActivation effect)
+    private void InterpretEffect(Player ActivePlayer, Player RivalPlayer, Card card, EffectActivation effect, List<Card> parentSource = null)
+    {
+        PersonalizeEffect(effect.EffectName);
+        UnityEngine.Debug.Log($"Se ejecutará el efecto {effect.EffectName}");
+
+        List<Card> targets = GetTargets(ActivePlayer, RivalPlayer, card, effect);
+        List<UnityCard>[] targetsArray = null;
+        if (targets == null)
+        {
+            if (effect.SelectorSource == "board") targetsArray = Context.Board;
+            else if (parentSource != null) targets = parentSource;
+            else return;
+        }
+        Context context = new();
+
+        Interpreter interpreter = new();
+        interpreter.Environment.Assign(baseEffect.ContextId, context);
+
+        if (targets != null)
+            interpreter.Environment.Assign(baseEffect.TargetsId, targets);
+
+        if (targetsArray != null)
+            interpreter.Environment.Assign(baseEffect.TargetsId, targetsArray);
+
+        foreach (var pair in effect.Parameters)
+        {
+            interpreter.Environment.Assign(pair.Key.Name, pair.Value);
+            UnityEngine.Debug.Log(pair.Key.Name + " existe en el Environment");
+        }
+
+        if (targets != null)
+            foreach (var target in targets)
+            {
+                if (target is SilverUnityCard unityCard)
+                    UnityEngine.Debug.Log($"La carta {target.Name} tiene {unityCard.ActualPower}");
+            }
+
+        interpreter.Execute(baseEffect.Block);
+
+        if (targets != null)
+            foreach (var target in targets)
+            {
+                if (target is SilverUnityCard unityCard)
+                    UnityEngine.Debug.Log($"La carta {target.Name} tiene {unityCard.ActualPower}");
+            }
+
+        if (effect.PostAction != null)
+        {
+            InterpretEffect(ActivePlayer, RivalPlayer, card, effect.PostAction, targets);
+        }
+    }
+
+    private void InterpretEffect(Player ActivePlayer, Player RivalPlayer, Card card, EffectActivation effect, List<UnityCard>[] parentSource)
+    {
+        PersonalizeEffect(effect.EffectName);
+        UnityEngine.Debug.Log($"Se ejecutará el efecto {effect.EffectName}");
+
+        List<Card> targets = GetTargets(ActivePlayer, RivalPlayer, card, effect);
+        List<UnityCard>[] targetsArray = null;
+        if (targets == null)
+        {
+            if (effect.SelectorSource == "board") targetsArray = Context.Board;
+            else if (parentSource != null) targetsArray = parentSource;
+            else return;
+        }
+        Context context = new();
+
+        Interpreter interpreter = new();
+        interpreter.Environment.Assign(baseEffect.ContextId, context);
+
+        if (targets != null)
+            interpreter.Environment.Assign(baseEffect.TargetsId, targets);
+
+        if (targetsArray != null)
+            interpreter.Environment.Assign(baseEffect.TargetsId, targetsArray);
+
+        foreach (var pair in effect.Parameters)
+        {
+            interpreter.Environment.Assign(pair.Key.Name, pair.Value);
+            UnityEngine.Debug.Log(pair.Key.Name + " existe en el Environment");
+        }
+
+        if (targets != null)
+            foreach (var target in targets)
+            {
+                if (target is SilverUnityCard unityCard)
+                    UnityEngine.Debug.Log($"La carta {target.Name} tiene {unityCard.ActualPower}");
+            }
+
+        interpreter.Execute(baseEffect.Block);
+
+        if (targets != null)
+            foreach (var target in targets)
+            {
+                if (target is SilverUnityCard unityCard)
+                    UnityEngine.Debug.Log($"La carta {target.Name} tiene {unityCard.ActualPower}");
+            }
+
+        if (effect.PostAction != null)
+        {
+            InterpretEffect(ActivePlayer, RivalPlayer, card, effect.PostAction, targetsArray);
+        }
+    }
+
+    private List<Card> GetTargets(Player ActivePlayer, Player RivalPlayer, Card card, EffectActivation effect, List<Card> parentSource = null)
     {
         List<Card> targets = new();
         List<Card> source = null;
 
         switch (effect.SelectorSource)
         {
-            case "board":
-                source = Context.Board;
-                break;
             case "hand":
                 source = Context.Hand;
                 break;
@@ -131,7 +203,12 @@ public class PersonalizedEffect : Effect
             case "otherField":
                 source = Context.FieldOfPlayer(RivalPlayer.PlayerID);
                 break;
+            case "parent":
+                source = parentSource;
+                break;
         }
+
+        if (source == null) return null;
 
         foreach (Card sourceCard in source)
         {

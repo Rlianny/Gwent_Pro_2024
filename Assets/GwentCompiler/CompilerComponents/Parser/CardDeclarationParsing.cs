@@ -213,8 +213,13 @@ public partial class Parser
 
     private EffectInfo EffectInfo()
     {
-        var effect = Consume(TokenSubtypes.Effect, "Effect information declaration expected", new List<TokenSubtypes> { TokenSubtypes.CloseBracket });
-        if(effect == null) return null;
+        if(!Check(new List<TokenSubtypes>() {TokenSubtypes.Effect, TokenSubtypes.Type}))
+        {
+            GenerateError("Effect information declaration expected", Previous().Location);
+            Synchronize(new List<TokenSubtypes>() {TokenSubtypes.Comma});
+            return null;
+        }
+        Advance();
         Consume(TokenSubtypes.Colon, "Was expected ':'", null);
         CodeLocation colonLocation = Previous().Location;
         IExpression name = null;
@@ -238,7 +243,22 @@ public partial class Parser
             }
             Consume(TokenSubtypes.Comma, "Was expected ','", null);
         }
-        else name = Expression();
+        else 
+        {
+            name = Expression();
+            Consume(TokenSubtypes.Comma, "Was expected ','", null);
+            while (Check(TokenSubtypes.Identifier))
+            {
+                ParsedParam param = ParsedParam();
+                if(param != null)
+                @params.Add(param);
+                else 
+                {
+                    Synchronize(new List<TokenSubtypes>() { TokenSubtypes.CloseBrace });
+                    break;
+                }
+            }
+        }
 
         return new EffectInfo(name, @params, colonLocation);
 
@@ -324,7 +344,19 @@ public partial class Parser
             CodeLocation colonLocation = Previous().Location;
             IExpression name = Expression();
             Consume(TokenSubtypes.Comma, "Was expected ','", null);
-            EffectInfo info = new EffectInfo(name, null, colonLocation);
+            List<ParsedParam> @params = new();
+            while (Check(TokenSubtypes.Identifier))
+            {
+                ParsedParam param = ParsedParam();
+                if(param != null)
+                @params.Add(param);
+                else 
+                {
+                    Synchronize(new List<TokenSubtypes>() { TokenSubtypes.CloseBrace });
+                    break;
+                }
+            }
+            EffectInfo info = new EffectInfo(name, @params, colonLocation);
             Selector selector = null;
             if (Peek().Subtype == TokenSubtypes.Selector)
             {

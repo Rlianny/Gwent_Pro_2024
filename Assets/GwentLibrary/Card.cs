@@ -51,6 +51,7 @@ public abstract class Card
         EffectDescription = card.EffectDescription;
         EffectNumber = card.EffectNumber;
         CharacterDescription = card.CharacterDescription;
+        OnActivation = card.OnActivation;
         Quote = card.Quote;
     }
 

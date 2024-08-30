@@ -14,43 +14,23 @@ public class Context
         private set { }
     }
 
-    public static List<Card> Board
+    public static List<UnityCard>[] Board
     {
         get
         {
-            List<Card> toReturn = new();
 
-            foreach (Card card in GameManager.Player1.Battlefield.GetRowFromBattlefield(RowTypes.Melee))
+            List<UnityCard>[] cards = new List<UnityCard>[]
             {
-                toReturn.Add(card);
-            }
+                GameManager.Player1.Battlefield.GetRowFromBattlefield(RowTypes.Melee),
+                GameManager.Player1.Battlefield.GetRowFromBattlefield(RowTypes.Ranged),
+                GameManager.Player1.Battlefield.GetRowFromBattlefield(RowTypes.Siege),
+                GameManager.Player2.Battlefield.GetRowFromBattlefield(RowTypes.Melee),
+                GameManager.Player2.Battlefield.GetRowFromBattlefield(RowTypes.Ranged),
+                GameManager.Player2.Battlefield.GetRowFromBattlefield(RowTypes.Siege),
 
-            foreach (Card card in GameManager.Player1.Battlefield.GetRowFromBattlefield(RowTypes.Ranged))
-            {
-                toReturn.Add(card);
-            }
+            };
 
-            foreach (Card card in GameManager.Player1.Battlefield.GetRowFromBattlefield(RowTypes.Siege))
-            {
-                toReturn.Add(card);
-            }
-
-            foreach (Card card in GameManager.Player2.Battlefield.GetRowFromBattlefield(RowTypes.Melee))
-            {
-                toReturn.Add(card);
-            }
-
-            foreach (Card card in GameManager.Player2.Battlefield.GetRowFromBattlefield(RowTypes.Ranged))
-            {
-                toReturn.Add(card);
-            }
-
-            foreach (Card card in GameManager.Player2.Battlefield.GetRowFromBattlefield(RowTypes.Siege))
-            {
-                toReturn.Add(card);
-            }
-
-            return toReturn;
+            return cards;
         }
         private set { }
     }

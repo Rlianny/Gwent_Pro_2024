@@ -14,7 +14,7 @@ public partial class ObjectCompiler
         List<Parameter> parameters = null;
         if(node.Params != null && interpreter.Interpret(node.Params) is List<Parameter> paramList) parameters = paramList;
 
-        BlockStmt block = null;
+        IStatement block = null;
         if(node.Action != null) block = node.Action.BlockStmt;
 
         if(effectName != null && block != null)

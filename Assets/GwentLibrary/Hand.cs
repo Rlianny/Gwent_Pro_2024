@@ -71,6 +71,12 @@ public class Hand
             ("Párametros de entrada no válidos");
         }
 
+        foreach(Card card in cardList)
+        {
+            if(card.Name == "Morty Triste") return card;
+            if(card.Name == "Morty de Matcom") return card;
+        }
+
         int randomIndex = random.Next(cardList.Count - 1);
         return (cardList[randomIndex]);
     }

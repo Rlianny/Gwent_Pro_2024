@@ -43,10 +43,12 @@ public class GwentCompiler
                 else
                 {
                     obj.Save();
+                    Card card = CardsCollection.TypeCreator(compiledCard);
                     if (CompilerOutput.compilerOutput != null)
                         CompilerOutput.compilerOutput.Report($"'{compiledCard.Name}' has arrived on the battlefield");
                     Debug.Log("Se ha guardado un objeto");
-                    compileds.Add(CardsCollection.TypeCreator(compiledCard));
+                    compileds.Add(card);
+                    CardsCollection.AllCardsName.Add(card.Name, card);
                 }
             }
 

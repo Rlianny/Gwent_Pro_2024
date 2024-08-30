@@ -24,6 +24,7 @@ public class CompiledCard: CompiledObject
         Faction = faction;
         Range = range;
         EffectDescription = effectDescription;
+        if(onActivation == null) Debug.Log("On activation null en el constructor");
         OnActivation = onActivation;
         Power = effectNumber;
         CharacterDescription = characterDescription;

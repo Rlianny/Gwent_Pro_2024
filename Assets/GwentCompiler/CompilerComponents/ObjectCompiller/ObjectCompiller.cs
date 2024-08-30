@@ -26,7 +26,9 @@ public partial class ObjectCompiler : VisitorBase<object>
                 catch (RuntimeError ex)
                 {
                     hadError = true;
-                    Debug.Log(ex.Message);
+                    if (CompilerOutput.compilerOutput != null)
+                        CompilerOutput.compilerOutput.Report(ex.ToString());
+                    Debug.Log(ex.ToString());
                 }
             }
             if (node is EffectDeclaration effectDeclaration)

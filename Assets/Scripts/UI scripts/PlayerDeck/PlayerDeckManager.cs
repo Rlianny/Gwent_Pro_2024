@@ -22,7 +22,7 @@ public class PlayerDeckManager : MonoBehaviour
     {
         playerDeckManager = this;
 
-        CharacterManager.Init(); // borrar despues
+        // CharacterManager.Init(); // borrar despues
         cardsCollection = new CardsCollection(CardsCreator.GetCardInfoList(PathContainer.CardDataBaseDirectoryPath), CardsCreator.LoadAll(PathContainer.SerializedFilesDirectoryPath));
         InitButton.interactable = false;
 
@@ -30,7 +30,9 @@ public class PlayerDeckManager : MonoBehaviour
         UnityCards.text = "";
         TotalForce.text = "";
         HeroCards.text = "";
-        HideImage();
+
+        if (actualDeck == null)
+            HideImage();
 
         foreach (var pair in cardsCollection.AllLeaders)
         {
@@ -65,6 +67,7 @@ public class PlayerDeckManager : MonoBehaviour
 
     public void GenerateDeck(string Faction)
     {
+        Debug.Log(Faction);
         actualDeck = null;
         actualDeck = new DeckCreator(Faction, cardsCollection.AllFactions, cardsCollection.AllLeaders);
 
@@ -73,19 +76,19 @@ public class PlayerDeckManager : MonoBehaviour
 
         ShowImage();
 
-        foreach(Card card in cardsCollection.Collection)
+        foreach (Card card in cardsCollection.Collection)
         {
-            if(card.Type != CardTypes.Líder && (card.Faction == "Neutral" || card.Faction == actualDeck.Faction))
+            if (card.Type != CardTypes.Líder && (card.Faction == "Neutral" || card.Faction == actualDeck.Faction))
             {
                 actualDeck.AddCardToMyDeck(card);
-                if(card is SilverUnityCard silverUnityCard)
+                if (card is SilverUnityCard silverUnityCard)
                 {
                     actualDeck.DuplicateCard(card);
                     actualDeck.DuplicateCard(card);
                 }
             }
-        }
 
+        }
     }
 
     private void ShowImage()

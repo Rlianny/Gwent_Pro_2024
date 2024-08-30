@@ -68,11 +68,13 @@ public class AssignmentExpr : IExpression
 {
     public IExpression Name { get; private set; }
     public IExpression Value { get; private set; }
+    public Token Assignment {get; private set;}
 
-    public AssignmentExpr(IExpression name, IExpression value)
+    public AssignmentExpr(IExpression name, IExpression value, Token assignment)
     {
         Name = name;
         Value = value;
+        Assignment = assignment;
     }
 }
 

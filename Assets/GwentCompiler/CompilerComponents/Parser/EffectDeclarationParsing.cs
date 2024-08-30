@@ -116,15 +116,12 @@ public partial class Parser
         else GenerateError("Variable was expected", location.Location);
         Consume(TokenSubtypes.CloseParenthesis, "Was expected ')'", null);
         Consume(TokenSubtypes.Lambda, "Was expected '=>'", null);
-        BlockStmt block = null;
+        IStatement block = null;
         location = Previous();
         IStatement statement = Statement();
-        if (statement is BlockStmt blockStmt)
-        {
-            block = blockStmt;
-        }
+        if(statement != null)
+        block = statement;
         else GenerateError("Block was expected", location.Location);
-        Consume(TokenSubtypes.Semicolon, "Was expected ';'", null);
         if (targetsVar != null && contextVar != null && block != null)
             return new EffectAction(targetsVar, contextVar, block);
         else return null;

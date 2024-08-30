@@ -16,7 +16,7 @@ public static class CharacterManager
     }
     public static string Query(string query)
     {
-        //Init();
+        Init();
 
         if (!string.IsNullOrEmpty(query) && Content.FilesRoot.Length != 0)
         {

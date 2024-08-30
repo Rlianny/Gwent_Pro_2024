@@ -102,11 +102,7 @@ public partial class Parser
         Variable variable = new Variable(Consume(TokenSubtypes.Identifier, "Expect identifier in for statement", new List<TokenSubtypes>{TokenSubtypes.CloseParenthesis}));
         Consume(TokenSubtypes.In, "Expect 'in' in for statement", new List<TokenSubtypes>{TokenSubtypes.CloseParenthesis});
         IExpression collection = Expression();
-        List<IStatement> body = null;
-        if (Match(TokenSubtypes.OpenBrace))
-        {
-            body = Block();
-        }
+        IStatement body = Statement();
         return new ForStmt(variable, collection, body);
     }
 

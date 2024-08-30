@@ -73,13 +73,13 @@ public class ForStmt : IStatement
 {
     public Variable Variable {get; private set;}
     public IExpression Collection {get; private set;}
-    public BlockStmt Body {get; private set;}
+    public IStatement Body {get; private set;}
 
-    public ForStmt(Variable variable, IExpression collection, List<IStatement> body)
+    public ForStmt(Variable variable, IExpression collection, IStatement body)
     {
         Variable = variable;
         Collection = collection;
-        Body = new BlockStmt(body);
+        Body = body;
     }
 }
 

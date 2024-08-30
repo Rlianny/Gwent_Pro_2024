@@ -26,8 +26,13 @@ public class DeckCreator
     {
         Faction = factionName;
         DeckLeader = allLeaders[factionName];
-        CardDeck = factionCards[Faction];
-
+        CardDeck = new();
+        Debug.Log("Llegan " + factionCards[Faction].Count);
+        foreach(Card card in factionCards[Faction])
+        {
+            if(card.Type != CardTypes.Líder)
+            CardDeck.Add(card);
+        }
         UpdateDeckInfo();
     }
 
@@ -40,8 +45,9 @@ public class DeckCreator
     {
         if (card is SilverUnityCard silverCard)
         {
-            if (CardActualAppearances(silverCard) < SilverUnityCard.PossibleAppearances)
+            if (CardActualAppearances(silverCard) < 3)
             {
+                Debug.Log("Se agregara la carta");
                 Card copy = new SilverUnityCard(card);
                 CardDeck.Add(copy);
                 UpdateDeckInfo();
@@ -59,19 +65,21 @@ public class DeckCreator
     /// Este método añade una carta al mazo.
     /// </summary>
     /// <param name="card">Carta que será añadida al mazo.</param>
-    public void AddCardToMyDeck(Card card)
+    public bool AddCardToMyDeck(Card card)
     {
         if (card.Faction == Faction || card.Faction == "Neutral")
         {
-            if (!(card is HeroCard && CardDeck.Contains(card)))
+            if (!(card is HeroCard && CardDeck.Contains(card)) || (card is SilverUnityCard && CardActualAppearances(card) == 0))
             {
+                Debug.Log("Se agregara la carta");
                 CardDeck.Add(card);
                 UpdateDeckInfo();
+                return true;
             }
+            return false;
         }
 
-        else
-            Console.WriteLine("Error, no puede añadirse la carta");
+        return false;
     }
 
     /// <summary>
@@ -179,7 +187,6 @@ public class DeckCreator
             if (card.Name == cardToCount.Name)
                 count++;
         }
-
         return count;
     }
 }

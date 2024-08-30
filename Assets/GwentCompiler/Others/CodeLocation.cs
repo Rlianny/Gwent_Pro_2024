@@ -13,3 +13,8 @@ public class CodeLocation
         Column = column;
     }
 }
+
+public enum ValueType
+{
+    String, Number, Boolean, Card, CardList,
+}

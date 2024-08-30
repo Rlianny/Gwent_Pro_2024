@@ -65,8 +65,13 @@ public interface IErrorReporter
 public class RuntimeError : Exception
 {
     public CodeLocation CodeLocation { get; private set; }
-    public RuntimeError(string message, CodeLocation location) : base($"Error: {message} in row {location.Row}, column {location.Column}.")
+    public RuntimeError(string message, CodeLocation location) : base($"Error: {message}")
     {
         CodeLocation = location;
+    }
+
+    public override string ToString()
+    {
+        return $"Error: {base.Message} in row {CodeLocation.Row}, column {CodeLocation.Column}.";
     }
 }

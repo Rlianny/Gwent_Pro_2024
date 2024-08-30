@@ -38,13 +38,21 @@ public partial class Interpreter : VisitorBase<object>
     }
 
     public object Evaluate(IExpression expression)
-    {
+    { 
+
         return VisitBase(expression);
     }
 
     public void Execute(IStatement statement)
     {
-        VisitBase(statement);
+        try
+        {
+            VisitBase(statement);
+        }
+        catch (RuntimeError ex)
+        {
+            GenerateError(ex.Message, ex.CodeLocation);
+        }
     }
 
     private void ExecuteBlock(BlockStmt block, Environment environment)

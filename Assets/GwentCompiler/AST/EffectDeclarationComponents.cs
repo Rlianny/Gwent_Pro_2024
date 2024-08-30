@@ -16,9 +16,9 @@ public class EffectAction : IEffectComponent
 {
     public Variable TargetsId {get; private set;}
     public Variable ContextId {get; private set;}
-    public BlockStmt BlockStmt {get; private set;}
+    public IStatement BlockStmt {get; private set;}
 
-    public EffectAction(Variable targets, Variable context, BlockStmt block)
+    public EffectAction(Variable targets, Variable context, IStatement block)
     {
         TargetsId = targets;
         ContextId = context;

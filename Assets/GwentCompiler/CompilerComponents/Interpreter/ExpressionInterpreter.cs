@@ -187,7 +187,44 @@ public partial class Interpreter : VisitorBase<object>
         if (value == null || expr.Name == null) return null;
 
         if (expr.Name is Variable variable)
-            Environment.Assign(variable.Value.Lexeme, value);
+        {
+            switch (expr.Assignment.Subtype)
+            {
+                case TokenSubtypes.Assignment:
+                    Environment.Assign(variable.Value.Lexeme, value);
+
+                    break;
+
+                case TokenSubtypes.IncrementAssignment:
+                    if (value is double doubleValue && Environment.Get(variable.Value) is double doubleVarValue)
+                        Environment.Assign(variable.Value.Lexeme, doubleVarValue += doubleValue);
+                    else throw new RuntimeError("The operands must be numeric values", expr.Assignment.Location);
+
+                    break;
+
+                case TokenSubtypes.DecrementAssignment:
+                    if (value is double doubleValue1 && Environment.Get(variable.Value) is double doubleVarValue1)
+                        Environment.Assign(variable.Value.Lexeme, doubleVarValue1 += doubleValue1);
+                    else throw new RuntimeError("The operands must be numeric values", expr.Assignment.Location);
+
+                    break;
+
+                case TokenSubtypes.MultiplicativeAssignment:
+                    if (value is double doubleValue2 && Environment.Get(variable.Value) is double doubleVarValue2)
+                        Environment.Assign(variable.Value.Lexeme, doubleVarValue2 *= doubleValue2);
+                    else throw new RuntimeError("The operands must be numeric values", expr.Assignment.Location);
+
+                    break;
+
+                case TokenSubtypes.DivisiveAssignment:
+                    if (value is double doubleValue3 && Environment.Get(variable.Value) is double doubleVarValue3)
+                        if (doubleVarValue3 != 0)
+                            Environment.Assign(variable.Value.Lexeme, doubleVarValue3 /= doubleValue3);
+                        else throw new RuntimeError("The value must be non cero", expr.Assignment.Location);
+
+                    break;
+            }
+        }
 
         if (expr.Name is CardPropertyAccessExpr cardProperty)
         {
@@ -203,7 +240,28 @@ public partial class Interpreter : VisitorBase<object>
 
                         if (card is SilverUnityCard silverUnityCard)
                         {
-                            silverUnityCard.ActualPower = power;
+                            switch (expr.Assignment.Subtype)
+                            {
+                                case TokenSubtypes.Assignment:
+                                    silverUnityCard.ActualPower = power;
+                                    break;
+
+                                case TokenSubtypes.IncrementAssignment:
+                                    silverUnityCard.ActualPower += power;
+                                    break;
+
+                                case TokenSubtypes.DecrementAssignment:
+                                    silverUnityCard.ActualPower -= power;
+                                    break;
+
+                                case TokenSubtypes.DivisiveAssignment:
+                                    silverUnityCard.ActualPower /= power;
+                                    break;
+
+                                case TokenSubtypes.MultiplicativeAssignment:
+                                    silverUnityCard.ActualPower *= power;
+                                    break;
+                            }
 
                             if (silverUnityCard.ActualPower < 0)
                             {

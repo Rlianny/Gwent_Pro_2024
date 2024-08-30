@@ -48,7 +48,7 @@ public partial class Interpreter : VisitorBase<object>
         {
             var collection = Evaluate(forStmt.Collection);
 
-            if (collection is IEnumerable<object> enumerable)
+            if (collection is IEnumerable<Card> enumerable)
             {
                 var list = enumerable.ToList();
                 foreach (var item in list)
@@ -57,13 +57,25 @@ public partial class Interpreter : VisitorBase<object>
                     Execute(forStmt.Body);
                 }
             }
+
+            else if (collection is IEnumerable<UnityCard>[] array)
+            {
+                foreach (var list in array)
+                {
+                    foreach (var item in list)
+                    {
+                        Environment.Assign(forStmt.Variable.Value.Lexeme, item);
+                        Execute(forStmt.Body);
+                    }
+                }
+            }
         }
 
         finally
         {
             this.Environment = previous;
         }
-        
+
         return null;
     }
 }

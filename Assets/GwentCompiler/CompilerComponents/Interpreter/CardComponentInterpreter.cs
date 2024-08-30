@@ -238,7 +238,7 @@ public partial class Interpreter : VisitorBase<object>
 
             if (source is string stringSource)
             {
-                if (stringSource == "board" || stringSource == "hand" || stringSource == "otherHand" || stringSource == "deck" || stringSource == "otherDeck" || stringSource == "field" || stringSource == "parent" && isRoot == false) selectorSource = stringSource;
+                if (stringSource == "board" || stringSource == "hand" || stringSource == "otherHand" || stringSource == "deck" || stringSource == "otherDeck" || stringSource == "field" || stringSource == "otherField" || stringSource == "parent" && isRoot == false) selectorSource = stringSource;
 
                 else throw new RuntimeError("Invalid source declaration", data.Selector.Source.Operator);
             }

@@ -10,7 +10,7 @@ public enum TokenTypes
     Identifier,
     Keyword,
     Punctuation,
-    ArithmeticOperator, ComparisonOperator, LogicalOperator, AssignmentOperator, MembershipOperator, IncrementDecrementOPerator, StringOperator,
+    ArithmeticOperator, ComparisonOperator, LogicalOperator, AssignmentOperator, ArithmeticAssignmentOperator, MembershipOperator, IncrementDecrementOPerator, StringOperator,
     NumericLiteral, StringLiteral, BooleanLiteral,
     Comments,
     WhiteSpaces,
@@ -23,7 +23,7 @@ public enum TokenSubtypes
     Comma, OpenParenthesis, CloseParenthesis, OpenBracket, CloseBracket, OpenBrace, CloseBrace, Colon, Semicolon, Lambda, Dot,
     effect, card, Name, While, For, String, Number, Bool, Params, Action, Type, Faction, Power, Range, OnActivation, Effect, Selector, Source, Single, Predicate, PostAction, If, Else, EffectDescription, CharacterDescription, Quote, TriggerPlayer, Board, HandOfPlayer, FieldOfPlayer, GraveyardOfPlayer, DeckOfPlayer, Owner, Find, Push, SendBottom, Pop, Remove, Shuffle, Hand, Deck, Field, Graveyard,
     Negation, True, False, NumericLiteral, StringLiteral, Identifier, Comments, WhiteSpaces,
-    Addition, Subtraction, Multiplication, Division, Potentiation, Equality, Inequality, AND, OR, GreaterThanOrEqual, LessThanOrEqual, GreaterThan, LessThan, In, PostIncrement, PostDecrement, StringConcatenation, StringConcatenationSpaced, Assignment,
+    Addition, Subtraction, Multiplication, Division, Potentiation, Equality, Inequality, AND, OR, GreaterThanOrEqual, LessThanOrEqual, GreaterThan, LessThan, In, PostIncrement, PostDecrement, IncrementAssignment, DecrementAssignment, MultiplicativeAssignment, DivisiveAssignment, StringConcatenation, StringConcatenationSpaced, Assignment,
     EOF,
     Print,
 }
@@ -37,6 +37,7 @@ public static class LexicalComponents
         { TokenTypes.BooleanLiteral, new Regex("^true(?![a-zA-Z0-9])|^false(?![a-zA-Z0-9])") },
         { TokenTypes.NumericLiteral, new Regex(@"^\d+(\.\d+)?\b") },
         { TokenTypes.StringLiteral, new Regex("^\"[^\"]*\"") },
+        { TokenTypes.ArithmeticAssignmentOperator, new Regex("^\\+\\=|^-\\=|^\\*\\=|^/\\=")},
         { TokenTypes.IncrementDecrementOPerator, new Regex("^\\+\\+|^-\\-")},
         { TokenTypes.ArithmeticOperator, new Regex("^\\+|^-|^\\*|^/|^\\^")},
         { TokenTypes.ComparisonOperator, new Regex("^>=|^<=|^==|^!=|^<|^>")},
@@ -169,6 +170,15 @@ public static class LexicalComponents
             {
                 {"++", TokenSubtypes.PostIncrement},
                 {"--", TokenSubtypes.PostDecrement},
+            }
+        },
+        {
+            TokenTypes.ArithmeticAssignmentOperator, new Dictionary<string, TokenSubtypes>
+            {
+                {"+=", TokenSubtypes.IncrementAssignment},
+                {"-=", TokenSubtypes.DecrementAssignment},
+                {"*=", TokenSubtypes.MultiplicativeAssignment},
+                {"/=", TokenSubtypes.DivisiveAssignment},
             }
         },
         {

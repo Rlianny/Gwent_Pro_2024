@@ -1,48 +1,27 @@
-effect
-{
-    Name: "Damage",
-    Params:
-    {
-        Amount : Number
-    },
-    Action: (targets, context) => 
-    {
-        for target in targets
-        {
-            i = 0;
-            while(i < Amount)
-            {
-                target.Power = target.Power - 1;
-                i = i + 1;
-            }
-        }
-    };
-}
-
 card
 {
-    Name: "Beluga",
-    Type: "Oro",
-    Faction: "Smiths Interdimensionales",
-    Power: 7,
-    Range: ["Melee", "Siege"],
-    CharacterDescription: "Es una criatura acuatica que proviene del océano, muy parecido a un pez",
-    EffectDescription: "Reduce en 5 los puntos de las cartas del tablero",
-    Quote: "Blu blu blu",
+    Type: "Plata",
+    Name: "de Matcom",
+    Faction: "Neutral",
+    Power: 10,
+    Range: ["Melee", "Ranged", "Siege"],
     OnActivation:
     [
         {
-            Effect:
+            Effect: 
             {
                 Name: "Damage",
-                Amount: 5,
+                Amount: 10,
             },
             Selector:
             {
-                Source: "board",
+                Source: "otherField",
                 Single: false,
-                Predicate: (unit) => unit.Faction == "Smiths Interdimensionales"
+                Predicate: (unit) => true
             },
         }
     ]
+    CharacterDescription: "Un Morty que estudia CC, 100% un cuervo",
+    Quote: "Sin miedo al Epsilon",
+    EffectDescription: "Disminuye en 10 los puntos de las cartas del campo del enemigo",
 }

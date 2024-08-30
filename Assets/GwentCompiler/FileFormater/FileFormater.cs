@@ -9,7 +9,10 @@ public static class FileFormatter
 {
     public static void Save(CompiledObject @object)
     {
-        string fileName = $"{@object.GetHashCode()}.bin";
+        string fileName = "";
+        if (@object is CompiledCard compiledCard) fileName += compiledCard.Name;
+        if (@object is CompiledEffect compiledEffect) fileName += compiledEffect.Name;
+        fileName += $"{@object.GetHashCode()}.bin";
         string combinedPath = Path.Combine("Assets/CardsCollection/Serialized", fileName);
 
         BinaryFormatter binaryFormatter = new();
