@@ -67,7 +67,6 @@ public class PersonalizedEffect : Effect
 
     public override void TakeEffect(Player ActivePlayer, Player RivalPlayer, Card card)
     {
-        if (card.OnActivation == null) UnityEngine.Debug.Log("on activation null");
         foreach (var effect in card.OnActivation)
         {
             InterpretEffect(ActivePlayer, RivalPlayer, card, effect);
@@ -103,24 +102,9 @@ public class PersonalizedEffect : Effect
         foreach (var pair in effect.Parameters)
         {
             interpreter.Environment.Assign(pair.Key.Name, pair.Value);
-            UnityEngine.Debug.Log(pair.Key.Name + " existe en el Environment");
         }
 
-        if (targets != null)
-            foreach (var target in targets)
-            {
-                if (target is SilverUnityCard unityCard)
-                    UnityEngine.Debug.Log($"La carta {target.Name} tiene {unityCard.ActualPower}");
-            }
-
         interpreter.Execute(baseEffect.Block);
-
-        if (targets != null)
-            foreach (var target in targets)
-            {
-                if (target is SilverUnityCard unityCard)
-                    UnityEngine.Debug.Log($"La carta {target.Name} tiene {unityCard.ActualPower}");
-            }
 
         if (effect.PostAction != null)
         {
@@ -155,24 +139,9 @@ public class PersonalizedEffect : Effect
         foreach (var pair in effect.Parameters)
         {
             interpreter.Environment.Assign(pair.Key.Name, pair.Value);
-            UnityEngine.Debug.Log(pair.Key.Name + " existe en el Environment");
         }
 
-        if (targets != null)
-            foreach (var target in targets)
-            {
-                if (target is SilverUnityCard unityCard)
-                    UnityEngine.Debug.Log($"La carta {target.Name} tiene {unityCard.ActualPower}");
-            }
-
         interpreter.Execute(baseEffect.Block);
-
-        if (targets != null)
-            foreach (var target in targets)
-            {
-                if (target is SilverUnityCard unityCard)
-                    UnityEngine.Debug.Log($"La carta {target.Name} tiene {unityCard.ActualPower}");
-            }
 
         if (effect.PostAction != null)
         {
