@@ -7,14 +7,14 @@ using System.Threading;
 
 public class DeckCreator
 {
-    public string Faction { get; private set; } = String.Empty;     // Facción del mazo
-    public Card DeckLeader { get; private set; }        // Líder de la facción del mazo
-    public List<Card> CardDeck { get; private set; } = new();       // Lista de cartas del mazo (no incluye al Líder)
-    public int CardsTotalNumber { get; private set; }       // Número de cartas en el mazo
-    public int UnityCardsTotalNumber { get; private set; }      // Número de cartas de unidad en el mazo
-    public int HeroCardsTotalNumber { get; private set; }       // Número de cartas de tipo Héroe en el mazo
-    public int SpecialCardsTotalNumber { get; private set; }        // Número de cartas especiales en el mazo
-    public int UnityPowerTotalNumber { get; private set; }      // Fuerza total de las cartas de unidad del mazo
+    public string Faction { get; private set; } = String.Empty;     
+    public Card DeckLeader { get; private set; }        
+    public List<Card> CardDeck { get; private set; } = new();       
+    public int CardsTotalNumber { get; private set; }       
+    public int UnityCardsTotalNumber { get; private set; }      
+    public int HeroCardsTotalNumber { get; private set; }       
+    public int SpecialCardsTotalNumber { get; private set; }        
+    public int UnityPowerTotalNumber { get; private set; }      
 
     /// <summary>
     /// Constructor de la clase DeckCreator.
@@ -97,23 +97,6 @@ public class DeckCreator
                 return;
             }
         }
-    }
-
-    public static List<Card> Shuffle(List<Card> cards)
-    {
-        int i = 0;
-        System.Random random = new System.Random();
-        Card temp;
-        while(i < cards.Count)
-        {
-            int aleatory1 = random.Next(0, cards.Count-1);
-            int aleatory2 = random.Next(0, cards.Count-1);
-            temp = cards[aleatory1];
-            cards[aleatory1] = cards[aleatory2];
-            cards[aleatory2] = temp;
-            i++;
-        }
-        return cards;
     }
 
     /// <summary>

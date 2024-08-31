@@ -21,7 +21,12 @@ public partial class ObjectCompiler
         if (node.Range != null && interpreter.Interpret(node.Range) is List<string> rangeList) range = rangeList;
 
         List<EffectActivation> onAct = null;
-        if(node.OnActivationField != null && interpreter.Interpret(node.OnActivationField) is List<EffectActivation> activations) onAct = activations;
+        if (node.OnActivationField == null) Debug.Log("Caso 1");
+        if (interpreter.Interpret(node.OnActivationField) is not List<EffectActivation>)
+        {
+            if(interpreter.Interpret(node.OnActivationField) == null) Debug.Log(null);
+        }
+        if (node.OnActivationField != null && interpreter.Interpret(node.OnActivationField) is List<EffectActivation> activations) onAct = activations;
 
         string effectDescription = null;
         if (node.EffectDescription != null && interpreter.Interpret(node.EffectDescription) is string stringEffectDescription) effectDescription = stringEffectDescription;
@@ -35,10 +40,46 @@ public partial class ObjectCompiler
         double? power = null;
         if (node.Power != null && interpreter.Interpret(node.Power) is double intPower) power = intPower;
 
-        if(cardType != null && cardName != null && cardFaction != null && range != null && onAct != null && effectDescription != null && power != null && characterDescription != null && quote != null) 
-        return new CompiledCard(cardType, "Morty " + cardName, cardFaction, range, onAct, effectDescription, (int)power, characterDescription, quote);
+        // if(cardType != null && cardName != null && cardFaction != null && range != null && onAct != null && effectDescription != null && power != null && characterDescription != null && quote != null) 
+        // return new CompiledCard(cardType, "Morty " + cardName, cardFaction, range, onAct, effectDescription, (int)power, characterDescription, quote);
 
-        else throw new RuntimeError("Missing card fields", node.CardLocation.Location);
+        if (cardType != null)
+        {
+            if (cardName != null)
+            {
+                if (cardFaction != null)
+                {
+                    if (range != null)
+                    {
+                        if (onAct != null)
+                        {
+                            if (effectDescription != null)
+                            {
+                                if (power != null)
+                                {
+                                    if (characterDescription != null)
+                                    {
+                                        if (quote != null)
+                                        {
+                                            return new CompiledCard(cardType, "Morty " + cardName, cardFaction, range, onAct, effectDescription, (int)power, characterDescription, quote);
+                                        }
+                                        else throw new RuntimeError("Missing card quote field", node.CardLocation.Location);
+                                    }
+                                    else throw new RuntimeError("Missing card character description field", node.CardLocation.Location);
+                                }
+                                else throw new RuntimeError("Missing card power field", node.CardLocation.Location);
+                            }
+                            else throw new RuntimeError("Missing card effect description field", node.CardLocation.Location);
+                        }
+                        else throw new RuntimeError("Missing card OnActivation field", node.CardLocation.Location);
+                    }
+                    else throw new RuntimeError("Missing card range field", node.CardLocation.Location);
+                }
+                else throw new RuntimeError("Missing card faction field", node.CardLocation.Location);
+            }
+            else throw new RuntimeError("Missing card name field", node.CardLocation.Location);
+        }
+        else throw new RuntimeError("Missing card type field", node.CardLocation.Location);
 
     }
 

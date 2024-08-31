@@ -5,17 +5,17 @@ using System.Linq;
 using System.Collections;
 
 [Serializable]
-public class CompiledCard: CompiledObject
+public class CompiledCard : CompiledObject
 {
-    public string Type { get; private set; } 
-    public string Name { get; private set; } 
-    public string Faction { get; private set; } 
-    public List<string> Range { get; private set; } 
-    public string EffectDescription { get; private set; } 
-    public List<EffectActivation> OnActivation { get; private set; } 
-    public int Power { get; private set; } 
-    public string CharacterDescription { get; private set; } 
-    public string Quote { get; private set; } 
+    public string Type { get; private set; }
+    public string Name { get; private set; }
+    public string Faction { get; private set; }
+    public List<string> Range { get; private set; }
+    public string EffectDescription { get; private set; }
+    public List<EffectActivation> OnActivation { get; private set; }
+    public int Power { get; private set; }
+    public string CharacterDescription { get; private set; }
+    public string Quote { get; private set; }
 
     public CompiledCard(string type, string name, string faction, List<string> range, List<EffectActivation> onActivation, string effectDescription, int effectNumber, string characterDescription, string quote)
     {
@@ -24,7 +24,6 @@ public class CompiledCard: CompiledObject
         Faction = faction;
         Range = range;
         EffectDescription = effectDescription;
-        if(onActivation == null) 
         OnActivation = onActivation;
         Power = effectNumber;
         CharacterDescription = characterDescription;
@@ -51,6 +50,7 @@ public class CompiledCard: CompiledObject
 
             onActivation += $"{act.SelectorSource}, {act.SelectorSingle}, ";
         }
+
         return $"{Type}, {Name}, {Faction}, {ranges}, {onActivation} {EffectDescription}, {Power}, {CharacterDescription}, {Quote}";
     }
 

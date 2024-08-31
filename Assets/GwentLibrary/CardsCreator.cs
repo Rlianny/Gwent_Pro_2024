@@ -29,6 +29,11 @@ public static class CardsCreator
         return CardInfoList;
     }
 
+    /// <summary>
+    /// Este método toma un contenedor de objetos serializados y los guarda en una lista.
+    /// </summary>
+    /// <param name="path">Ruta de la carpeta que contiene los archivos de serialización.</param>
+    /// <returns>Devuelve una lista que contine todos los objetos que han sido comilados (cartas y efectos).</returns>
     public static List<CompiledObject> LoadAll(string path)
     {
         List<CompiledObject> objects = new();

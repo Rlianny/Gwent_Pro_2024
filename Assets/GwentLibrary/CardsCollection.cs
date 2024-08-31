@@ -28,7 +28,7 @@ public class CardsCollection
         {
             Card card = TypeCreator(infoArray[0], infoArray);
             count++;
-            CardBorn(card);
+            CardRegistration(card);
         }
 
         foreach (var compiledObj in compileds)
@@ -37,7 +37,7 @@ public class CardsCollection
             {
                 Card card = TypeCreator(compiledCard);
                 count++;
-                CardBorn(card);
+                CardRegistration(card);
             }
         }
 
@@ -47,7 +47,11 @@ public class CardsCollection
             Debug.Log("Todas las cartas han sido cargadas");
     }
 
-    private void CardBorn(Card card)
+    /// <summary>
+    /// Este método registra la carta en los campos de clase que se encargan de clasificar las cartas en colecciones.
+    /// </summary>
+    /// <param name="card">Carta que será registrada.</param>
+    private void CardRegistration(Card card)
     {
         Collection.Add(card);
 
@@ -56,15 +60,15 @@ public class CardsCollection
 
         Debug.Log($"{card.Name} ha entrado al campo de batalla");
 
-        if (card.Type != CardTypes.Líder)        // si la carta no es el Líder de una facción 
+        if (card.Type != CardTypes.Líder)
         {
-            if (!AllFactions.Keys.Contains(card.Faction))        //  si la facción no estaba como llave del diccionario la agregamos y agregamos la carta 
+            if (!AllFactions.Keys.Contains(card.Faction))
             {
                 List<Card> Temp = new();
                 AllFactions.Add(card.Faction, Temp);
                 Temp.Add(card);
             }
-            else        // si la facción ya estaba establecida como llave del diccionario solo añadimos la carta
+            else
             {
                 AllFactions[card.Faction].Add(card);
             }
@@ -111,6 +115,11 @@ public class CardsCollection
         }
     }
 
+    /// <summary>
+    /// Este método elige el tipo de carta que será creado en correspondecia con el tipo declarado en la base de datos.
+    /// </summary>
+    /// <param name="compiledCard">Carta compilada a partir de la cual se desea crear una carta.</param>
+    /// <returns>Instancia de objeto que hereda de carta.</returns>
     public static Card TypeCreator(CompiledCard compiledCard)
     {
         switch (compiledCard.Type)

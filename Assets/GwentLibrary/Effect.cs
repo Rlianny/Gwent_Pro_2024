@@ -81,12 +81,14 @@ public class PersonalizedEffect : Effect
 
         List<Card> targets = GetTargets(ActivePlayer, RivalPlayer, card, effect);
         List<UnityCard>[] targetsArray = null;
+
         if (targets == null)
         {
             if (effect.SelectorSource == "board") targetsArray = Context.Board;
             else if (parentSource != null) targets = parentSource;
             else return;
         }
+        
         Context context = new();
 
         Interpreter interpreter = new();

@@ -163,11 +163,14 @@ public partial class Interpreter : VisitorBase<object>
 
         foreach (var activation in onActivation.Activations)
         {
+            Debug.Log("va a visitar y el count es" + effects.Count);
             object newActivation = Visit(activation, true);
-            if (newActivation != null)
-                effects.Add((EffectActivation)newActivation);
+            Debug.Log("visito y el count es " + effects.Count);
+            if (newActivation != null && newActivation is EffectActivation effectActivation)
+                effects.Add(effectActivation);
         }
 
+        Debug.Log("va a aretornar y el count es " + effects.Count);
         return effects;
     }
 
@@ -221,7 +224,7 @@ public partial class Interpreter : VisitorBase<object>
                     else throw new RuntimeError("Invalid parameter declaration, this effect does not contain this parameter", activationParam.VarName.Value.Location);
                 }
 
-                if (Effect.GetCompiledEffect(stringName).Parameters.Count != parameter.Count) throw new RuntimeError("Invalid parameter declaration, there are still parameters to declare", data.Effect.ActivationParams[0].Colon);
+                //if (Effect.GetCompiledEffect(stringName).Parameters.Count != parameter.Count) throw new RuntimeError("Invalid parameter declaration, there are still parameters to declare", data.Effect.ActivationParams[0].Colon);
                 Params = parameter;
             }
 

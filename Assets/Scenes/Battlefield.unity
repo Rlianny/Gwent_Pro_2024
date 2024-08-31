@@ -2171,6 +2171,7 @@ MonoBehaviour:
   Player1SScore: {fileID: 2110804557}
   Player1TotalScore: {fileID: 1247705047}
   Player1LeaderPlace: {fileID: 1611319001}
+  Player1Hand: {fileID: 478091630}
   Player1HandScript: {fileID: 583387635}
   Player2Name: {fileID: 1271573875}
   Player2Faction: {fileID: 311598822}
@@ -2183,6 +2184,7 @@ MonoBehaviour:
   Player2SScore: {fileID: 20214305961396964}
   Player2TotalScore: {fileID: 1610362567}
   Player2LeaderPlace: {fileID: 82295649}
+  Player2Hand: {fileID: 661591154}
   Player2HandScript: {fileID: 8933253019043194138}
   WeatherEffect2S: {fileID: 1104788853}
   WeatherEffect2R: {fileID: 725816883}
@@ -2617,6 +2619,17 @@ RectTransform:
   m_AnchoredPosition: {x: -162.13501, y: 270}
   m_SizeDelta: {x: 1572.2, y: 540}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &478091630 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3554805046613723921, guid: 8d2ee0021d3e95ee6826d8565f6ff3b6, type: 3}
+  m_PrefabInstance: {fileID: 583387632}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 583387634}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30649d3a9faa99c48a7b1166b86bf2a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &483189089
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3767,6 +3780,17 @@ MonoBehaviour:
   CardBeingDropped: {fileID: 0}
   Pop: {fileID: 8300000, guid: bff830be9083fa66083eb2c3dbdee157, type: 3}
   UIAudible: {fileID: 391175266}
+--- !u!114 &661591154 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3554805046613723921, guid: 8d2ee0021d3e95ee6826d8565f6ff3b6, type: 3}
+  m_PrefabInstance: {fileID: 8933253019043194135}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8933253019043194137}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30649d3a9faa99c48a7b1166b86bf2a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &701265562
 GameObject:
   m_ObjectHideFlags: 0

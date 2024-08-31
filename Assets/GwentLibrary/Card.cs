@@ -55,6 +55,11 @@ public abstract class Card
         Quote = card.Quote;
     }
 
+    /// <summary>
+    /// Constructor de la clase Card.
+    /// </summary>
+    /// <param name="compiledCard">Carta compilada a partir de la cual se creará una carta.</param>
+    /// <remarks>Este constructor está pensado para crear una nueva carta de plata a partir de una carta compilada serializada.</remarks>
     public Card(CompiledCard compiledCard)
     {
         type = compiledCard.Type;
@@ -66,6 +71,10 @@ public abstract class Card
         OnActivation = compiledCard.OnActivation;
     }
 
+    /// <summary>
+    /// Método para guardar el ID del propietario de la carta durante la partida.
+    /// </summary>
+    /// <param name="id">ID del jugador al que pertenecerá la carta.</param>
     public void SetOwner(int id)
     {
         Owner = id;

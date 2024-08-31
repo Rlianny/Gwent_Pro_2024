@@ -10,14 +10,14 @@ public class Player
 {
     private static int IDSelector;
     public int PlayerID;
-    public string PlayerName { get; private set; }      // nombre del jugador
-    public string PlayerFaction { get; private set; }       // facción del jugador
-    public Card PlayerLeader { get; private set; }      // carta líder de la facción del jugador
-    public Hand PlayerHand { get; private set; }        // mano del jugador
-    public PlayerBattlefield Battlefield { get; private set; }      // parte del campo de batalla perteneciente al jugador
-    public bool HasPassed { get; private set; }     // booleano para indicar si el jugador ha pasado la ronda
-    public int GamesWon { get; private set; }       // cantidad de rondas ganadas por el jugador
-    public bool IsActive { get; private set; }      // booleano para indicar si es el turno del jugador
+    public string PlayerName { get; private set; } 
+    public string PlayerFaction { get; private set; }      
+    public Card PlayerLeader { get; private set; }     
+    public Hand PlayerHand { get; private set; }        
+    public PlayerBattlefield Battlefield { get; private set; }      
+    public bool HasPassed { get; private set; }    
+    public int GamesWon { get; private set; }       
+    public bool IsActive { get; private set; } 
 
     /// <summary>
     /// Constructor de la clase Player.

@@ -136,6 +136,22 @@ public class Context
         if (GameManager.Player1.PlayerID == id) return GameManager.Player1.PlayerHand.GameDeck;
         else return GameManager.Player2.PlayerHand.GameDeck;
     }
+
+    public static void Shuffle(List<Card> cards)
+    {
+        int i = 0;
+        System.Random random = new System.Random();
+        Card temp;
+        while(i < cards.Count)
+        {
+            int aleatory1 = random.Next(0, cards.Count-1);
+            int aleatory2 = random.Next(0, cards.Count-1);
+            temp = cards[aleatory1];
+            cards[aleatory1] = cards[aleatory2];
+            cards[aleatory2] = temp;
+            i++;
+        }
+    }
 }
 
 

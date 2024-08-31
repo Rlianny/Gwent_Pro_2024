@@ -359,7 +359,36 @@ public partial class Interpreter : VisitorBase<object>
         else return Context.Deck;
     }
 
-    // FindMethodExpr
+    public object Visit(FindMethodExpr expr)
+    {
+        var value = Evaluate(expr.AccessExpression);
+        if (expr.Args is LambdaExpr lambdaExpr)
+        {
+            Delegate @delegate = new Delegate(lambdaExpr);
+            List<Card> toReturn = new();
+            if (value is List<Card> cardList)
+            {
+                foreach (Card card in cardList)
+                {
+                    if (@delegate.Invoke(card)) toReturn.Add(card);
+                }
+                return toReturn;
+            }
+            else if (value is List<UnityCard>[] cardArray)
+            {
+                foreach (var list in cardArray)
+                {
+                    foreach (UnityCard card in list)
+                    {
+                        if (@delegate.Invoke(card)) toReturn.Add(card);
+                    }
+                }
+                return toReturn;
+            }
+            else throw new RuntimeError($"The method '{expr.Method.Lexeme}' is only accessible from card lists", expr.Method.Location);
+        }
+        else throw new RuntimeError($"The method '{expr.Method.Lexeme}' only accept as argument lambda expression", expr.Method.Location);
+    }
 
     public object Visit(PushMethodExpr expr)
     {
@@ -374,6 +403,7 @@ public partial class Interpreter : VisitorBase<object>
             }
             else throw new RuntimeError("Expect a card as method argument", expr.Method.Location);
         }
+        else if (value is List<UnityCard>[] cardArray) return new List<Card>();
         else throw new RuntimeError($"The method '{expr.Method.Lexeme}' is only accessible from card lists", expr.Method.Location);
     }
 
@@ -390,6 +420,7 @@ public partial class Interpreter : VisitorBase<object>
             }
             else throw new RuntimeError("Expect a card as method argument", expr.Method.Location);
         }
+        else if (value is List<Card>[] cardArray) return new List<Card>();
         else throw new RuntimeError($"The method '{expr.Method.Lexeme}' is only accessible from card lists", expr.Method.Location);
     }
 
@@ -410,6 +441,7 @@ public partial class Interpreter : VisitorBase<object>
             }
             else throw new RuntimeError($"No overload for method '{expr.Method.Lexeme}' takes 1 arguments", expr.Method.Location);
         }
+        else if (value is List<UnityCard>[] cardArray) return new List<Card>();
         else throw new RuntimeError($"The method '{expr.Method.Lexeme}' is only accessible from card lists", expr.Method.Location);
     }
 
@@ -425,6 +457,21 @@ public partial class Interpreter : VisitorBase<object>
             }
             else throw new RuntimeError("Expect a card as method argument", expr.Method.Location);
         }
+        else if (value is List<UnityCard>[] cardArray)
+        {
+            var arg = Evaluate(expr.Args);
+            bool answer = false;
+            if (arg is Card card)
+            {
+                if (card is UnityCard unityCard)
+                    foreach (var list in cardArray)
+                    {
+                        if (list.Remove(unityCard)) answer = true;
+                    }
+                return answer;
+            }
+            else throw new RuntimeError("Expect a card as method argument", expr.Method.Location);
+        }
         else throw new RuntimeError($"The method '{expr.Method.Lexeme}' is only accessible from card lists", expr.Method.Location);
     }
 
@@ -433,9 +480,10 @@ public partial class Interpreter : VisitorBase<object>
         var value = Evaluate(expr.AccessExpression);
         if (value is List<Card> cardList)
         {
-            cardList = DeckCreator.Shuffle(cardList);
+            Context.Shuffle(cardList);
             return cardList;
         }
+        else if (value is List<UnityCard>[] cardArray) return new List<Card>();
         else throw new RuntimeError($"The method '{expr.Method.Lexeme}' is only accessible from card lists", expr.Method.Location);
     }
 

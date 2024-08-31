@@ -1,18 +1,26 @@
+effect
+{
+    Name: "Fatality",
+    Action: (targets, context) =>
+    {
+        for target in targets
+        {
+            context.Board.Remove(target);
+        }
+    }
+}
+
 card
 {
-    Type: "Plata",
-    Name: "de Matcom",
+    Type: "Oro",
+    Name: "Parca",
     Faction: "Neutral",
-    Power: 10,
-    Range: ["Melee", "Ranged", "Siege"],
+    Power: 7,
+    Range: ["Siege"],
     OnActivation:
     [
         {
-            Effect: 
-            {
-                Name: "Damage",
-                Amount: 10,
-            },
+            Effect: "Fatality",
             Selector:
             {
                 Source: "otherField",
@@ -21,7 +29,31 @@ card
             },
         }
     ]
-    CharacterDescription: "Un Morty que estudia CC, 100% un cuervo",
-    Quote: "Sin miedo al Epsilon",
-    EffectDescription: "Disminuye en 10 los puntos de las cartas del campo del enemigo",
+    CharacterDescription: "La triste y negra parca, andando con su guadaña simbolizando muerte",
+    Quote: "(...)",
+    EffectDescription: "Envía todas las cartas del enemigo al cementerio",
+}
+
+card
+{
+    Type: "Oro",
+    Name: "Fidel",
+    Faction: "Neutral",
+    Power: 10,
+    Range: ["Melee"],
+    OnActivation:
+    [
+        {
+            Effect: "Draw",
+            Selector:
+            {
+                Source: "board",
+                Single: true,
+                Predicate: (unit) => unit.Faction == "Neutral"
+            },
+        }
+    ]
+    CharacterDescription: "Comandante en jefe de los Mortys",
+    Quote: "Yo te di la palabra chico?",
+    EffectDescription: "Roba una carta",
 }

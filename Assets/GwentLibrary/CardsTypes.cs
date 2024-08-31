@@ -14,9 +14,9 @@ public class LeaderCard : Card
 
 public abstract class UnityCard : Card
 {
-    public List<RowTypes> Row { get; private set; }     // Lista donde cada elemento es un string que representa la posición de la carta en el campo de battalla (M, R, S)
-    public int Power { get; private set; }        // Poder (puntos) de la carta
-    public string RowString { get; private set; }     // String que contiene las posibles posiciones de la carta en el campo de battalla (M, R, S)
+    public List<RowTypes> Row { get; private set; }    
+    public int Power { get; private set; }        
+    public string RowString { get; private set; }     
 
     public UnityCard(string[] CardInfoArray) : base(CardInfoArray)
     {
@@ -47,17 +47,17 @@ public abstract class UnityCard : Card
             if (row == "Melee")
             {
                 rowTypes.Add(RowTypes.Melee);
-                rowString += "M";
+                rowString += "M ";
             }
             if (row == "Ranged")
             {
                 rowTypes.Add(RowTypes.Ranged);
-                rowString += "R";
+                rowString += "R ";
             }
             if (row == "Siege")
             {
                 rowTypes.Add(RowTypes.Siege);
-                rowString += "S";
+                rowString += "S ";
             }
         }
 
@@ -74,7 +74,7 @@ public class HeroCard : UnityCard
 
 public class SilverUnityCard : UnityCard
 {
-    public int ActualPower { get; set; }      // Poder actual (puntos actuales) en el campo de batalla
+    public int ActualPower { get; set; }
     public static int PossibleAppearances = 3;
     public SilverUnityCard(string[] CardInfoArray) : base(CardInfoArray)
     {

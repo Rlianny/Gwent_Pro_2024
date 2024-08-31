@@ -25,6 +25,7 @@ public class UIVisual : MonoBehaviour, IObserver
     public TextMeshProUGUI Player1SScore;
     public TextMeshProUGUI Player1TotalScore;
     public HorizontalLayoutGroup Player1LeaderPlace;
+    public HorizontalLayoutGroup Player1Hand;
     [SerializeField] UIHand Player1HandScript;
 
     // Player2
@@ -39,6 +40,7 @@ public class UIVisual : MonoBehaviour, IObserver
     public TextMeshProUGUI Player2SScore;
     public TextMeshProUGUI Player2TotalScore;
     public HorizontalLayoutGroup Player2LeaderPlace;
+    public HorizontalLayoutGroup Player2Hand;
     [SerializeField] UIHand Player2HandScript;
 
     public Image WeatherEffect2S;
@@ -284,7 +286,7 @@ public class UIVisual : MonoBehaviour, IObserver
         UpdateScores();
         UpdateBattlefieldUI();
 
-        if(!eventReport.RivalPlayer.HasPassed)
+        if (!eventReport.RivalPlayer.HasPassed)
         {
             StartCoroutine(ShowMessage($"Turno de {eventReport.RivalPlayer.PlayerName}"));
         }
@@ -672,12 +674,15 @@ public class UIVisual : MonoBehaviour, IObserver
         UpdateBattlefieldRowUI(RowM2, GameManager.Player2, 0);
         UpdateBattlefieldRowUI(RowR2, GameManager.Player2, 1);
         UpdateBattlefieldRowUI(RowS2, GameManager.Player2, 2);
+        UpdatePlayerHandUI(Player1Hand, GameManager.Player1);
+        UpdatePlayerHandUI(Player2Hand, GameManager.Player2);
 
         Debug.Log("El campo ha sido actualizado");
     }
 
     private void UpdateBattlefieldRowUI(HorizontalLayoutGroup rowToClear, Player playerBeingUpdated, int RowCorrespondency)
     {
+        List<SilverUnityCard> cardsInRow = new();
         for (int i = 0; i < rowToClear.transform.childCount; i++)
         {
             Card card = rowToClear.transform.GetChild(i).GetComponent<UICard>().MotherCard;
@@ -686,14 +691,72 @@ public class UIVisual : MonoBehaviour, IObserver
                 if (!playerBeingUpdated.Battlefield.GetRowFromBattlefield(Tools.RowForIndex[RowCorrespondency]).Contains(silverUnityCard))
                 {
                     GameObject cardToDestroy = rowToClear.transform.GetChild(i).gameObject;
-                    SendToCemetery(cardToDestroy, Player2Cemetery);
+                    if (playerBeingUpdated == GameManager.Player1)
+                        SendToCemetery(cardToDestroy, Player1Cemetery);
+                    else
+                        SendToCemetery(cardToDestroy, Player2Cemetery);
                     Debug.Log(card.Name + "ha sido enviado al cementerio");
                 }
 
                 else
+                {
                     rowToClear.transform.GetChild(i).GetComponent<UICard>().CardPower.text = silverUnityCard.ActualPower.ToString();
+                    cardsInRow.Add(silverUnityCard);
+                }
+            }
+        }
+
+        foreach (UnityCard unityCard in playerBeingUpdated.Battlefield.GetRowFromBattlefield(Tools.RowForIndex[RowCorrespondency]))
+        {
+            if (unityCard is SilverUnityCard silverUnityCard)
+            {
+                if (!cardsInRow.Contains(silverUnityCard))
+                {
+                    var newCard = Instantiate(CardPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+                    newCard.transform.SetParent(rowToClear.transform);
+                    UICard ui = newCard.GetComponent<UICard>();
+                    ui.PrintCard(unityCard);
+                }
+            }
+        }
+    }
+    private void UpdatePlayerHandUI(HorizontalLayoutGroup rowToClear, Player playerBeingUpdated)
+    {
+        List<Card> cardsInRow = new();
+        for (int i = 0; i < rowToClear.transform.childCount; i++)
+        {
+            Card card = rowToClear.transform.GetChild(i).GetComponent<UICard>().MotherCard;
+
+            if (!playerBeingUpdated.PlayerHand.PlayerHand.Contains(card))
+            {
+                GameObject cardToDestroy = rowToClear.transform.GetChild(i).gameObject;
+                Debug.Log(card.Name + "ha sido enviado al cementerio");
+                if (playerBeingUpdated == GameManager.Player1)
+                    SendToCemetery(cardToDestroy, Player1Cemetery);
+                else
+                    SendToCemetery(cardToDestroy, Player2Cemetery);
+            }
+
+            else
+            {
+                if (card is SilverUnityCard silverUnityCard)
+                    rowToClear.transform.GetChild(i).GetComponent<UICard>().CardPower.text = silverUnityCard.ActualPower.ToString();
+                cardsInRow.Add(card);
+            }
+        }
+
+        foreach (Card card in playerBeingUpdated.PlayerHand.PlayerHand)
+        {
+            if (!cardsInRow.Contains(card))
+            {
+                var newCard = Instantiate(CardPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+                newCard.transform.SetParent(rowToClear.transform);
+                UICard ui = newCard.GetComponent<UICard>();
+                ui.PrintCard(card);
             }
         }
     }
 }
+
+
 

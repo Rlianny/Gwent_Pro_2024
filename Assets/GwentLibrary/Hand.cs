@@ -7,8 +7,8 @@ using System;
 
 public class Hand
 {
-    public List<Card> PlayerHand { get; private set; } = new();       // Lista de cartas en la mano del jugador
-    public List<Card> GameDeck { get; private set; }      // Lista de cartas en el mazo del jugador
+    public List<Card> PlayerHand { get; private set; } = new();       
+    public List<Card> GameDeck { get; private set; }
 
     /// <summary>
     /// Constructor de la clase Hand.
@@ -73,8 +73,10 @@ public class Hand
 
         foreach(Card card in cardList)
         {
-            if(card.Name == "Morty Triste") return card;
-            if(card.Name == "Morty de Matcom") return card;
+            //if(card.Name == "Morty Triste") return card;
+            //if(card.Name == "Morty de Matcom") return card;
+            if(card.Name == "Morty Fidel") return card;
+            if(card.Name == "Morty Parca") return card;
         }
 
         int randomIndex = random.Next(cardList.Count - 1);
