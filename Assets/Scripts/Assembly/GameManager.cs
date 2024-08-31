@@ -12,7 +12,7 @@ public class GameManager : Subject
     public static Player Player1;       // Jugador1
     public static Player Player2;       // Jugador2
 
-    public static GameManager AwakeManager() 
+    public static GameManager AwakeManager()
     {
         return new GameManager();
     }
@@ -28,12 +28,12 @@ public class GameManager : Subject
 
         if (Player1.IsActive == true)
             Debug.Log($"{Player1.PlayerName} empieza");
-        
+
 
         if (Player2.IsActive == true)
             Debug.Log($"{Player2.PlayerName} empieza");
 
-        NotifyObservers(new GameEventReport(GameEvents.Start));
+        NotifyObservers(new GameEventReport(GameEvents.Start, Player1, Player2));
     }
 
     public void PlayACard(Card card, RowTypes row)
@@ -94,7 +94,7 @@ public class GameManager : Subject
 
         if (rivalPlayer.HasPassed == false)
         {
-            NotifyObservers(new GameEventReport(GameEvents.PassTurn));
+            NotifyObservers(new GameEventReport(GameEvents.PassTurn, activePlayer, rivalPlayer));
             rivalPlayer.StartTurn();
         }
 
@@ -154,7 +154,7 @@ public class GameManager : Subject
     {
         activePlayer.Battlefield.UpdateBattlefieldInfo();
         rivalPlayer.Battlefield.UpdateBattlefieldInfo();
-        NotifyObservers(new GameEventReport(GameEvents.DecoyEventAbort));
+        NotifyObservers(new GameEventReport(GameEvents.DecoyEventAbort, activePlayer, rivalPlayer));
         ChangeTurn(activePlayer, rivalPlayer);
     }
 
@@ -238,9 +238,9 @@ public class GameManager : Subject
     {
         if (Player1.GamesWon < 2 && Player2.GamesWon < 2)
         {
-            NotifyObservers(new GameEventReport(GameEvents.FinishRound));
+            NotifyObservers(new GameEventReport(GameEvents.FinishRound, Player1, Player2));
             FinishRound(Player1, Player2);
-            NotifyObservers(new GameEventReport(GameEvents.StartRound));
+            NotifyObservers(new GameEventReport(GameEvents.StartRound, Player1, Player2));
         }
     }
 
@@ -258,7 +258,7 @@ public class GameManager : Subject
 
             Player1.PlayerHand.DrawCard();
             Player2.PlayerHand.DrawCard();
-            NotifyObservers(new GameEventReport(GameEvents.DrawCard));
+            NotifyObservers(new GameEventReport(GameEvents.DrawCard, Player1, Player2));
         }
     }
 
@@ -277,7 +277,7 @@ public class GameManager : Subject
 
             if (Player1.GamesWon == 2 || Player2.GamesWon == 2)
             {
-                NotifyObservers(new GameEventReport(GameEvents.FinishGame));
+                NotifyObservers(new GameEventReport(GameEvents.FinishGame, Player1, Player2));
                 GameOver = true;
             }
 
@@ -287,7 +287,7 @@ public class GameManager : Subject
                 Player2.NewRound();
 
                 PickPLayerAsFirst(Player1, Player2);
-                NotifyObservers(new GameEventReport(GameEvents.Start));
+                NotifyObservers(new GameEventReport(GameEvents.Start, Player1, Player2));
             }
         }
     }
@@ -298,7 +298,7 @@ public class GameManager : Subject
 
         if (winner.GamesWon == 2)
         {
-            NotifyObservers(new GameEventReport(GameEvents.FinishGame));
+            NotifyObservers(new GameEventReport(GameEvents.FinishGame, winner, looser));
             GameOver = true;
         }
 

@@ -19,9 +19,11 @@ public class GameEventReport
         RowOfCard = rowOfCard;
     }
 
-    public GameEventReport(GameEvents gameEvent)
+    public GameEventReport(GameEvents gameEvent, Player activePlayer, Player rivalPlayer)
     {
         GameEvent = gameEvent;
+        ActivePlayer = activePlayer;
+        RivalPlayer = rivalPlayer;
     }
 
     public GameEventReport(GameEvents currentEvent, Player activePlayer, Player rivalPlayer, Card triggerCard)

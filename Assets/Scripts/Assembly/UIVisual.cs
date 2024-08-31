@@ -503,7 +503,7 @@ public class UIVisual : MonoBehaviour, IObserver
     {
         UpdateScores();
 
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSecondsRealtime(1);
 
         StartCoroutine(ShowMessage($"{eventReport.ActivePlayer.PlayerName} empieza..."));
     }
@@ -592,14 +592,13 @@ public class UIVisual : MonoBehaviour, IObserver
 
     IEnumerator PassTurn(GameEventReport eventReport)
     {
-        if (eventReport.ActivePlayer.HasPassed == true && eventReport.RivalPlayer.HasPassed == false)
-        {
-            StartCoroutine(ShowMessage($"{eventReport.ActivePlayer} ha pasado"));
 
-            yield return new WaitForSeconds(2f);
+        StartCoroutine(ShowMessage($"{eventReport.ActivePlayer.PlayerName} ha pasado"));
 
-            StartCoroutine(ShowMessage($"Turno de {eventReport.RivalPlayer.PlayerName}"));
-        }
+        yield return new WaitForSeconds(2f);
+
+        StartCoroutine(ShowMessage($"Turno de {eventReport.RivalPlayer.PlayerName}"));
+
     }
 
     IEnumerator FinishRound()
