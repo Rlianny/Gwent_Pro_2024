@@ -71,7 +71,9 @@ public class UIHand : MonoBehaviour
         {
             if (GameManager.Player1.IsActive == true)
             {
-                this.Hand.transform.position = OriginalPosition;
+                //this.Hand.transform.position = OriginalPosition;
+                //StartCoroutine(BringBackHand());
+                
                 Interaction.blocksRaycasts = true;
                 PassButton.interactable = true;
 
@@ -84,8 +86,10 @@ public class UIHand : MonoBehaviour
 
             else
             {
-                
-                this.Hand.transform.position = ExteriorPoint.transform.position;
+
+                //this.Hand.transform.position = ExteriorPoint.transform.position;
+                //StartCoroutine(SendHandOut());
+                this.Hand.transform.GetComponent<CanvasGroup>().alpha = 0;
                 Interaction.blocksRaycasts = false;
                 LeaderInteraction.interactable = false;
                 PassButton.interactable = false;
@@ -96,7 +100,9 @@ public class UIHand : MonoBehaviour
         {
             if (GameManager.Player2.IsActive == true)
             {
-                this.Hand.transform.position = OriginalPosition;
+                //this.Hand.transform.position = OriginalPosition;
+                //StartCoroutine(BringBackHand());
+                //this.Hand.transform.GetComponent<CanvasGroup>().alpha = 1;
                 Interaction.blocksRaycasts = true;
                 PassButton.interactable = true;
 
@@ -109,8 +115,9 @@ public class UIHand : MonoBehaviour
 
             else
             {
-                
-                this.Hand.transform.position = ExteriorPoint.transform.position;
+                //StartCoroutine(SendHandOut());
+                //this.Hand.transform.position = ExteriorPoint.transform.position;
+                this.Hand.transform.GetComponent<CanvasGroup>().alpha = 0;
                 Interaction.blocksRaycasts = false;
                 LeaderInteraction.interactable = false;
                 PassButton.interactable = false;
@@ -138,6 +145,14 @@ public class UIHand : MonoBehaviour
         else
             Debug.Log("No es posible añadir más cartas a la mano visual");
     }
+
+    public IEnumerator BringBackHand()
+    {
+        yield return new WaitForSecondsRealtime(2);
+        this.Hand.transform.GetComponent<CanvasGroup>().alpha = 1;
+    }
+
+    
 
     async private void Wait()
     {

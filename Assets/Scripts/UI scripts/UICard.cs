@@ -28,9 +28,14 @@ public class UICard : MonoBehaviour
     {
         MotherCard = card;
 
+        for (int i = CardInfo.transform.childCount - 1; i >= 0; i--)
+        {
+            Destroy(CardInfo.transform.GetChild(i).gameObject);
+        }
+
         CardName.text = card.Name;
 
-        string character = CharacterManager.Query(MotherCard.Name  + " " + MotherCard.CharacterDescription);
+        string character = CharacterManager.Query(MotherCard.Name + " " + MotherCard.CharacterDescription);
         Debug.Log(character.ToUpper());
 
         Character.sprite = Resources.Load<Sprite>(character);

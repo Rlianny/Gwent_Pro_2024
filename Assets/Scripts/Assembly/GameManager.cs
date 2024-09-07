@@ -215,7 +215,7 @@ public class GameManager : Subject
 
     private void InternalChangeTurn(Player activePlayer, Player rivalPlayer)
     {
-        if (activePlayer.HasPassed == false)
+        if (rivalPlayer.HasPassed == false)
         {
             activePlayer.FinishTurn();
             rivalPlayer.StartTurn();

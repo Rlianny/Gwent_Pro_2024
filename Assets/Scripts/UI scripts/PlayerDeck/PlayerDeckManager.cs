@@ -34,6 +34,12 @@ public class PlayerDeckManager : MonoBehaviour
         if (actualDeck == null)
             HideImage();
 
+        else
+        {
+            string character = CharacterManager.Query(actualDeck.DeckLeader.Name + " " + actualDeck.DeckLeader.CharacterDescription);
+            LeaderImage.sprite = Resources.Load<Sprite>(character);
+        }
+
         foreach (var pair in cardsCollection.AllLeaders)
         {
             var newFaction = Instantiate(FactionPrefab, new Vector3(0, 0, 0), Quaternion.identity);

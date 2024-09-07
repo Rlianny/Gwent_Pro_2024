@@ -213,7 +213,12 @@ public class UIVisual : MonoBehaviour, IObserver
         UpdateBattlefieldUI();
 
         if (eventReport.RivalPlayer.HasPassed == false)
+        {
             StartCoroutine(ShowMessage($"Turno de {eventReport.RivalPlayer.PlayerName}"));
+            if (eventReport.RivalPlayer == GameManager.Player1)
+                StartCoroutine(Player1HandScript.BringBackHand());
+            else StartCoroutine(Player2HandScript.BringBackHand());
+        }
 
     }
 
@@ -241,6 +246,9 @@ public class UIVisual : MonoBehaviour, IObserver
         }
         SmogForDecoyEvent.gameObject.SetActive(false);
         StartCoroutine(ShowMessage($"Turno de {nextPlayer.PlayerName}"));
+        if (nextPlayer == GameManager.Player1)
+            StartCoroutine(Player1HandScript.BringBackHand());
+        else StartCoroutine(Player2HandScript.BringBackHand());
 
     }
     public void DecoyEventInit(GameEventReport eventReport)
@@ -289,6 +297,9 @@ public class UIVisual : MonoBehaviour, IObserver
         if (!eventReport.RivalPlayer.HasPassed)
         {
             StartCoroutine(ShowMessage($"Turno de {eventReport.RivalPlayer.PlayerName}"));
+            if (eventReport.RivalPlayer == GameManager.Player1)
+                StartCoroutine(Player1HandScript.BringBackHand());
+            else StartCoroutine(Player2HandScript.BringBackHand());
         }
 
         if (eventReport.Card is WeatherCard weatherCard)
@@ -506,6 +517,9 @@ public class UIVisual : MonoBehaviour, IObserver
         yield return new WaitForSecondsRealtime(1);
 
         StartCoroutine(ShowMessage($"{eventReport.ActivePlayer.PlayerName} empieza..."));
+        if (eventReport.ActivePlayer == GameManager.Player1)
+            StartCoroutine(Player1HandScript.BringBackHand());
+        else StartCoroutine(Player2HandScript.BringBackHand());
     }
 
     private IEnumerator Summon(GameEventReport eventReport)
@@ -516,9 +530,12 @@ public class UIVisual : MonoBehaviour, IObserver
         if (eventReport.Card != null)
         {
 
-            if (eventReport.ActivePlayer.IsActive == true && eventReport.RivalPlayer.HasPassed == false)
+            if (eventReport.RivalPlayer.HasPassed == false)
             {
                 StartCoroutine(ShowMessage($"Turno de {eventReport.RivalPlayer.PlayerName}"));
+                if (eventReport.RivalPlayer == GameManager.Player1)
+                    StartCoroutine(Player1HandScript.BringBackHand());
+                else StartCoroutine(Player2HandScript.BringBackHand());
             }
 
             if (eventReport.Card.Name == "Lluvia de Plumbuses")
@@ -598,6 +615,9 @@ public class UIVisual : MonoBehaviour, IObserver
         yield return new WaitForSeconds(2f);
 
         StartCoroutine(ShowMessage($"Turno de {eventReport.RivalPlayer.PlayerName}"));
+        if (eventReport.RivalPlayer == GameManager.Player1)
+            StartCoroutine(Player1HandScript.BringBackHand());
+        else StartCoroutine(Player2HandScript.BringBackHand());
 
     }
 
@@ -635,6 +655,9 @@ public class UIVisual : MonoBehaviour, IObserver
         {
             yield return new WaitForSeconds(4f);
             StartCoroutine(ShowMessage($"Turno de {eventReport.ActivePlayer.PlayerName}"));
+            if (eventReport.ActivePlayer == GameManager.Player1)
+                StartCoroutine(Player1HandScript.BringBackHand());
+            else StartCoroutine(Player2HandScript.BringBackHand());
         }
 
         UpdateScores();
