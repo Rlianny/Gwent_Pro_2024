@@ -132,18 +132,18 @@ public class UIHand : MonoBehaviour
     {
         await Task.Delay(400);
 
-        if (Hand.GetComponent<HorizontalLayoutGroup>().transform.childCount < 10)
-        {
-            var newCard = Instantiate(CardPrefab, new Vector3(0, 0, 0), Quaternion.identity);
-            newCard.transform.SetParent(Hand.transform);
-            UICard ui = newCard.GetComponent<UICard>();
-            ui.PrintCard(card);
+        // if (Hand.GetComponent<HorizontalLayoutGroup>().transform.childCount < 10)
+        // {
+        //     var newCard = Instantiate(CardPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+        //     newCard.transform.SetParent(Hand.transform);
+        //     UICard ui = newCard.GetComponent<UICard>();
+        //     ui.PrintCard(card);
 
-            Debug.Log($"La carta {card.Name} ha sido añadida a la mano visual");
-        }
+        //     Debug.Log($"La carta {card.Name} ha sido añadida a la mano visual");
+        // }
 
-        else
-            Debug.Log("No es posible añadir más cartas a la mano visual");
+        // else
+        //     Debug.Log("No es posible añadir más cartas a la mano visual");
     }
 
     public IEnumerator BringBackHand()

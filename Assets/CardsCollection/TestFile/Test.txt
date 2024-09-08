@@ -1,26 +1,219 @@
 effect
 {
-    Name: "Fatality",
+    Name: "Draw",
+    Action: (targets, context) =>
+    {
+        topCard = context.Deck.Pop();
+        context.Hand.Push(topCard);
+        context.Hand.Shuffle();
+    }
+}
+
+effect
+{
+    Name: "Increase",
+    Params:
+    {
+        Amount: Number
+    },
     Action: (targets, context) =>
     {
         for target in targets
         {
-            context.Board.Remove(target);
+            target.Power += Amount;
         }
     }
 }
 
+effect
+{
+    Name: "Damage",
+    Params:
+    {
+        Amount: Number
+    },
+    Action: (objetives, actuality) =>
+    {
+        for objetive in objetives
+        {
+            objetive.Power -= Amount;
+        }
+    }
+}
+
+effect
+{
+    Name: "HighBetrayal",
+    Action: (targets, context) =>
+    {
+        for target in targets
+        {
+            context.Deck.Push(target);
+        }
+
+        context.Deck.Shuffle();
+    }
+}
+
+effect
+{
+    Name: "Survivor",
+    Action: (targets, context) =>
+    {
+        for target in targets
+        {
+            if(context.Graveyard.Remove(target))
+            {
+                context.Deck.Push(target);
+            }
+        }
+    }
+}
+
+effect
+{
+    Name: "Death",
+    Params:
+    {
+        Amount: Number
+    },
+    Action: (targets, context) =>
+    {
+        otherId = 0;
+
+        if(context.TriggerPlayer == 0)
+        {
+            otherId = 1;
+        }
+
+        for target in selection
+        {
+            if(target.Power >= Amount)
+            context.FieldOfPlayer(otherId).Remove(target);
+        }
+    },
+}
+
 card
 {
-    Type: "Oro",
-    Name: "Parca",
-    Faction: "Neutral",
-    Power: 7,
-    Range: ["Siege"],
+    Type: "Líder",
+    Name: "de Matcom",
+    Faction: "Secta" @@ "Mortífera",
+    CharacterDescription: "Un Morty estudiante de CC, que ha decidido conquistar el mundo (es pa' un proyecto de Programación)",
+    Quote: "Sin miedo al epsilon",
     OnActivation:
     [
         {
-            Effect: "Fatality",
+            Effect:
+            {
+                Name: "Increase",
+                Amount: 5,
+            },
+            Selector:
+            {
+                Source: "field",
+                Single: false,
+                Predicate: (unit) => true
+            },
+            PostAction:
+            {
+                Type: "Draw",
+            },
+
+        }
+
+    ]
+    EffectDescription: "Aumenta en 5 los puntos de las cartas de tu campo y roba una carta de tu mazo",
+}
+
+card
+{
+    Faction: "Secta Mortífera",
+    Name: "Platanito",
+    Type: "Oro",
+    CharacterDescription: "Un Morty banana, ni siquiera Rick sabe cómo terminó convirtiendo a su nieto en una fruta",
+    Quote: "Oro parece, pláta-no es, quien no lo adivine bien bobo es",
+    Power: 7,
+    Range: ["Melee", "Siege"],
+    OnActivation:
+    [
+        {
+            Effect:
+            {
+                Name: "Draw",
+            },
+            Selector:
+            {
+                Source: "deck",
+                Single: true && false,
+                Predicate: (unit) => true
+
+            },
+        }
+    ]
+    EffectDescription: "Roba una carta de tu mazo",
+
+}
+
+card
+{
+    Name: "Dios",
+    Type: "Oro",
+    Faction: "Secta Mortífera",
+    Power: 11,
+    Range: ["Siege", "Ranged"],
+    CharacterDescription: "Un Morty divino, glorificado como un dios en una realidad alterna",
+    OnActivation: 
+    [
+        {
+            Effect:
+            {
+                Name: "Increase",
+                Amount: 3,
+            },
+            Selector:
+            {
+                Source: "hand",
+                Single: false,
+                Predicate: (unityCard) => unityCard.Faction == "Secta" @@ "Mortífera"
+            },
+            PostAction:
+            {
+                Type: "Survivor",
+            }
+        }
+
+        {
+            Effect:
+            {
+                Name: "Damage",
+                Amount: 5,
+            },
+            Selector:
+            {   
+                Source: "otherField",
+                Single: false,
+                Predicate: (unit) => unit.Power > 5
+            },
+        }
+    ]
+    EffectDescription: "Aumenta en 3 los puntos de las cartas de tu mano que pertenezcan a la facción Secta Mortífera, devuelve las cartas del cementerio a tu mazo y reduce en 5 los puntos del campo del enemigo que tengan un puntaje mayor que 5",
+    Quote: "Gloria a Morty",
+}
+
+card
+{
+    Type: "Plata",
+    Name: "Ruso",
+    CharacterDescription: "Este Morty solía ser un Agente de la KGB, así que... ten cuidado",
+    Power: 7,
+    Faction: "Secta Mortífera",
+    Ranges: ["Melee", "Ranged", "Siege"],
+    Quote: "(...)",
+    OnActivation:
+    [
+        {
+            Effect: "HighBetrayal",
             Selector:
             {
                 Source: "otherField",
@@ -29,31 +222,18 @@ card
             },
         }
     ]
-    CharacterDescription: "La triste y negra parca, andando con su guadaña simbolizando muerte",
-    Quote: "(...)",
-    EffectDescription: "Envía todas las cartas del enemigo al cementerio",
+    EffectDescription: "Añade las cartas del campo enemigo a tu mazo",
 }
 
 card
 {
-    Type: "Oro",
-    Name: "Fidel",
-    Faction: "Neutral",
-    Power: 10,
-    Range: ["Melee"],
+    Name:
+    Type:
+    Faction:
+    Power:
+    Ranges:
+    CharacterDescription:
     OnActivation:
-    [
-        {
-            Effect: "Draw",
-            Selector:
-            {
-                Source: "board",
-                Single: true,
-                Predicate: (unit) => unit.Faction == "Neutral"
-            },
-        }
-    ]
-    CharacterDescription: "Comandante en jefe de los Mortys",
-    Quote: "Yo te di la palabra chico?",
-    EffectDescription: "Roba una carta",
+    EffectDescription:
+    Quote:
 }

@@ -18,7 +18,7 @@ public partial class Parser
     {
         IExpression expr = LogicOperation();
 
-        if (Match(new List<TokenSubtypes>(){TokenSubtypes.Assignment, TokenSubtypes.IncrementAssignment, TokenSubtypes.DecrementAssignment, TokenSubtypes.MultiplicativeAssignment, TokenSubtypes.DivisiveAssignment}))
+        if (Match(new List<TokenSubtypes>() { TokenSubtypes.Assignment, TokenSubtypes.IncrementAssignment, TokenSubtypes.DecrementAssignment, TokenSubtypes.MultiplicativeAssignment, TokenSubtypes.DivisiveAssignment }))
         {
             Token equal = Previous();
             IExpression value = Assignment();
@@ -26,7 +26,7 @@ public partial class Parser
             {
                 return new AssignmentExpr(variable, value, equal);
             }
-            if(expr is CardPropertyAccessExpr cardProperty)
+            if (expr is CardPropertyAccessExpr cardProperty)
             {
                 return new AssignmentExpr(cardProperty, value, equal);
             }
@@ -379,6 +379,7 @@ public partial class Parser
         }
 
         else GenerateError("Expression expected", Peek().Location); // Si ninguno de los casos coincide, significa que estamos sentados sobre un token que no puede iniciar una expresión
+        Synchronize(new List<TokenSubtypes> {TokenSubtypes.Colon, TokenSubtypes.Comma, TokenSubtypes.CloseBrace, TokenSubtypes.CloseParenthesis});
         return null;
     }
 

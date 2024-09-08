@@ -33,6 +33,8 @@ public class CompiledCard : CompiledObject
     {
         string ranges = "";
         string onActivation = "";
+        
+        if(Range != null)
         foreach (string range in Range)
         {
             ranges += range + " ";

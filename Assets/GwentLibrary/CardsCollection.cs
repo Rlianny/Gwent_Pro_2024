@@ -64,9 +64,12 @@ public class CardsCollection
         {
             if (!AllFactions.Keys.Contains(card.Faction))
             {
-                List<Card> Temp = new();
-                AllFactions.Add(card.Faction, Temp);
-                Temp.Add(card);
+                if (!AllFactions.ContainsKey(card.Faction))
+                {
+                    List<Card> Temp = new();
+                    AllFactions.Add(card.Faction, Temp);
+                }
+                AllFactions[card.Faction].Add(card);
             }
             else
             {
@@ -77,6 +80,9 @@ public class CardsCollection
         {
             if (!AllLeaders.ContainsKey(card.Faction))
                 AllLeaders.Add(card.Faction, card);
+
+            if (!AllFactions.ContainsKey(card.Faction))
+                AllFactions.Add(card.Faction, new());
         }
     }
 

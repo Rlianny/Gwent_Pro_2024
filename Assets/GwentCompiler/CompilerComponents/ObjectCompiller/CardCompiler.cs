@@ -24,7 +24,7 @@ public partial class ObjectCompiler
         if (node.OnActivationField == null) Debug.Log("Caso 1");
         if (interpreter.Interpret(node.OnActivationField) is not List<EffectActivation>)
         {
-            if(interpreter.Interpret(node.OnActivationField) == null) Debug.Log(null);
+            if (interpreter.Interpret(node.OnActivationField) == null) Debug.Log(null);
         }
         if (node.OnActivationField != null && interpreter.Interpret(node.OnActivationField) is List<EffectActivation> activations) onAct = activations;
 
@@ -49,14 +49,15 @@ public partial class ObjectCompiler
             {
                 if (cardFaction != null)
                 {
-                    if (range != null)
+                    if (range != null || cardType == "Líder")
                     {
                         if (onAct != null)
                         {
                             if (effectDescription != null)
                             {
-                                if (power != null)
+                                if (power != null || cardType == "Líder")
                                 {
+                                    if (power == null) power = 0;
                                     if (characterDescription != null)
                                     {
                                         if (quote != null)

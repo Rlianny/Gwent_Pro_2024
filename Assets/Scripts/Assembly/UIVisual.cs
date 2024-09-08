@@ -194,17 +194,20 @@ public class UIVisual : MonoBehaviour, IObserver
 
     private void DrawCard()
     {
-        if (GameManager.Player1.PlayerHand.PlayerHand.Count <= 10)
-            Player1HandScript.DrawCardUI(GameManager.Player1.PlayerHand.PlayerHand[GameManager.Player1.PlayerHand.PlayerHand.Count - 1]);
+        // if (GameManager.Player1.PlayerHand.PlayerHand.Count <= 10)
+        //     Player1HandScript.DrawCardUI(GameManager.Player1.PlayerHand.PlayerHand[GameManager.Player1.PlayerHand.PlayerHand.Count - 1]);
 
-        if (GameManager.Player1.PlayerHand.PlayerHand.Count <= 10)
-            Player1HandScript.DrawCardUI(GameManager.Player1.PlayerHand.PlayerHand[GameManager.Player1.PlayerHand.PlayerHand.Count - 2]);
+        // if (GameManager.Player1.PlayerHand.PlayerHand.Count <= 10)
+        //     Player1HandScript.DrawCardUI(GameManager.Player1.PlayerHand.PlayerHand[GameManager.Player1.PlayerHand.PlayerHand.Count - 2]);
 
-        if (GameManager.Player2.PlayerHand.PlayerHand.Count <= 10)
-            Player2HandScript.DrawCardUI(GameManager.Player2.PlayerHand.PlayerHand[GameManager.Player2.PlayerHand.PlayerHand.Count - 1]);
+        // if (GameManager.Player2.PlayerHand.PlayerHand.Count <= 10)
+        //     Player2HandScript.DrawCardUI(GameManager.Player2.PlayerHand.PlayerHand[GameManager.Player2.PlayerHand.PlayerHand.Count - 1]);
 
-        if (GameManager.Player2.PlayerHand.PlayerHand.Count <= 10)
-            Player2HandScript.DrawCardUI(GameManager.Player2.PlayerHand.PlayerHand[GameManager.Player2.PlayerHand.PlayerHand.Count - 2]);
+        // if (GameManager.Player2.PlayerHand.PlayerHand.Count <= 10)
+        //     Player2HandScript.DrawCardUI(GameManager.Player2.PlayerHand.PlayerHand[GameManager.Player2.PlayerHand.PlayerHand.Count - 2]);
+
+        UpdateScores();
+        UpdateBattlefieldUI();
     }
 
     public void AbortingDecoyEvent(GameEventReport eventReport)
@@ -464,15 +467,17 @@ public class UIVisual : MonoBehaviour, IObserver
             GameObject card = toClear.transform.GetChild(i).gameObject;
 
             if (toClear.transform.parent.parent.name == "Player1")
-                SendToCemetery(card, Player1Cemetery);
+                SendToCemetery(card, Player1Cemetery, GameManager.Player1);
 
             if (toClear.transform.parent.parent.name == "Player2")
-                SendToCemetery(card, Player2Cemetery);
+                SendToCemetery(card, Player2Cemetery, GameManager.Player2);
         }
     }
 
-    private void SendToCemetery(GameObject card, Image cemeteryImage)
+    private void SendToCemetery(GameObject card, Image cemeteryImage, Player affected)
     {
+        Card motherCard = card.transform.GetComponent<UICard>().MotherCard;
+        affected.Battlefield.SendToGraveyard(motherCard);
         LeanTween.move(card, cemeteryImage.transform, 1f)
                 .setOnComplete(() => Destroy(card));
         ShowImage(cemeteryImage);
@@ -485,10 +490,10 @@ public class UIVisual : MonoBehaviour, IObserver
             GameObject card = toClear.transform.GetChild(i).gameObject;
 
             if (toClear.transform.parent.parent.name == "Player1")
-                SendToCemetery(card, Player1Cemetery);
+                SendToCemetery(card, Player1Cemetery, GameManager.Player1);
 
             if (toClear.transform.parent.parent.name == "Player2")
-                SendToCemetery(card, Player2Cemetery);
+                SendToCemetery(card, Player2Cemetery, GameManager.Player2);
 
             if (toClear.transform.parent.parent.name == "BattlefieldBoard")
                 Destroy(card);
@@ -569,18 +574,18 @@ public class UIVisual : MonoBehaviour, IObserver
                 ClearSlot(WeatherM);
             }
 
-            if (eventReport.Card.EffectNumber == 7)
-            {
-                if (GameManager.Player1.IsActive == true)
-                {
-                    Player1HandScript.DrawCardUI(GameManager.Player1.PlayerHand.PlayerHand[GameManager.Player1.PlayerHand.PlayerHand.Count - 1]);
-                }
+            // if (eventReport.Card.EffectNumber == 7)
+            // {
+            //     if (GameManager.Player1.IsActive == true)
+            //     {
+            //         Player1HandScript.DrawCardUI(GameManager.Player1.PlayerHand.PlayerHand[GameManager.Player1.PlayerHand.PlayerHand.Count - 1]);
+            //     }
 
-                else if (GameManager.Player2.IsActive == true)
-                {
-                    Player2HandScript.DrawCardUI(GameManager.Player2.PlayerHand.PlayerHand[GameManager.Player2.PlayerHand.PlayerHand.Count - 1]);
-                }
-            }
+            //     else if (GameManager.Player2.IsActive == true)
+            //     {
+            //         Player2HandScript.DrawCardUI(GameManager.Player2.PlayerHand.PlayerHand[GameManager.Player2.PlayerHand.PlayerHand.Count - 1]);
+            //     }
+            // }
 
             if (eventReport.Card.EffectNumber == 16)
             {
@@ -589,7 +594,7 @@ public class UIVisual : MonoBehaviour, IObserver
 
             }
 
-            if (eventReport.Card.EffectNumber == 15)
+            if (eventReport.Card.Type == CardTypes.Líder)
             {
                 if (GameManager.Player1.IsActive == true)
                 {
@@ -714,9 +719,9 @@ public class UIVisual : MonoBehaviour, IObserver
                 {
                     GameObject cardToDestroy = rowToClear.transform.GetChild(i).gameObject;
                     if (playerBeingUpdated == GameManager.Player1)
-                        SendToCemetery(cardToDestroy, Player1Cemetery);
+                        SendToCemetery(cardToDestroy, Player1Cemetery, GameManager.Player1);
                     else
-                        SendToCemetery(cardToDestroy, Player2Cemetery);
+                        SendToCemetery(cardToDestroy, Player2Cemetery, GameManager.Player2);
                     Debug.Log(card.Name + "ha sido enviado al cementerio");
                 }
 
@@ -754,9 +759,9 @@ public class UIVisual : MonoBehaviour, IObserver
                 GameObject cardToDestroy = rowToClear.transform.GetChild(i).gameObject;
                 Debug.Log(card.Name + "ha sido enviado al cementerio");
                 if (playerBeingUpdated == GameManager.Player1)
-                    SendToCemetery(cardToDestroy, Player1Cemetery);
+                    SendToCemetery(cardToDestroy, Player1Cemetery, GameManager.Player1);
                 else
-                    SendToCemetery(cardToDestroy, Player2Cemetery);
+                    SendToCemetery(cardToDestroy, Player2Cemetery, GameManager.Player2);
             }
 
             else

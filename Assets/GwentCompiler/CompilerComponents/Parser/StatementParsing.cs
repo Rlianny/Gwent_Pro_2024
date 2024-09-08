@@ -11,6 +11,7 @@ public partial class Parser
     {
         if (Match(TokenSubtypes.If))
         {
+            Debug.Log("If");
             return IfStatement();
         }
 
@@ -21,19 +22,23 @@ public partial class Parser
 
         if (Match(TokenSubtypes.While))
         {
+            Debug.Log("While");
             return WhileStatement();
         }
 
         if (Match(TokenSubtypes.For))
         {
+            Debug.Log("For");
             return ForStatement();
         }
 
         if (Match(TokenSubtypes.OpenBrace))
         {
+            Debug.Log("Block");
             return new BlockStmt(Block());
         }
 
+        Debug.Log("Expression");
         return ExpressionStatement();
     }
 
