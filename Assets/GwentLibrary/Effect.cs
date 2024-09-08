@@ -79,14 +79,10 @@ public class PersonalizedEffect : Effect
         UnityEngine.Debug.Log($"Se ejecutará el efecto {effect.EffectName}");
 
         List<Card> targets = GetTargets(ActivePlayer, RivalPlayer, card, effect);
-        List<UnityCard>[] targetsArray = null;
 
         if (targets == null)
         {
-            if (effect.SelectorSource == "board") targetsArray = Context.Board;
-            else if (effect.SelectorSource == "field") targetsArray = Context.Field;
-            else if (effect.SelectorSource == "otherField") targetsArray = Context.FieldOfPlayer(RivalPlayer.PlayerID);
-            else if (parentSource != null) targets = parentSource;
+            if (parentSource != null) targets = parentSource;
             else return;
         }
 
@@ -94,12 +90,7 @@ public class PersonalizedEffect : Effect
 
         Interpreter interpreter = new();
         interpreter.Environment.Assign(baseEffect.ContextId, context);
-
-        if (targets != null)
-            interpreter.Environment.Assign(baseEffect.TargetsId, targets);
-
-        if (targetsArray != null)
-            interpreter.Environment.Assign(baseEffect.TargetsId, targetsArray);
+        interpreter.Environment.Assign(baseEffect.TargetsId, targets);
 
         foreach (var pair in effect.Parameters)
         {
@@ -111,45 +102,6 @@ public class PersonalizedEffect : Effect
         if (effect.PostAction != null)
         {
             InterpretEffect(ActivePlayer, RivalPlayer, card, effect.PostAction, targets);
-        }
-    }
-
-    private void InterpretEffect(Player ActivePlayer, Player RivalPlayer, Card card, EffectActivation effect, List<UnityCard>[] parentSource)
-    {
-        PersonalizeEffect(effect.EffectName);
-        UnityEngine.Debug.Log($"Se ejecutará el efecto {effect.EffectName}");
-
-        List<Card> targets = GetTargets(ActivePlayer, RivalPlayer, card, effect);
-        List<UnityCard>[] targetsArray = null;
-        if (targets == null)
-        {
-            if (effect.SelectorSource == "board") targetsArray = Context.Board;
-            else if (effect.SelectorSource == "field") targetsArray = Context.Field;
-            else if (effect.SelectorSource == "otherField") targetsArray = Context.FieldOfPlayer(RivalPlayer.PlayerID);
-            else if (parentSource != null) targetsArray = parentSource;
-            else return;
-        }
-        Context context = new();
-
-        Interpreter interpreter = new();
-        interpreter.Environment.Assign(baseEffect.ContextId, context);
-
-        if (targets != null)
-            interpreter.Environment.Assign(baseEffect.TargetsId, targets);
-
-        if (targetsArray != null)
-            interpreter.Environment.Assign(baseEffect.TargetsId, targetsArray);
-
-        foreach (var pair in effect.Parameters)
-        {
-            interpreter.Environment.Assign(pair.Key.Name, pair.Value);
-        }
-
-        interpreter.Execute(baseEffect.Block);
-
-        if (effect.PostAction != null)
-        {
-            InterpretEffect(ActivePlayer, RivalPlayer, card, effect.PostAction, targetsArray);
         }
     }
 
@@ -174,6 +126,15 @@ public class PersonalizedEffect : Effect
                 break;
             case "parent":
                 source = parentSource;
+                break;
+            case "board":
+                source = Context.BoardList;
+                break;
+            case "field":
+                source = Context.FieldList;
+                break;
+            case "otherField":
+                source = Context.FieldOfPlayerList(RivalPlayer.PlayerID);
                 break;
         }
 

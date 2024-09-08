@@ -35,6 +35,36 @@ public class Context
         private set { }
     }
 
+    public static List<Card> BoardList
+    {
+        get
+        {
+
+            List<Card> cards = new();
+
+            foreach (Card card in GameManager.Player1.Battlefield.GetRowFromBattlefield(RowTypes.Melee))
+                cards.Add(card);
+
+            foreach (Card card in GameManager.Player1.Battlefield.GetRowFromBattlefield(RowTypes.Ranged))
+                cards.Add(card);
+
+            foreach (Card card in GameManager.Player1.Battlefield.GetRowFromBattlefield(RowTypes.Siege))
+                cards.Add(card);
+
+            foreach (Card card in GameManager.Player2.Battlefield.GetRowFromBattlefield(RowTypes.Melee))
+                cards.Add(card);
+
+            foreach (Card card in GameManager.Player2.Battlefield.GetRowFromBattlefield(RowTypes.Ranged))
+                cards.Add(card);
+
+            foreach (Card card in GameManager.Player2.Battlefield.GetRowFromBattlefield(RowTypes.Siege))
+                cards.Add(card);
+
+            return cards;
+        }
+        private set { }
+    }
+
     public static List<Card> Hand
     {
         get
@@ -75,6 +105,27 @@ public class Context
         private set { }
     }
 
+    public static List<Card> FieldList
+    {
+        get
+        {
+            Player currentPlayer = null;
+            if (GameManager.Player1.IsActive) currentPlayer = GameManager.Player1;
+            else currentPlayer = GameManager.Player2;
+            List<Card> toReturn = new List<Card>();
+
+            foreach (Card card in currentPlayer.Battlefield.GetRowFromBattlefield(RowTypes.Melee))
+                toReturn.Add(card);
+            foreach (Card card in currentPlayer.Battlefield.GetRowFromBattlefield(RowTypes.Ranged))
+                toReturn.Add(card);
+            foreach (Card card in currentPlayer.Battlefield.GetRowFromBattlefield(RowTypes.Siege))
+                toReturn.Add(card);
+
+            return toReturn;
+        }
+        private set { }
+    }
+
     public static List<Card> Graveyard
     {
         get
@@ -103,6 +154,24 @@ public class Context
                 currentPlayer.Battlefield.GetRowFromBattlefield(RowTypes.Siege),
 
             };
+
+        return toReturn;
+    }
+
+    public static List<Card> FieldOfPlayerList(int id)
+    {
+        Player currentPlayer = null;
+        if (GameManager.Player1.PlayerID == id) currentPlayer = GameManager.Player1;
+        else currentPlayer = GameManager.Player2;
+
+        List<Card> toReturn = new List<Card>();
+
+        foreach (Card card in currentPlayer.Battlefield.GetRowFromBattlefield(RowTypes.Melee))
+            toReturn.Add(card);
+        foreach (Card card in currentPlayer.Battlefield.GetRowFromBattlefield(RowTypes.Ranged))
+            toReturn.Add(card);
+        foreach (Card card in currentPlayer.Battlefield.GetRowFromBattlefield(RowTypes.Siege))
+            toReturn.Add(card);
 
         return toReturn;
     }
