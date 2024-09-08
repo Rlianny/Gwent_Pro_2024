@@ -84,10 +84,12 @@ public class PersonalizedEffect : Effect
         if (targets == null)
         {
             if (effect.SelectorSource == "board") targetsArray = Context.Board;
+            else if (effect.SelectorSource == "field") targetsArray = Context.Field;
+            else if (effect.SelectorSource == "otherField") targetsArray = Context.FieldOfPlayer(RivalPlayer.PlayerID);
             else if (parentSource != null) targets = parentSource;
             else return;
         }
-        
+
         Context context = new();
 
         Interpreter interpreter = new();
@@ -122,6 +124,8 @@ public class PersonalizedEffect : Effect
         if (targets == null)
         {
             if (effect.SelectorSource == "board") targetsArray = Context.Board;
+            else if (effect.SelectorSource == "field") targetsArray = Context.Field;
+            else if (effect.SelectorSource == "otherField") targetsArray = Context.FieldOfPlayer(RivalPlayer.PlayerID);
             else if (parentSource != null) targetsArray = parentSource;
             else return;
         }
@@ -168,12 +172,6 @@ public class PersonalizedEffect : Effect
             case "otherDeck":
                 source = Context.DeckOfPlayer(RivalPlayer.PlayerID);
                 break;
-            case "field":
-                source = Context.Field;
-                break;
-            case "otherField":
-                source = Context.FieldOfPlayer(RivalPlayer.PlayerID);
-                break;
             case "parent":
                 source = parentSource;
                 break;
@@ -192,6 +190,7 @@ public class PersonalizedEffect : Effect
 
         return targets;
     }
+
     private void PersonalizeEffect(string effectName)
     {
         baseEffect = AllCompiledEffects[effectName];

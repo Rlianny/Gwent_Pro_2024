@@ -54,7 +54,7 @@ public class Context
         }
     }
 
-    public static List<Card> Field
+    public static List<UnityCard>[] Field
     {
         get
         {
@@ -62,22 +62,13 @@ public class Context
             if (GameManager.Player1.IsActive) currentPlayer = GameManager.Player1;
             else currentPlayer = GameManager.Player2;
 
-            List<Card> toReturn = new List<Card>();
-
-            foreach (Card card in currentPlayer.Battlefield.GetRowFromBattlefield(RowTypes.Melee))
+            List<UnityCard>[] toReturn = new List<UnityCard>[]
             {
-                toReturn.Add(card);
-            }
+                currentPlayer.Battlefield.GetRowFromBattlefield(RowTypes.Melee),
+                currentPlayer.Battlefield.GetRowFromBattlefield(RowTypes.Ranged),
+                currentPlayer.Battlefield.GetRowFromBattlefield(RowTypes.Siege),
 
-            foreach (Card card in currentPlayer.Battlefield.GetRowFromBattlefield(RowTypes.Ranged))
-            {
-                toReturn.Add(card);
-            }
-
-            foreach (Card card in currentPlayer.Battlefield.GetRowFromBattlefield(RowTypes.Siege))
-            {
-                toReturn.Add(card);
-            }
+            };
 
             return toReturn;
         }
@@ -99,28 +90,19 @@ public class Context
         else return GameManager.Player2.PlayerHand.PlayerHand;
     }
 
-    public static List<Card> FieldOfPlayer(int id)
+    public static List<UnityCard>[] FieldOfPlayer(int id)
     {
         Player currentPlayer = null;
         if (GameManager.Player1.PlayerID == id) currentPlayer = GameManager.Player1;
         else currentPlayer = GameManager.Player2;
 
-        List<Card> toReturn = new List<Card>();
+        List<UnityCard>[] toReturn = new List<UnityCard>[]
+            {
+                currentPlayer.Battlefield.GetRowFromBattlefield(RowTypes.Melee),
+                currentPlayer.Battlefield.GetRowFromBattlefield(RowTypes.Ranged),
+                currentPlayer.Battlefield.GetRowFromBattlefield(RowTypes.Siege),
 
-        foreach (Card card in currentPlayer.Battlefield.GetRowFromBattlefield(RowTypes.Melee))
-        {
-            toReturn.Add(card);
-        }
-
-        foreach (Card card in currentPlayer.Battlefield.GetRowFromBattlefield(RowTypes.Ranged))
-        {
-            toReturn.Add(card);
-        }
-
-        foreach (Card card in currentPlayer.Battlefield.GetRowFromBattlefield(RowTypes.Siege))
-        {
-            toReturn.Add(card);
-        }
+            };
 
         return toReturn;
     }
@@ -142,10 +124,10 @@ public class Context
         int i = 0;
         System.Random random = new System.Random();
         Card temp;
-        while(i < cards.Count)
+        while (i < cards.Count)
         {
-            int aleatory1 = random.Next(0, cards.Count-1);
-            int aleatory2 = random.Next(0, cards.Count-1);
+            int aleatory1 = random.Next(0, cards.Count - 1);
+            int aleatory2 = random.Next(0, cards.Count - 1);
             temp = cards[aleatory1];
             cards[aleatory1] = cards[aleatory2];
             cards[aleatory2] = temp;
