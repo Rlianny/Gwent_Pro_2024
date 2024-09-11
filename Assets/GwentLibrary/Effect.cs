@@ -136,6 +136,9 @@ public class PersonalizedEffect : Effect
             case "otherField":
                 source = Context.FieldOfPlayerList(RivalPlayer.PlayerID);
                 break;
+            case "graveyard":
+                source = Context.Graveyard;
+                break;
         }
 
         if (source == null) return null;

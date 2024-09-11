@@ -21,11 +21,6 @@ public partial class ObjectCompiler
         if (node.Range != null && interpreter.Interpret(node.Range) is List<string> rangeList) range = rangeList;
 
         List<EffectActivation> onAct = null;
-        if (node.OnActivationField == null) Debug.Log("Caso 1");
-        if (interpreter.Interpret(node.OnActivationField) is not List<EffectActivation>)
-        {
-            if (interpreter.Interpret(node.OnActivationField) == null) Debug.Log(null);
-        }
         if (node.OnActivationField != null && interpreter.Interpret(node.OnActivationField) is List<EffectActivation> activations) onAct = activations;
 
         string effectDescription = null;
